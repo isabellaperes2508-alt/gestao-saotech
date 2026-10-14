@@ -14,7 +14,8 @@
     return;
   }
 
-  const sb = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey, {
+  const baseUrl = String(cfg.supabaseUrl).trim().replace(/\/(rest|auth|storage)\/v1\/?.*$/, "").replace(/\/+$/, "");
+  const sb = window.supabase.createClient(baseUrl, String(cfg.supabaseAnonKey).trim(), {
     auth: {persistSession: true, autoRefreshToken: true, detectSessionInUrl: true}
   });
   window.sb = sb;
