@@ -43,6 +43,10 @@
     if (entrou) return;
     const email = (session.user.email || "").toLowerCase();
     const {data: membro, error} = await sb.from("equipe").select("*").eq("email", email).maybeSingle();
+    if (!error && !membro) {
+      const {data: portal, error: ePortal} = await sb.rpc("portal_dados");
+      if (!ePortal && portal) { entrou = true; esconderLogin(); document.body.classList.add("modo-portal"); window.SaotechPortal?.iniciar(sb, portal); return; }
+    }
     if (error || !membro) {
       await sb.auth.signOut();
       const det = error ? ` (${[error.code, error.message].filter(Boolean).join(": ")})` : "";
@@ -59,9 +63,11 @@
     $("#f-login")?.addEventListener("submit", async e => {
       e.preventDefault();
       const btn = e.target.querySelector("button"); btn.disabled = true; btn.textContent = "Entrando…";
-      const {data, error} = await sb.auth.signInWithPassword({email: $("#l-email").value.trim(), password: $("#l-senha").value});
+      let login = $("#l-email").value.trim().toLowerCase();
+      if (login && !login.includes("@")) login = login.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, ".") + "@clientes.saotech.com.br";
+      const {data, error} = await sb.auth.signInWithPassword({email: login, password: $("#l-senha").value});
       btn.disabled = false; btn.textContent = "Entrar";
-      if (error) { mostrarLogin(/invalid/i.test(error.message) ? "E-mail ou senha incorretos." : "Não foi possível entrar: " + error.message); return; }
+      if (error) { mostrarLogin(/invalid/i.test(error.message) ? "Usuário ou senha incorretos." : "Não foi possível entrar: " + error.message); return; }
       entrar(data.session);
     });
     $("#l-esqueci")?.addEventListener("click", async () => {
@@ -271,6 +277,9 @@
         can: acao => acao === "data.write" ? (membro.perfil || "operacional") !== "leitura" : true,
         perfil: () => membro.perfil || (membro.admin ? "admin" : "operacional"),
         async equipe(){ const {data, error} = await sb.from("equipe").select("email,pessoa,nome,admin,perfil").order("nome"); if (error) throw erroDb(error); return data || []; },
+        async portalAcessos(){ const {data, error} = await sb.from("clientes_acesso").select("usuario,nome,demandas"); if (error) throw erroDb(error); return data || []; },
+        async criarAcessoCliente(demanda, usuario){ const {data, error} = await sb.rpc("garantir_acesso_cliente", {p_demanda: demanda, p_usuario: usuario || null}); if (error) throw erroDb(error); return data; },
+        async responderCliente(usuario, texto){ const {data, error} = await sb.rpc("portal_responder", {p_usuario: usuario, p_texto: texto}); if (error) throw erroDb(error); return data; },
         async definirPerfil(email, perfil){ const {error} = await sb.from("equipe").update({perfil, admin: perfil === "admin"}).eq("email", email); if (error) throw erroDb(error); },
         id: async () => session.user.id, name: async () => membro.nome, pessoa: () => membro.pessoa,
         me: async () => ({id: session.user.id, name: membro.nome, email: membro.email})

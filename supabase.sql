@@ -112,3 +112,10 @@ do $$ begin
   create policy "equipe_admin_altera" on public.equipe for update to authenticated using (public.e_admin()) with check (public.e_admin());
 exception when duplicate_object then null; end $$;
 grant update (perfil, admin, nome) on public.equipe to authenticated;
+
+-- 10) Portal do cliente
+-- Tabela clientes_acesso + funções garantir_acesso_cliente, portal_dados, portal_enviar, portal_responder
+-- e o gatilho acesso_cliente (cria o login do cliente automaticamente ao cadastrar uma demanda).
+-- Usuário = primeiro nome + último sobrenome (ex.: eduardo.rocha), e-mail interno usuario@clientes.saotech.com.br,
+-- senha padrão definida pela Saotech. O cliente não lê a tabela docs: só recebe os próprios dados pelas funções.
+-- As definições completas estão nas migrações "portal_do_cliente", "portal_usuario_ajustes" e "portal_responder" do projeto Supabase.

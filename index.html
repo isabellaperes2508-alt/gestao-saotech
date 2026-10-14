@@ -678,6 +678,26 @@ dialog.busca .gb-top .btn.ghost{color:var(--creme)}
 .geo-coord input{flex:1;min-width:0;padding:4px 10px;font-size:12.5px}
 .leaflet-popup-content a{color:#5C6B3D;font-weight:600}
 @media (max-width:640px){.mapa{height:280px}.mapa.grande{height:60vh}}
+/* portal do cliente */
+body.modo-portal .wrap:not(.portal){display:none!important}
+body.modo-portal #bv{display:none}
+.portal{padding-bottom:24px}
+.pt-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.pt-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px;align-items:start;margin-top:16px}
+.pt-chatbox{position:sticky;top:12px}
+.pt-chatbox .chat{height:min(55vh,520px);max-height:none}
+.pt-explica{margin:14px 0 0;font-size:14px;color:var(--ink-2);background:var(--accent-soft);border-radius:10px;padding:10px 12px}
+.pt-doc{padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.card h3+.pt-doc{border-top:0}
+.pt-rodape{text-align:center;margin-top:18px}
+@media (max-width:900px){.pt-grid{grid-template-columns:minmax(0,1fr)}.pt-chatbox{position:static}}
+.acesso-card{border-top:3px solid var(--lima)}
+.acesso-dados{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.acesso-dados>div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.acesso-dados b{font-size:16px;overflow-wrap:anywhere}
+@media (max-width:640px){.acesso-dados{grid-template-columns:minmax(0,1fr)}}
+.msg.cli .bubble{background:var(--lima);color:var(--musgo)} .msg.cli .av{background:var(--lima);color:var(--musgo)}
+.portal-chat .conv-h .label{color:var(--accent)}
 </style>
 
 
@@ -704,10 +724,10 @@ body.sem-login .wrap{visibility:hidden}
 <div id="login" hidden>
   <div class="box">
     <img class="logo" id="login-logo" alt="Saotech Geotecnologia">
-    <div><h1>Gestão Saotech</h1><p>Entre com o e-mail cadastrado na equipe.</p></div>
+    <div><h1>Gestão Saotech</h1><p>Equipe: entre com seu e-mail. Clientes: use o usuário que a Saotech enviou (nome.sobrenome).</p></div>
     <div id="login-msg" role="status" hidden></div>
     <form id="f-login" data-modo="entrar">
-      <label class="f">E-mail<input id="l-email" type="email" autocomplete="username" required></label>
+      <label class="f">E-mail ou usuário<input id="l-email" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="nome.sobrenome ou e-mail" required></label>
       <label class="f">Senha<input id="l-senha" type="password" autocomplete="current-password" required></label>
       <button class="btn primary" type="submit">Entrar</button>
       <button class="link" type="button" id="l-esqueci">Esqueci a senha</button>
@@ -753,6 +773,7 @@ body.sem-login .wrap{visibility:hidden}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js"></script>
 <script src="config.js"></script>
 <script src="backend.js"></script>
+<script src="portal.js"></script>
 <script>
 /* Mostra erros inesperados na tela para facilitar o suporte */
 (function(){
@@ -884,7 +905,7 @@ function muralMsgs(){
 }
 function novasMural(){ return muralMsgs().filter(m => m.pessoa !== S.me && m.em > (S.visto.mural || "")).length; }
 function tabsDisponiveis(){
-  const n = (S.tab === "conversas" && S.convSel === "equipe" ? 0 : novasMural()) + novasDemandas().length;
+  const n = (S.tab === "conversas" && S.convSel === "equipe" ? 0 : novasMural()) + novasDemandas().length + portaisNaoLidos();
   const t = [["inicio","Início"],["demandas","Demandas"],["clientes","Clientes"],["conversas","Conversas" + (n ? `<span class="badge">${n}</span>` : "")],["agenda","Agenda de campo"],["mapa","Mapa"],["galeria","Galeria"],["registro","Registrar atividade"],["produtividade","Produtividade"],["historico","Histórico"]];
   if (S.podeFin) t.push(["financeiro","Financeiro"]);
   return t;
@@ -1302,6 +1323,7 @@ async function enviarArquivos(files, pendEl){
   return out;
 }
 async function enviarMensagem(pref){
+  if (pref === "pt") { document.querySelector('[data-composer="pt"]')?.requestSubmit(); return; }
   const txtEl = $(`#${pref}-txt`); const fileEl = $(`#${pref}-file`); const pendEl = $(`#${pref}-pend`);
   const texto = txtEl.value.trim(); const files = fileEl?.files || [];
   if (!texto && !files.length) return;
@@ -2169,7 +2191,8 @@ function viewInicio(){
 
   const nm = novasMural(); const nd = S.demandas.filter(temNovidade).sort((a, b) => a.ultimaMsg.em < b.ultimaMsg.em ? 1 : -1);
   const ultMural = muralMsgs().slice(-1)[0];
-  const msgHtml = (nm ? `<button type="button" class="li" data-conv="equipe"><span class="t"><b>Equipe · geral</b> · ${esc(corta(ultMural ? primeiro(ultMural.pessoa) + ": " + (ultMural.texto || "arquivo") : "", 60))}</span><span class="nbadge">${nm}</span></button>` : "")
+  const ptHtml = S.portais.filter(portalNovas).map(p => `<button type="button" class="li" data-conv="portal:${esc(p.usuario)}"><span class="t"><b>${esc(p.nome)}</b> · mensagem pelo portal</span><span class="nbadge">cliente</span></button>`).join("");
+  const msgHtml = ptHtml + (nm ? `<button type="button" class="li" data-conv="equipe"><span class="t"><b>Equipe · geral</b> · ${esc(corta(ultMural ? primeiro(ultMural.pessoa) + ": " + (ultMural.texto || "arquivo") : "", 60))}</span><span class="nbadge">${nm}</span></button>` : "")
     + nd.slice(0, 6).map(d => `<button type="button" class="li" data-conv="${d.id}"><span class="t"><b>${esc(d.cliente)}</b> · mensagem de ${esc(primeiro(d.ultimaMsg.pessoa))}</span><span class="sub">${fmtCurto(d.ultimaMsg.em)}</span></button>`).join("");
 
   const mov = S.demandas.flatMap(d => (d.historico || []).map(x => ({...x, d}))).sort((a, b) => a.em < b.em ? 1 : -1).slice(0, 8);
@@ -2330,6 +2353,7 @@ function processoHtml(d){
       ${d.protocoloOrgao || d.protocoloNumero ? `<div class="pst"><span class="label">Protocolo</span><b style="font-size:16px">${esc(d.protocoloNumero || "—")}</b><span class="sub">${esc(d.protocoloOrgao || "")}${d.protocoloPrevisao ? " · retorno " + fmtDM(d.protocoloPrevisao) : ""}</span></div>` : ""}
     </section>
     ${S.podeFin ? `<div style="margin-top:16px">${contratoCardHtml(d)}</div>` : ""}
+    <div style="margin-top:16px">${acessoCardHtml(d)}</div>
     <div style="margin-top:16px">${vinculosHtml(d)}</div>
     <div style="margin-top:16px">${geoCardHtml(d)}</div>
     <div class="cols-3-2" style="margin-top:16px">
@@ -2370,7 +2394,9 @@ function viewClientes(){
 
 /* ---------- View: Conversas ---------- */
 function viewConversas(){
-  if (S.convSel !== "equipe" && !S.demandas.some(d => d.id === S.convSel)) S.convSel = "equipe";
+  const ehPortal = String(S.convSel).startsWith("portal:");
+  if (S.convSel !== "equipe" && !ehPortal && !S.demandas.some(d => d.id === S.convSel)) S.convSel = "equipe";
+  if (ehPortal && S.portais.length && !S.portais.some(p => "portal:" + p.usuario === S.convSel)) S.convSel = "equipe";
   const ult = muralMsgs().slice(-1)[0];
   const q = (S.cvBusca || "").toLowerCase();
   const chave = d => d.ultimaMsg?.em || "";
@@ -2385,13 +2411,24 @@ function viewConversas(){
         <span class="r1"><b>Equipe · geral</b>${nm ? `<span class="nbadge">${nm}</span>` : ult ? `<span class="sub">${fmtCurto(ult.em)}</span>` : ""}</span>
         <span class="prev">${ult ? esc(primeiro(ult.pessoa) + ": " + (ult.texto || "enviou arquivo")) : "Conversa com toda a equipe"}</span>
       </button>
-      <div class="label" style="padding:12px 12px 4px">Por cliente</div>
+      ${S.portais.length ? `<div class="label" style="padding:12px 12px 4px">Clientes · portal</div>${S.portais.filter(p => !q || (p.nome || "").toLowerCase().includes(q)).sort((a, b) => ((b.msgs || []).slice(-1)[0]?.em || "") > ((a.msgs || []).slice(-1)[0]?.em || "") ? 1 : -1).map(p => { const ult = (p.msgs || []).slice(-1)[0]; const sel = S.convSel === "portal:" + p.usuario; return `<button type="button" class="side-it" data-conv="portal:${esc(p.usuario)}" aria-current="${sel}">
+        <span class="r1"><b>${esc(p.nome)}</b>${portalNovas(p) && !sel ? `<span class="ndot" title="Mensagem nova do cliente"></span>` : ult ? `<span class="sub">${fmtCurto(ult.em)}</span>` : ""}</span>
+        <span class="prev">${ult ? esc((ult.de === "cliente" ? "Cliente: " : primeiro(ult.de) + ": ") + ult.texto) : "@" + esc(p.usuario) + " · sem mensagens"}</span></button>`; }).join("")}` : ""}
+      <div class="label" style="padding:12px 12px 4px">Conversa interna por processo</div>
       ${dems.map(d => { const nov = temNovidade(d) && d.id !== S.convSel; return `<button type="button" class="side-it" data-conv="${d.id}" aria-current="${S.convSel === d.id}">
         <span class="r1"><b>${esc(d.cliente)}</b>${nov ? `<span class="ndot" title="Mensagem nova"></span>` : d.ultimaMsg ? `<span class="sub">${fmtCurto(d.ultimaMsg.em)}</span>` : ""}</span>
         <span class="prev">${esc(d.codigo)} · ${d.ultimaMsg ? "última de " + esc(primeiro(d.ultimaMsg.pessoa)) : "sem mensagens"}</span></button>`; }).join("") || `<p class="sub" style="padding:8px 12px">Nenhuma conversa encontrada.</p>`}
     </div></aside>`;
   let main;
-  if (S.convSel === "equipe") {
+  if (String(S.convSel).startsWith("portal:")) {
+    const p = S.portais.find(x => "portal:" + x.usuario === S.convSel);
+    const dems = (p?.demandas || []).map(id => S.demandas.find(d => d.id === id)).filter(Boolean);
+    main = p ? `<section class="card chatbox portal-chat"><div class="conv-h"><div><span class="label">Portal do cliente · @${esc(p.usuario)} · o cliente vê esta conversa</span><h3>${esc(p.nome)}</h3></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${dems.map(d => `<button type="button" class="btn sm" data-proc="${d.id}">${esc(d.codigo)}</button>`).join("")}</div></div>
+      <div class="chat" id="cv-chat">${portalChatHtml(p.msgs || [])}</div>
+      <form class="composer" data-composer="pt"><textarea id="pt-txt" rows="2" placeholder="Responder ao cliente (ele verá esta mensagem no portal)"></textarea><div class="row2"><span class="pend sub">Mensagem visível para o cliente</span><button class="btn primary" style="margin-left:auto">Enviar ao cliente</button></div></form></section>`
+      : `<section class="card empty">Carregando conversa…</section>`;
+  } else if (S.convSel === "equipe") {
     main = `<section class="card chatbox"><div class="conv-h"><div><span class="label">Toda a equipe</span><h3>Equipe · geral</h3></div><div class="avs">${PESSOAS.map(p => `<span class="av" title="${esc(p.nome)}">${esc(p.ini)}</span>`).join("")}</div></div>
       <div class="chat" id="cv-chat">${chatHtml(muralMsgs().slice(-300), true)}</div>${composerHtml("mu", true)}</section>`;
   } else {
@@ -2964,6 +3001,69 @@ document.addEventListener("change", async e => {
   inp.value = "";
 });
 
+/* ---------- v10: portal do cliente (lado da equipe) ---------- */
+S.portais = []; S.acessos = [];
+const SENHA_CLIENTE = "423833";
+const LINK_PORTAL = () => location.origin + location.pathname;
+const acessoDe = id => S.acessos.find(a => (a.demandas || []).includes(id));
+let tAcessos;
+function carregarAcessos(){
+  if (!S.user?.portalAcessos) return;
+  clearTimeout(tAcessos);
+  tAcessos = setTimeout(async () => { try { S.acessos = await S.user.portalAcessos(); if (["clientes", "conversas"].includes(S.tab)) render(); } catch {} }, 400);
+}
+const portalNovas = p => { const ult = (p.msgs || []).filter(m => m.de === "cliente").slice(-1)[0]; return ult && ult.em > (S.visto.portal?.[p.usuario] || "") ? 1 : 0; };
+const portaisNaoLidos = () => S.portais.filter(p => portalNovas(p) && !(S.tab === "conversas" && S.convSel === "portal:" + p.usuario)).length;
+function msgWaAcesso(d, a){
+  const nome = (a?.nome || d.cliente || "").split(/\s+/)[0];
+  const txt = `Olá, ${nome}! Aqui é ${primeiro(S.me)}, da Saotech Geotecnologia.\n\nCriamos o seu acesso ao Portal do Cliente, onde você acompanha a etapa e a evolução do seu processo e conversa diretamente com a nossa equipe.\n\nAcesse: ${LINK_PORTAL()}\nUsuário: ${a.usuario}\nSenha: ${SENHA_CLIENTE}\n\nQualquer dúvida, estamos à disposição.`;
+  return `https://wa.me/${telefone(d.contato)}?text=${encodeURIComponent(txt)}`;
+}
+function acessoCardHtml(d){
+  const a = acessoDe(d.id);
+  if (!S.user?.portalAcessos) return "";
+  if (!a) return `<div class="card"><div class="conv-h"><h3>Portal do cliente</h3></div><p class="sub" style="margin:0 0 10px">${d.exemplo ? "Demandas de exemplo não ganham acesso." : "Este cliente ainda não tem acesso ao portal."}</p>${!d.exemplo && !S.somenteLeitura ? `<button type="button" class="btn primary" data-criaracesso="${d.id}">Criar acesso do cliente</button>` : ""}</div>`;
+  const p = S.portais.find(x => x.usuario === a.usuario);
+  const outros = (a.demandas || []).filter(x => x !== d.id).map(x => S.demandas.find(y => y.id === x)?.codigo).filter(Boolean);
+  return `<div class="card acesso-card"><div class="conv-h"><div><span class="label">Portal do cliente</span><h3>Acesso de ${esc(a.nome)}</h3></div>${p && portalNovas(p) ? `<span class="nbadge">nova mensagem</span>` : ""}</div>
+    <div class="acesso-dados">
+      <div><span class="label">Usuário</span><b class="mono">${esc(a.usuario)}</b></div>
+      <div><span class="label">Senha</span><b class="mono">${SENHA_CLIENTE}</b></div>
+      <div><span class="label">Vê também</span><b style="font-size:13px">${outros.length ? esc(outros.join(", ")) : "só este processo"}</b></div>
+    </div>
+    <p class="sub" style="margin:8px 0 10px">O cliente vê apenas a etapa, o andamento, os documentos pendentes, a agenda e a conversa com a equipe. Não vê valores, anotações nem conversas internas.</p>
+    <div class="acts" style="display:flex;gap:6px;flex-wrap:wrap">
+      <a class="btn sm lima" href="${msgWaAcesso(d, a)}" target="_blank" rel="noopener">Enviar acesso pelo WhatsApp</a>
+      <button type="button" class="btn sm" data-copiaracesso="${d.id}">Copiar dados de acesso</button>
+      <button type="button" class="btn sm" data-conv="portal:${esc(a.usuario)}">Conversa com o cliente</button>
+    </div></div>`;
+}
+function portalChatHtml(msgs){
+  let dia = "", h = "";
+  for (const m of msgs) {
+    const dd = new Date(m.em).toLocaleDateString("sv-SE");
+    if (dd !== dia) { dia = dd; h += `<div class="chat-day">${dd === hoje() ? "Hoje" : dd === addDias(hoje(), -1) ? "Ontem" : esc(fmtDia(dd))}</div>`; }
+    const cli = m.de === "cliente";
+    h += `<div class="msg ${!cli && m.de === S.me ? "me" : ""} ${cli ? "cli" : ""}"><span class="av">${cli ? "CL" : esc(pessoa(m.de).ini)}</span><div class="bubble"><div class="h"><b>${cli ? "Cliente" : esc(primeiro(m.de))}</b><span>${fmtHora(m.em)}</span></div><div class="tx">${esc(m.texto)}</div></div></div>`;
+  }
+  return h || `<p class="muted" style="text-align:center">Nenhuma mensagem ainda. O que você escrever aqui aparece no portal do cliente.</p>`;
+}
+document.addEventListener("click", async e => {
+  const c = e.target.closest("[data-criaracesso]");
+  if (c) { e.stopPropagation(); c.disabled = true; try { const u = await S.user.criarAcessoCliente(c.dataset.criaracesso); toast(`Acesso criado: ${u}`); S.acessos = await S.user.portalAcessos(); render(); } catch (err) { falhaEscrita(err); c.disabled = false; } return; }
+  const cp = e.target.closest("[data-copiaracesso]");
+  if (cp) { e.stopPropagation(); const d = S.demandas.find(x => x.id === cp.dataset.copiaracesso); const a = acessoDe(d.id); const t = `Portal do Cliente Saotech\n${LINK_PORTAL()}\nUsuário: ${a.usuario}\nSenha: ${SENHA_CLIENTE}`;
+    try { await navigator.clipboard.writeText(t); toast("Dados de acesso copiados"); } catch { toast(t); } }
+}, true);
+document.addEventListener("submit", async e => {
+  const f = e.target.closest('[data-composer="pt"]'); if (!f) return; e.preventDefault(); e.stopImmediatePropagation();
+  const u = S.convSel.slice(7); const t = $("#pt-txt"); const texto = t.value.trim(); if (!texto) return;
+  const btn = f.querySelector(".btn.primary"); btn.disabled = true; t.value = "";
+  try { await S.user.responderCliente(u, texto); S.visto.portal = {...(S.visto.portal || {}), [u]: agoraISO()}; salvarVisto(); }
+  catch (err) { t.value = texto; falhaEscrita(err); }
+  btn.disabled = false;
+}, true);
+
 /* ---------- Render ---------- */
 function render(){
   renderTabs(); renderStatus();
@@ -2982,6 +3082,7 @@ function render(){
   if (f && v.contains(f) && (f.tagName === "INPUT" || f.tagName === "TEXTAREA")) { f.focus(); try { f.setSelectionRange(pos, pos); } catch {} }
   if (S.tab === "conversas") {
     if (S.convSel === "equipe") { const ult = muralMsgs().slice(-1)[0]; if (ult && ult.em > (S.visto.mural || "")) { S.visto.mural = ult.em; salvarVisto(); renderTabs(); } }
+    else if (String(S.convSel).startsWith("portal:")) { const p = S.portais.find(x => "portal:" + x.usuario === S.convSel); const ult = (p?.msgs || []).slice(-1)[0]; if (ult && ult.em > (S.visto.portal?.[p.usuario] || "")) { S.visto.portal = {...(S.visto.portal || {}), [p.usuario]: ult.em}; salvarVisto(); renderTabs(); } }
     else { const d = S.demandas.find(x => x.id === S.convSel); if (d && temNovidade(d)) { marcarVistoDemanda(d.id); renderTabs(); } }
     const c = $("#cv-chat"); if (c) c.scrollTop = (!mesmo || cvFim) ? c.scrollHeight : cvTop;
   }
@@ -3107,11 +3208,13 @@ render();
   if (S.finAcesso && user?.equipe) $("#btnEquipe").hidden = false;
   let prontos = 0; const pronto = () => { if (++prontos >= 2 && !S.conectado) { S.conectado = true; setTimeout(() => mostrarBoasVindas(), 700); } render(); };
   const onErr = err => { if (err.code === "revoked") S.erro = "O acesso a este painel mudou. Recarregue a página."; else S.erro = "A conexão com o banco caiu. Recarregue a página."; render(); };
-  db.collection("demandas").onSnapshot(s => { S.demandas = s.docs.map(d => ({id: d.id, ...d.data()})); pronto(); }, onErr);
+  db.collection("demandas").onSnapshot(s => { const antes = S.demandas.length; S.demandas = s.docs.map(d => ({id: d.id, ...d.data()})); if (antes && antes !== S.demandas.length) carregarAcessos(); pronto(); }, onErr);
   db.collection("registros").orderBy("data", "desc").limit(800).onSnapshot(s => { S.registros = s.docs.map(d => ({id: d.id, ...d.data()})); pronto(); }, onErr);
   db.collection("mural").orderBy("data", "desc").limit(120).onSnapshot(s => { S.mural = s.docs.map(d => ({id: d.id, ...d.data()})); render(); }, () => {});
   db.collection("agenda").onSnapshot(s => { S.agenda = s.docs.map(d => ({id: d.id, ...d.data()})); render(); }, () => {});
   db.collection("expediente").orderBy("data", "desc").limit(400).onSnapshot(s => { S.expediente = s.docs.map(d => ({id: d.id, ...d.data()})); renderStatus(); if (S.tab === "produtividade") render(); }, () => {});
+  db.collection("portal").onSnapshot(s => { S.portais = s.docs.map(d => ({id: d.id, ...d.data()})); renderTabs(); if (["conversas", "clientes", "inicio"].includes(S.tab)) render(); }, () => {});
+  carregarAcessos();
   db.doc("config/anotacoes").onSnapshot(s => { S.anotacoes = s.exists ? s.data() : {}; if (S.tab === "inicio" && !S.anotEditando) render(); }, () => {});
   db.doc("config/equipe").onSnapshot(s => { S.config = s.exists ? {emails: {}, ...s.data()} : {emails: {}}; if (S.tab !== "agenda") render(); }, () => {});
   if (S.finAcesso) S.finCol.onSnapshot(s => { S.fin = Object.fromEntries(s.docs.map(d => [d.id, d.data()])); render(); }, () => {});
