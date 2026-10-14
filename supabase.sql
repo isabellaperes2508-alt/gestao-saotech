@@ -82,3 +82,10 @@ on conflict (email) do update set pessoa = excluded.pessoa, nome = excluded.nome
 insert into public.docs (path, col, data) values
   ('config/equipe', 'config', '{"emails":{"moises-bruno":"moisesbrunos@hotmail.com","isabella-cleto":"isabellaperes2508@gmail.com","joao-marcos":"joaomarcospds16@gmail.com","moises-junior":"moisesjuniortma@gmail.com"}}')
 on conflict (path) do nothing;
+
+-- 8) Permissões de acesso às tabelas (necessário em projetos novos do Supabase)
+grant usage on schema public to anon, authenticated;
+grant select on public.equipe to authenticated;
+grant select, insert, update, delete on public.docs to authenticated;
+grant execute on function public.e_membro() to authenticated;
+grant execute on function public.e_admin() to authenticated;

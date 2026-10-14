@@ -45,7 +45,8 @@
     const {data: membro, error} = await sb.from("equipe").select("*").eq("email", email).maybeSingle();
     if (error || !membro) {
       await sb.auth.signOut();
-      mostrarLogin(error ? "Não foi possível verificar seu cadastro. Tente de novo." : `O e-mail ${email} não está cadastrado na equipe. Peça à administração para incluir.`);
+      const det = error ? ` (${[error.code, error.message].filter(Boolean).join(": ")})` : "";
+      mostrarLogin(error ? (/equipe|relation|schema cache|PGRST205|42P01/i.test(det) ? "O banco ainda não foi preparado: rode o arquivo supabase.sql no SQL Editor do Supabase." + det : "Não foi possível verificar seu cadastro." + det) : `O e-mail ${email} não está cadastrado na equipe. Peça à administração para incluir.`);
       return;
     }
     entrou = true; esconderLogin();
