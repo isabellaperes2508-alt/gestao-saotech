@@ -234,9 +234,10 @@
   const BUCKET = "anexos";
   const urls = new Map(); // id -> {url, ate}
   const assets = {
-    async upload(file){
+    async upload(file, opts){
       const nome = (file.name || "arquivo").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^\w.\-]+/g, "_").slice(-80);
-      const id = `${new Date().toISOString().slice(0, 7)}/${rid()}-${nome}`;
+      const pasta = opts && opts.pasta ? String(opts.pasta).replace(/[^\w.\-/]+/g, "").replace(/\/+$/, "") : new Date().toISOString().slice(0, 7);
+      const id = `${pasta}/${rid()}-${nome}`;
       const tipo = file.type || "application/octet-stream";
       if (file.size > 20 * 1024 * 1024) throw {code: "too_large", message: "Arquivo maior que 20 MB"};
       const {error} = await sb.storage.from(BUCKET).upload(id, file, {contentType: tipo, upsert: false});
@@ -279,7 +280,8 @@
         async equipe(){ const {data, error} = await sb.from("equipe").select("email,pessoa,nome,admin,perfil").order("nome"); if (error) throw erroDb(error); return data || []; },
         async portalAcessos(){ const {data, error} = await sb.from("clientes_acesso").select("usuario,nome,demandas"); if (error) throw erroDb(error); return data || []; },
         async criarAcessoCliente(demanda, usuario){ const {data, error} = await sb.rpc("garantir_acesso_cliente", {p_demanda: demanda, p_usuario: usuario || null}); if (error) throw erroDb(error); return data; },
-        async responderCliente(usuario, texto){ const {data, error} = await sb.rpc("portal_responder", {p_usuario: usuario, p_texto: texto}); if (error) throw erroDb(error); return data; },
+        async responderCliente(usuario, texto, anexos){ const {data, error} = await sb.rpc("portal_resposta", {p_usuario: usuario, p_texto: texto || "", p_anexos: anexos || []}); if (error) throw erroDb(error); return data; },
+        async agendarCliente(usuario, acao, ag){ const {data, error} = await sb.rpc("portal_agendar", {p_usuario: usuario, p_acao: acao, p_ag: ag}); if (error) throw {code: "upstream_error", message: error.message}; return data; },
         async definirPerfil(email, perfil){ const {error} = await sb.from("equipe").update({perfil, admin: perfil === "admin"}).eq("email", email); if (error) throw erroDb(error); },
         id: async () => session.user.id, name: async () => membro.nome, pessoa: () => membro.pessoa,
         me: async () => ({id: session.user.id, name: membro.nome, email: membro.email})

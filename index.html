@@ -698,6 +698,28 @@ body.modo-portal #bv{display:none}
 @media (max-width:640px){.acesso-dados{grid-template-columns:minmax(0,1fr)}}
 .msg.cli .bubble{background:var(--lima);color:var(--musgo)} .msg.cli .av{background:var(--lima);color:var(--musgo)}
 .portal-chat .conv-h .label{color:var(--accent)}
+/* agendamentos no chat */
+.ag-ev{font-size:12px;color:var(--muted);text-align:center;padding:2px 8px}
+.ag-ev span{font-weight:600;color:var(--ink-2)}
+.ag-card{align-self:center;width:min(420px,100%);background:var(--surface);border:1px solid var(--line-2);border-left:4px solid var(--accent);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;font-size:13.5px;box-shadow:var(--shadow)}
+.ag-card.ag-confirmado{border-left-color:var(--good)} .ag-card.ag-cancelado{border-left-color:var(--crit);opacity:.8} .ag-card.ag-remarcacao,.ag-card.ag-solicitado{border-left-color:var(--warn)}
+.ag-top{display:flex;align-items:center;gap:8px}
+.ag-top b{font-family:var(--f-display);font-size:15px;flex:1}
+.ag-st{font-size:11.5px;font-weight:600;border-radius:999px;padding:2px 9px;background:var(--surface-2)}
+.ag-st.ok{background:var(--good-soft);color:var(--good)} .ag-st.warn{background:var(--warn-soft);color:var(--warn)} .ag-st.crit{background:var(--crit-soft);color:var(--crit)}
+.ag-quando{} .ag-quando b{font-size:15px}
+.ag-local{color:var(--ink-2)} .ag-obs{color:var(--ink-2);font-style:italic} .ag-motivo{color:var(--warn);font-size:12.5px} .ag-espera{font-size:12.5px;color:var(--muted)}
+.ag-acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.ag-hist{font-size:12px;color:var(--ink-2)} .ag-hist summary{cursor:pointer;color:var(--accent)} .ag-hist ul{margin:6px 0 0;padding-left:18px} .ag-hist li span{color:var(--muted)}
+.ag-wrap{border-top:1px solid var(--line);padding-top:10px;margin-top:8px}
+.ag-form{display:flex;flex-direction:column;gap:10px;background:var(--accent-soft);border-radius:12px;padding:12px}
+.ag-form>b{font-family:var(--f-display);font-size:15px}
+.ag-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.ag-locais{border:0;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px}
+.ag-locais legend{font-size:12.5px;color:var(--ink-2);margin-bottom:4px;padding:0}
+.ag-locais label{display:flex;align-items:center;gap:5px} .ag-locais input{width:auto;accent-color:var(--accent)}
+.ag-erro{background:var(--crit-soft);color:var(--crit);border-radius:8px;padding:6px 10px;margin:0 0 8px;font-size:13px}
+.pt-chatbox .ag-wrap{max-height:none}
 </style>
 
 
@@ -2413,7 +2435,7 @@ function viewConversas(){
       </button>
       ${S.portais.length ? `<div class="label" style="padding:12px 12px 4px">Clientes · portal</div>${S.portais.filter(p => !q || (p.nome || "").toLowerCase().includes(q)).sort((a, b) => ((b.msgs || []).slice(-1)[0]?.em || "") > ((a.msgs || []).slice(-1)[0]?.em || "") ? 1 : -1).map(p => { const ult = (p.msgs || []).slice(-1)[0]; const sel = S.convSel === "portal:" + p.usuario; return `<button type="button" class="side-it" data-conv="portal:${esc(p.usuario)}" aria-current="${sel}">
         <span class="r1"><b>${esc(p.nome)}</b>${portalNovas(p) && !sel ? `<span class="ndot" title="Mensagem nova do cliente"></span>` : ult ? `<span class="sub">${fmtCurto(ult.em)}</span>` : ""}</span>
-        <span class="prev">${ult ? esc((ult.de === "cliente" ? "Cliente: " : primeiro(ult.de) + ": ") + ult.texto) : "@" + esc(p.usuario) + " · sem mensagens"}</span></button>`; }).join("")}` : ""}
+        <span class="prev">${ult ? esc((ult.de === "cliente" ? "Cliente: " : primeiro(ult.de) + ": ") + (ult.texto || "📎 arquivo")) : "@" + esc(p.usuario) + " · sem mensagens"}</span></button>`; }).join("")}` : ""}
       <div class="label" style="padding:12px 12px 4px">Conversa interna por processo</div>
       ${dems.map(d => { const nov = temNovidade(d) && d.id !== S.convSel; return `<button type="button" class="side-it" data-conv="${d.id}" aria-current="${S.convSel === d.id}">
         <span class="r1"><b>${esc(d.cliente)}</b>${nov ? `<span class="ndot" title="Mensagem nova"></span>` : d.ultimaMsg ? `<span class="sub">${fmtCurto(d.ultimaMsg.em)}</span>` : ""}</span>
@@ -2425,8 +2447,9 @@ function viewConversas(){
     const dems = (p?.demandas || []).map(id => S.demandas.find(d => d.id === id)).filter(Boolean);
     main = p ? `<section class="card chatbox portal-chat"><div class="conv-h"><div><span class="label">Portal do cliente · @${esc(p.usuario)} · o cliente vê esta conversa</span><h3>${esc(p.nome)}</h3></div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">${dems.map(d => `<button type="button" class="btn sm" data-proc="${d.id}">${esc(d.codigo)}</button>`).join("")}</div></div>
-      <div class="chat" id="cv-chat">${portalChatHtml(p.msgs || [])}</div>
-      <form class="composer" data-composer="pt"><textarea id="pt-txt" rows="2" placeholder="Responder ao cliente (ele verá esta mensagem no portal)"></textarea><div class="row2"><span class="pend sub">Mensagem visível para o cliente</span><button class="btn primary" style="margin-left:auto">Enviar ao cliente</button></div></form></section>`
+      <div class="chat" id="cv-chat">${portalChatHtml(p.msgs || [], p.agendamentos || [])}</div>
+      ${S.agForm && S.agForm.u === p.usuario ? `<div class="ag-wrap">${S.agErro ? `<p class="ag-erro">${esc(S.agErro)}</p>` : ""}${SaotechAg.formHtml(S.agForm.modo, (p.agendamentos || []).find(a => a.id === S.agForm.id), dems.map(d => ({id: d.id, codigo: d.codigo, rotulo: (d.servicos || [])[0] || d.cliente})))}</div>` : ""}
+      <form class="composer" data-composer="pt"><textarea id="pt-txt" rows="2" placeholder="Responder ao cliente (ele verá esta mensagem no portal)"></textarea><div class="row2"><label class="filebtn">${ICON.clip} Foto ou documento<input type="file" id="pt-file" multiple accept="image/*,application/pdf"></label><button type="button" class="btn sm lima" data-agnovo="${esc(p.usuario)}">📅 Agendar</button><span class="pend sub" id="pt-pend">Visível para o cliente</span><button class="btn primary" style="margin-left:auto">Enviar ao cliente</button></div></form></section>`
       : `<section class="card empty">Carregando conversa…</section>`;
   } else if (S.convSel === "equipe") {
     main = `<section class="card chatbox"><div class="conv-h"><div><span class="label">Toda a equipe</span><h3>Equipe · geral</h3></div><div class="avs">${PESSOAS.map(p => `<span class="av" title="${esc(p.nome)}">${esc(p.ini)}</span>`).join("")}</div></div>
@@ -3038,13 +3061,20 @@ function acessoCardHtml(d){
       <button type="button" class="btn sm" data-conv="portal:${esc(a.usuario)}">Conversa com o cliente</button>
     </div></div>`;
 }
-function portalChatHtml(msgs){
+function portalChatHtml(msgs, ags){
+  const ult = window.SaotechAg ? SaotechAg.ultimasPorAg(msgs) : {};
   let dia = "", h = "";
   for (const m of msgs) {
     const dd = new Date(m.em).toLocaleDateString("sv-SE");
     if (dd !== dia) { dia = dd; h += `<div class="chat-day">${dd === hoje() ? "Hoje" : dd === addDias(hoje(), -1) ? "Ontem" : esc(fmtDia(dd))}</div>`; }
     const cli = m.de === "cliente";
-    h += `<div class="msg ${!cli && m.de === S.me ? "me" : ""} ${cli ? "cli" : ""}"><span class="av">${cli ? "CL" : esc(pessoa(m.de).ini)}</span><div class="bubble"><div class="h"><b>${cli ? "Cliente" : esc(primeiro(m.de))}</b><span>${fmtHora(m.em)}</span></div><div class="tx">${esc(m.texto)}</div></div></div>`;
+    if (m.tipo === "agendamento") {
+      const ag = (ags || []).find(a => a.id === m.ag);
+      h += `<div class="ag-ev"><span>${cli ? "Cliente" : esc(primeiro(m.de))} · ${fmtHora(m.em)}</span> ${esc(m.texto)}</div>`;
+      if (ag && ult[ag.id] === m.id && window.SaotechAg) h += SaotechAg.cardHtml(ag, "equipe");
+      continue;
+    }
+    h += `<div class="msg ${!cli && m.de === S.me ? "me" : ""} ${cli ? "cli" : ""}"><span class="av">${cli ? "CL" : esc(pessoa(m.de).ini)}</span><div class="bubble"><div class="h"><b>${cli ? "Cliente" : esc(primeiro(m.de))}</b><span>${fmtHora(m.em)}</span></div>${m.texto ? `<div class="tx">${esc(m.texto)}</div>` : ""}${attsHtml(m.anexos)}</div></div>`;
   }
   return h || `<p class="muted" style="text-align:center">Nenhuma mensagem ainda. O que você escrever aqui aparece no portal do cliente.</p>`;
 }
@@ -3057,11 +3087,41 @@ document.addEventListener("click", async e => {
 }, true);
 document.addEventListener("submit", async e => {
   const f = e.target.closest('[data-composer="pt"]'); if (!f) return; e.preventDefault(); e.stopImmediatePropagation();
-  const u = S.convSel.slice(7); const t = $("#pt-txt"); const texto = t.value.trim(); if (!texto) return;
+  const u = S.convSel.slice(7); const t = $("#pt-txt"); const fileEl = $("#pt-file"); const texto = t.value.trim(); const files = fileEl?.files || [];
+  if (!texto && !files.length) return;
   const btn = f.querySelector(".btn.primary"); btn.disabled = true; t.value = "";
-  try { await S.user.responderCliente(u, texto); S.visto.portal = {...(S.visto.portal || {}), [u]: agoraISO()}; salvarVisto(); }
+  const anexos = [];
+  for (const [i, f0] of [...files].entries()) {
+    $("#pt-pend") && ($("#pt-pend").textContent = `Enviando ${i + 1} de ${files.length}…`);
+    const arq = await prepararArquivo(f0);
+    try { const r = await S.assets.upload(arq, {pasta: "portal/" + u}); anexos.push({id: r.id, nome: f0.name, tipo: r.contentType}); } catch (err) { toast(`${f0.name}: não foi possível enviar`); }
+  }
+  if (fileEl) fileEl.value = "";
+  if (!texto && !anexos.length) { btn.disabled = false; return; }
+  try { await S.user.responderCliente(u, texto, anexos); S.visto.portal = {...(S.visto.portal || {}), [u]: agoraISO()}; salvarVisto(); }
   catch (err) { t.value = texto; falhaEscrita(err); }
   btn.disabled = false;
+}, true);
+
+/* ---------- v11: agendamentos no chat do portal (lado da equipe) ---------- */
+function capturarAgForm(v){ const f = v.querySelector(".ag-form"); return f ? Object.fromEntries(new FormData(f)) : null; }
+function restaurarAgForm(v, vals){ const f = v.querySelector(".ag-form"); if (!f || !vals) return; for (const [k, val] of Object.entries(vals)) { const inp = f.elements[k]; if (!inp) continue; if (inp instanceof RadioNodeList) [...inp].forEach(r => r.checked = r.value === val); else inp.value = val; } }
+document.addEventListener("click", async e => {
+  const nv = e.target.closest("[data-agnovo]");
+  if (nv) { e.stopPropagation(); S.agForm = {modo: "novo", u: nv.dataset.agnovo}; S.agErro = ""; render(); document.querySelector("#view .ag-form")?.scrollIntoView({behavior: "smooth", block: "center"}); return; }
+  if (!document.getElementById("view")?.contains(e.target)) return;
+  if (e.target.closest("[data-agfechar]")) { e.stopPropagation(); S.agForm = null; S.agErro = ""; render(); return; }
+  const ac = e.target.closest("[data-agacao]"); if (!ac) return; e.stopPropagation();
+  const u = String(S.convSel).slice(7); const acao = ac.dataset.agacao, id = ac.dataset.agid;
+  if (acao === "confirmar") { ac.disabled = true; try { await S.user.agendarCliente(u, "confirmar", {id}); toast("Agendamento confirmado e incluído na Agenda de campo"); } catch (err) { toast(err.message || "Não foi possível confirmar"); ac.disabled = false; } return; }
+  S.agForm = {modo: acao, id, u}; S.agErro = ""; render(); document.querySelector("#view .ag-form")?.scrollIntoView({behavior: "smooth", block: "center"});
+}, true);
+document.addEventListener("submit", async e => {
+  const f = e.target.closest("#view .ag-form"); if (!f) return; e.preventDefault(); e.stopImmediatePropagation();
+  const r = SaotechAg.lerForm(f); if (r.erro) { S.agErro = r.erro; render(); return; }
+  const btn = f.querySelector(".btn.primary, .btn.danger"); if (btn) btn.disabled = true;
+  try { await S.user.agendarCliente(S.agForm?.u || String(S.convSel).slice(7), r.acao, r.ag); S.agForm = null; S.agErro = ""; toast(r.acao === "solicitar" ? "Solicitação enviada ao cliente" : r.acao === "remarcar" ? "Nova proposta enviada" : "Agendamento cancelado"); render(); }
+  catch (err) { S.agErro = err.message || "Não foi possível enviar"; render(); }
 }, true);
 
 /* ---------- Render ---------- */
@@ -3075,6 +3135,7 @@ function render(){
   const ctx = S.tab + "|" + (S.tab === "conversas" ? S.convSel : S.tab === "clientes" ? S.cliSel : "");
   const mesmo = v.dataset.ctx === ctx; v.dataset.ctx = ctx; v.dataset.tab = S.tab;
   const nomeBrand = document.querySelector(".brand p"); if (nomeBrand) nomeBrand.textContent = `${saudacao()}, ${primeiro(S.me)} · ${capital(fmtDia(hoje()))}`;
+  const agVals = capturarAgForm(v);
   v.innerHTML = S.tab === "inicio" ? viewInicio() : S.tab === "clientes" ? viewClientes() : S.tab === "conversas" ? viewConversas() : S.tab === "galeria" ? viewGaleria() : S.tab === "mapa" ? viewMapa() : S.tab === "historico" ? viewHistorico() : S.tab === "registro" ? viewRegistro() : S.tab === "produtividade" ? viewProdutividade() : S.tab === "financeiro" ? viewFinanceiro() : S.tab === "agenda" ? viewAgenda() : viewDemandas();
   if (mesmo) for (const [id, val] of Object.entries(keep)) { if (["busca","fResp","pPessoa","pDias","r-pessoa","g-dem","g-pes","cl-busca","cv-busca","aud-pessoa","aud-tipo","aud-dias","aud-busca"].includes(id)) continue; const el = document.getElementById(id); if (!el || !v.contains(el)) continue; if (el.type === "checkbox") el.checked = val; else if (el.tagName !== "SELECT" || [...el.options].some(o => o.value === val)) el.value = val; }
   if (mesmo && fileSel?.length) { const fi = v.querySelector("#mu-file"); try { fi.files = fileSel; } catch {} }
@@ -3086,6 +3147,7 @@ function render(){
     else { const d = S.demandas.find(x => x.id === S.convSel); if (d && temNovidade(d)) { marcarVistoDemanda(d.id); renderTabs(); } }
     const c = $("#cv-chat"); if (c) c.scrollTop = (!mesmo || cvFim) ? c.scrollHeight : cvTop;
   }
+  restaurarAgForm(v, agVals);
   renderDlgPanes();
   montarMapas();
 }
