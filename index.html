@@ -497,6 +497,7 @@ nav.tabs button[aria-selected="true"] .badge{background:var(--lima);color:var(--
 .tl-it.futuro::before{left:-16px}
 .tl-it time{font-size:11.5px;color:var(--muted)}
 .tl-it .atts a.img{width:84px;height:64px}
+.notas a{color:var(--accent);word-break:break-all}
 .notas{white-space:pre-wrap;font-size:13px;color:var(--ink-2);max-height:320px;overflow:auto}
 /* conversas */
 .conv .chatbox{display:flex;flex-direction:column}
@@ -695,7 +696,7 @@ const isImg = t => /^image\//.test(t || "");
 /* ---------- Estado ---------- */
 const S = {
   db: null, assets: null, mcp: null, conectado: false, erro: null,
-  demandas: [], fin: {}, registros: [], mural: [], agenda: [], expediente: [], config: {emails: {}},
+  demandas: [], fin: {}, registros: [], mural: [], agenda: [], expediente: [], config: {emails: {}}, anotacoes: {}, anotEditando: false,
   finAcesso: false, contaMoises: false, podeLimpar: false, somenteLeitura: false, finCol: null,
   me: ls.get("sao.me", null),
   tab: (t => t === "equipe" ? "conversas" : t)(ls.get("sao.tab", "inicio")),
@@ -1216,6 +1217,7 @@ function modelosCliente(d){
     : `Olá, ${nome}! Aqui é ${eu}, da Saotech Geotecnologia.\n\nGostaríamos de agendar o levantamento de campo${d.imovel ? " no imóvel " + d.imovel : ""}. Qual o melhor dia para você nesta ou na próxima semana?`});
   out.push({k: "entrada", t: "Entrada para início", txt: `Olá, ${nome}! Aqui é ${eu}, da Saotech Geotecnologia.\n\nObrigado por aprovar a proposta do ${serv}.${S.podeFin && f?.entradaValor ? ` O valor da entrada é ${brl(f.entradaValor)}${ent?.venc ? `, com vencimento em ${fmtData(ent.venc)}` : ""}.` : ""} Assim que confirmarmos o pagamento da entrada, agendamos o trabalho de campo.\n\nSe precisar dos dados para pagamento, é só pedir.`});
   if (d.protocoloOrgao || d.protocoloNumero) out.push({k: "prot", t: "Protocolo realizado", txt: `Olá, ${nome}! Aqui é ${eu}, da Saotech Geotecnologia.\n\nO processo foi protocolado${d.protocoloOrgao ? " no " + d.protocoloOrgao : ""}${d.protocoloNumero ? ", sob o nº " + d.protocoloNumero : ""}.${d.protocoloPrevisao ? ` A previsão de retorno é ${fmtData(d.protocoloPrevisao)}.` : ""} Avisaremos assim que houver novidade.`});
+  out.push({k: "conf", t: "Documentos para confrontantes", txt: `Olá! Aqui é ${eu}, da Saotech Geotecnologia.\n\nEstamos fazendo o levantamento do imóvel vizinho${d.imovel ? " (" + d.imovel + ")" : ""} e precisamos de algumas documentações básicas pessoais do senhor e de sua propriedade, caso tenha:\n\nPessoais: CPF, RG, certidão de casamento (caso seja casado), certidão de óbito (caso seja viúvo) e endereço de residência.\n\nPropriedade: certidão de inteiro teor mais atual (número da matrícula, CCIR e ITR), levantamento topográfico georreferenciado e certificação no SIGEF.\n\nPode enviar foto ou PDF por aqui mesmo. Obrigado!`});
   out.push({k: "fim", t: "Serviço concluído", txt: `Olá, ${nome}! Aqui é ${eu}, da Saotech Geotecnologia.\n\nO ${serv} foi concluído. Vamos te enviar os arquivos e documentos finais. Obrigado pela confiança!`});
   return out;
 }
@@ -1688,6 +1690,14 @@ function expedienteStats(pessoaId, dias){
 
 /* ---------- v5: saudação, boas-vindas, início, clientes, conversas e galeria ---------- */
 function saudacao(d = new Date()){ const h = d.getHours(); return h < 5 ? "Boa noite" : h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite"; }
+const linkify = t => esc(t).replace(/(https?:\/\/[^\s<]+[^\s<.,;:)])/g, '<a href="$1" target="_blank" rel="noopener">$1</a>').replace(/([\w.+-]+@[\w-]+\.[\w.]+)/g, '<a href="mailto:$1">$1</a>');
+document.addEventListener("click", async e => {
+  if (e.target.id === "anot-ed") { S.anotEditando = !S.anotEditando; render(); return; }
+  if (e.target.id !== "anot-salvar") return;
+  const texto = $("#anot-txt").value; e.target.disabled = true;
+  try { await S.db.doc("config/anotacoes").set({texto, atualizadoEm: agoraISO(), atualizadoPor: S.me}); S.anotEditando = false; toast("Anotações salvas"); render(); }
+  catch (err) { falhaEscrita(err); e.target.disabled = false; }
+});
 const capital = t => t ? t.charAt(0).toUpperCase() + t.slice(1) : "";
 const fmtCurto = ts => { const d = new Date(ts).toLocaleDateString("sv-SE"); return d === hoje() ? fmtHora(ts) : d === addDias(hoje(), -1) ? "ontem" : fmtDM(d); };
 const corta = (t, n = 120) => { t = String(t || ""); return t.length > n ? t.slice(0, n - 1) + "…" : t; };
@@ -1818,6 +1828,10 @@ function viewInicio(){
     <div class="card"><h3>Mensagens novas</h3>${msgHtml || vazio("Você está em dia com as conversas.")}</div>
     <div class="card"><h3>Documentos aguardando cliente</h3>${docHtml || vazio("Nenhum documento pendente de cliente.")}</div>
     <div class="card span2"><h3>Movimentações recentes</h3>${movHtml || vazio("Aqui aparecem as mudanças feitas nas demandas.")}</div>
+    <div class="card span2" id="anot"><div class="conv-h"><h3>Anotações e contatos úteis</h3>${S.somenteLeitura ? "" : `<button type="button" class="btn sm" id="anot-ed">${S.anotEditando ? "Cancelar" : "Editar"}</button>`}</div>
+      ${S.anotEditando ? `<textarea id="anot-txt" rows="14" style="width:100%">${esc(S.anotacoes.texto || "")}</textarea><div style="display:flex;justify-content:flex-end;margin-top:8px"><button type="button" class="btn primary" id="anot-salvar">Salvar anotações</button></div>`
+        : S.anotacoes.texto ? `<div class="notas anot">${linkify(S.anotacoes.texto)}</div>` : vazio("Telefones de cartórios, contatos de órgãos, links e lembretes fixos da equipe ficam aqui.")}
+    </div>
   </div>`;
 }
 
@@ -2219,6 +2233,7 @@ render();
   db.collection("mural").orderBy("data", "desc").limit(120).onSnapshot(s => { S.mural = s.docs.map(d => ({id: d.id, ...d.data()})); render(); }, () => {});
   db.collection("agenda").onSnapshot(s => { S.agenda = s.docs.map(d => ({id: d.id, ...d.data()})); render(); }, () => {});
   db.collection("expediente").orderBy("data", "desc").limit(400).onSnapshot(s => { S.expediente = s.docs.map(d => ({id: d.id, ...d.data()})); renderStatus(); if (S.tab === "produtividade") render(); }, () => {});
+  db.doc("config/anotacoes").onSnapshot(s => { S.anotacoes = s.exists ? s.data() : {}; if (S.tab === "inicio" && !S.anotEditando) render(); }, () => {});
   db.doc("config/equipe").onSnapshot(s => { S.config = s.exists ? {emails: {}, ...s.data()} : {emails: {}}; if (S.tab !== "agenda") render(); }, () => {});
   if (S.finAcesso) S.finCol.onSnapshot(s => { S.fin = Object.fromEntries(s.docs.map(d => [d.id, d.data()])); render(); }, () => {});
 })();
