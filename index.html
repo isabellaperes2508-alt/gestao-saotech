@@ -458,6 +458,23 @@ body.sem-login .wrap{visibility:hidden}
 <script src="config.js"></script>
 <script src="backend.js"></script>
 <script>
+/* Mostra erros inesperados na tela para facilitar o suporte */
+(function(){
+  function aviso(msg){
+    try {
+      let el = document.getElementById("erro-tecnico");
+      if (!el) { el = document.createElement("div"); el.id = "erro-tecnico"; el.setAttribute("role", "alert");
+        el.style.cssText = "position:fixed;left:12px;right:12px;bottom:12px;z-index:300;background:#FBEDE7;color:#3A3F28;border:1px solid #BC5A3E;border-radius:10px;padding:10px 14px;font:13px/1.4 Poppins,Arial,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.15)";
+        document.body.appendChild(el); }
+      el.textContent = "Erro técnico (envie um print para o suporte): " + msg;
+    } catch {}
+  }
+  window.addEventListener("error", e => aviso((e.message || "erro") + (e.lineno ? " · linha " + e.lineno : "")));
+  window.addEventListener("unhandledrejection", e => aviso(String(e.reason && (e.reason.message || e.reason.code) || e.reason)));
+  window.__avisoErro = aviso;
+})();
+</script>
+<script>
 /* ---------- Constantes do negócio ---------- */
 const PESSOAS = [
   {id:"moises-bruno", nome:"Moisés Bruno", ini:"MB", papel:"Agrimensor · direção"},
@@ -1649,7 +1666,7 @@ function toast(msg){ const t = document.createElement("div"); t.className = "toa
 function falhaEscrita(err){
   if (err?.code === "invalid_argument") { S.somenteLeitura = true; toast("Seu usuário não tem permissão para isso. Peça à administração para conferir seu cadastro na equipe."); render(); }
   else if (err?.code === "quota_exceeded") toast("O banco atingiu o limite de registros. Apague exemplos ou registros antigos.");
-  else toast("Não foi possível salvar agora. Tente de novo em instantes.");
+  else toast("Não foi possível salvar agora. Tente de novo em instantes." + (err?.message ? " (" + err.message + ")" : ""));
 }
 
 /* ---------- Conexão ---------- */
