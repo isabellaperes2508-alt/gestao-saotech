@@ -601,6 +601,83 @@ a.comp .ic{width:13px;height:13px}
   .mini-pipe{display:flex;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
   .mini-pipe button{flex:0 0 112px}
 }
+/* v9 */
+.grafico{width:100%;height:auto;display:block}
+.grafico .g-rec{fill:var(--musgo)} .grafico .g-prev{fill:#B9C08F} .grafico .g-atr{fill:var(--crit)}
+.grafico .g-ax{stroke:var(--line-2)} .grafico .g-sep{stroke:var(--line-2);stroke-dasharray:4 4}
+.grafico text{font-family:var(--f-body);fill:var(--ink-2)} .grafico .g-x{font-size:12px;text-anchor:middle} .grafico .g-x.cur{font-weight:700;fill:var(--musgo)}
+.grafico .g-v{font-size:10.5px;text-anchor:middle;fill:var(--ink)} .grafico .g-lbl{font-size:10.5px;fill:var(--muted)}
+.g-leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--ink-2);margin-top:8px}
+.g-leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.g-leg .g-rec{background:var(--musgo)} .g-leg .g-prev{background:#B9C08F} .g-leg .g-atr{background:var(--crit)} .g-leg .g-conf{background:none;border-top:2px dashed #C9CF3A;height:0;width:14px;border-radius:0}
+.fin-pg>div:last-child{gap:4px}
+.chk-line{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13.5px}
+.chk-line input{width:auto;accent-color:var(--accent)}
+.fin-row .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+/* recibo */
+.recibo{background:#fff;color:#2E3319;border:1px solid var(--line-2);border-radius:12px;padding:28px 30px;font-size:14px;line-height:1.6;max-width:720px;margin:0 auto}
+.rc-top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #2E3319;padding-bottom:14px;margin-bottom:16px}
+.rc-top img{height:42px}
+.rc-t{font-family:var(--f-display);font-weight:700;font-size:24px;letter-spacing:.12em;text-align:right}
+.rc-n{font-size:12px;color:#656B51;text-align:right}
+.rc-valor{font-family:var(--f-display);font-size:30px;font-weight:700;background:#F7F7DC;border-radius:10px;padding:8px 14px;display:inline-block;margin-bottom:12px}
+.rc-tab{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+.rc-tab td{border-top:1px solid #EAEBDA;padding:7px 4px}.rc-tab td:first-child{color:#656B51;width:42%}
+.rc-data{text-align:right;margin-top:18px}
+.rc-ass{display:flex;flex-direction:column;align-items:center;margin-top:44px;gap:2px}
+.rc-linha{width:260px;max-width:80%;border-top:1px solid #2E3319;margin-bottom:6px}
+.rc-ass span{font-size:12px;color:#656B51}
+@media print{
+  @page{size:A4;margin:16mm}
+  body.imprimindo>*:not(#dlg){display:none!important}
+  body.imprimindo #dlg{position:static;box-shadow:none;width:auto;max-height:none;border:0;padding:0;background:#fff}
+  body.imprimindo #dlg::backdrop{display:none}
+  body.imprimindo #dlg>*:not(.dlg-b){display:none!important}
+  body.imprimindo #dlg .dlg-b{padding:0;overflow:visible}
+  body.imprimindo .recibo{border:0;padding:0;max-width:none}
+}
+/* pré-visualização */
+dialog.prev{width:min(1100px,calc(100vw - 16px));height:calc(100dvh - 24px);display:flex;flex-direction:column}
+dialog.prev:not([open]){display:none}
+.prev-h{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;color:var(--creme);flex-wrap:wrap}
+.prev-h b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1}
+.prev-b{flex:1;min-height:0;background:#1F2310;display:grid;place-items:center}
+.prev-b iframe{width:100%;height:100%;border:0;background:#fff}
+.prev-b img{max-width:100%;max-height:100%;object-fit:contain}
+/* perfis */
+.perfil-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+.perfil-row:first-child{border-top:0}
+.perfil-row select{flex:0 1 330px;min-width:0}
+/* histórico */
+.aud-dia{font-family:var(--f-display);font-weight:600;font-size:14px;margin:14px 0 4px;color:var(--musgo)}
+.aud-dia:first-child{margin-top:0}
+.aud-it{display:grid;grid-template-columns:48px auto minmax(0,1fr);gap:10px;align-items:baseline;padding:6px 0;border-top:1px solid var(--line);font-size:13px}
+.aud-it time{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+.aud-it a{color:var(--accent)}
+.chip.aud-financeiro{background:var(--musgo);color:var(--lima);border-color:var(--musgo)}
+.chip.aud-agenda{background:var(--accent-soft);color:var(--accent)}
+@media (max-width:640px){.aud-it{grid-template-columns:44px minmax(0,1fr)}.aud-it .chip{display:none}}
+/* busca */
+dialog.busca .gb-top{display:flex;gap:8px;padding:12px 14px;background:var(--musgo)}
+dialog.busca .gb-top input{flex:1;font-size:16px;background:var(--musgo-2);border-color:var(--musgo-line);color:var(--creme)}
+dialog.busca .gb-top input::placeholder{color:var(--creme-2)}
+dialog.busca .gb-top .btn.ghost{color:var(--creme)}
+.gb-tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{border:1px solid var(--line-2);background:var(--surface);border-radius:999px;padding:5px 10px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink-2)}
+.tag span{font-weight:600;color:var(--muted);margin-left:2px}
+.tag.on{background:var(--musgo);border-color:var(--musgo);color:var(--creme)} .tag.on span{color:var(--lima)}
+.gb-it .t{display:flex;flex-direction:column;gap:2px;white-space:normal}
+.gb-hit{font-size:12px;color:var(--ink-2)} .gb-hit .chip{font-size:10.5px;padding:1px 6px}
+/* mapa */
+.mapa{height:340px;border-radius:10px;overflow:hidden;background:#1F2310;position:relative;z-index:0}
+.mapa.grande{height:min(72vh,680px);border-radius:0}
+.mapa.marcando{outline:3px solid var(--lima);cursor:crosshair}
+.mapa.marcando .leaflet-container{cursor:crosshair}
+.geo-acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center}
+.geo-coord{display:flex;gap:6px;flex:1 1 240px}
+.geo-coord input{flex:1;min-width:0;padding:4px 10px;font-size:12.5px}
+.leaflet-popup-content a{color:#5C6B3D;font-weight:600}
+@media (max-width:640px){.mapa{height:280px}.mapa.grande{height:60vh}}
 </style>
 
 
@@ -653,7 +730,9 @@ body.sem-login .wrap{visibility:hidden}
     <div class="hdr-acts">
       <button type="button" class="btn dia" id="btnDia" hidden></button>
       <button type="button" class="bell" id="btnSino" aria-label="Avisos de prazo" hidden><svg viewBox="0 0 24 24" class="ic" style="width:18px;height:18px"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg><span class="bell-n" id="sinoN"></span></button>
+      <button type="button" class="bell" id="btnBusca" aria-label="Buscar (atalho: /)" title="Buscar em tudo (atalho: /)"><svg viewBox="0 0 24 24" class="ic" style="width:18px;height:18px"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
       <div class="avisos" id="avisos" hidden></div>
+      <button type="button" class="btn sm ghost" id="btnEquipe" title="Equipe e permissões" hidden>Equipe</button>
       <button type="button" class="btn sm ghost" id="btnSair" title="Sair da conta" hidden>Sair</button>
     </div>
     <div class="who">
@@ -806,7 +885,7 @@ function muralMsgs(){
 function novasMural(){ return muralMsgs().filter(m => m.pessoa !== S.me && m.em > (S.visto.mural || "")).length; }
 function tabsDisponiveis(){
   const n = (S.tab === "conversas" && S.convSel === "equipe" ? 0 : novasMural()) + novasDemandas().length;
-  const t = [["inicio","Início"],["demandas","Demandas"],["clientes","Clientes"],["conversas","Conversas" + (n ? `<span class="badge">${n}</span>` : "")],["agenda","Agenda de campo"],["galeria","Galeria"],["registro","Registrar atividade"],["produtividade","Produtividade"]];
+  const t = [["inicio","Início"],["demandas","Demandas"],["clientes","Clientes"],["conversas","Conversas" + (n ? `<span class="badge">${n}</span>` : "")],["agenda","Agenda de campo"],["mapa","Mapa"],["galeria","Galeria"],["registro","Registrar atividade"],["produtividade","Produtividade"],["historico","Histórico"]];
   if (S.podeFin) t.push(["financeiro","Financeiro"]);
   return t;
 }
@@ -1261,7 +1340,7 @@ function paneAnexos(d){
   el.innerHTML = `
     <p class="sub" style="margin:0">Fotos de campo, matrículas, PDFs e documentos enviados na conversa desta demanda.</p>
     ${S.assets ? `<form class="composer" data-composer="da" style="border:0;padding:0;margin:0"><div class="row2"><label class="filebtn">${ICON.clip} Escolher arquivos<input type="file" id="da-file" multiple accept="image/*,application/pdf,.csv,.txt,.json,.md"></label><input type="hidden" id="da-txt" value=""><span class="pend" id="da-pend"></span><button class="btn primary">Enviar</button></div></form>` : ""}
-    <div class="gal">${itens.map(a => `<a data-blob="${esc(a.id)}" target="_blank" rel="noopener"><span class="th">${isImg(a.tipo) ? `<img data-blob="${esc(a.id)}" alt="">` : esc((a.nome.split(".").pop() || "arq").toUpperCase())}</span><span class="nm">${esc(a.nome)}</span><span class="sub">${esc(primeiro(a.pessoa))} · ${fmtQuando(a.em)}</span></a>`).join("") || `<p class="muted">Nenhum arquivo ainda.</p>`}</div>`;
+    <div class="gal">${itens.map(a => `<a data-blob="${esc(a.id)}" data-nome="${esc(a.nome)}" target="_blank" rel="noopener"><span class="th">${isImg(a.tipo) ? `<img data-blob="${esc(a.id)}" alt="">` : esc((a.nome.split(".").pop() || "arq").toUpperCase())}</span><span class="nm">${esc(a.nome)}</span><span class="sub">${esc(primeiro(a.pessoa))} · ${fmtQuando(a.em)}</span></a>`).join("") || `<p class="muted">Nenhum arquivo ainda.</p>`}</div>`;
 }
 
 /* ---------- Mensagens ao cliente ---------- */
@@ -1622,6 +1701,7 @@ function viewFinanceiro(){
     <div class="kpi ${atrasadas ? "alert" : ""}"><span class="label">Parcelas atrasadas</span><span class="v">${atrasadas}</span><span class="s">cobrar o cliente</span></div>
     <div class="kpi ${semContrato.length ? "warn" : ""}"><span class="label">Sem contrato lançado</span><span class="v">${semContrato.length}</span><span class="s">processos já em andamento</span></div>
   </section>
+  ${finDashboardHtml()}
   <div class="card"><h3>Contratos</h3>
     ${linhas.map(({d, f, r}) => { const pct = r.total ? Math.min(100, Math.round(r.pago / r.total * 100)) : 0; const st = r.quitado ? {txt: "Quitado", cls: ""} : r.proxima ? statusParcela(r.proxima) : {txt: r.legado ? "lançar parcelas" : "—", cls: ""};
       return `<button type="button" class="fin-ct" data-proc="${d.id}">
@@ -1659,14 +1739,14 @@ function finResumo(f){
   return {total, pago, aberto: Math.max(0, total - pago), atrasadas: abertas.filter(p => p.vencimento && p.vencimento < hoje()).length, proxima: abertas[0] || null, ps, quitado: !abertas.length};
 }
 const statusParcela = p => p.pago ? {txt: "Pago", cls: "ok"} : !p.vencimento ? {txt: "Sem vencimento", cls: ""} : p.vencimento < hoje() ? {txt: `Atrasada ${-diff(p.vencimento, hoje())} d`, cls: "crit"} : p.vencimento === hoje() ? {txt: "Vence hoje", cls: "warn"} : diff(p.vencimento, hoje()) <= 7 ? {txt: `Vence em ${diff(p.vencimento, hoje())} d`, cls: "warn"} : {txt: "Em aberto", cls: ""};
-function compLink(c){ return c ? `<a class="comp" data-blob="${esc(c.id)}" target="_blank" rel="noopener">${ICON.clip} ${esc(c.nome || "comprovante")}</a>` : ""; }
+function compLink(c){ return c ? `<a class="comp" data-blob="${esc(c.id)}" data-nome="${esc(c.nome || "")}" target="_blank" rel="noopener">${ICON.clip} ${esc(c.nome || "comprovante")}</a>` : ""; }
 function parcelaRowHtml(id, p){
   const st = statusParcela(p);
   return `<div class="fin-row ${p.pago ? "pago" : ""}">
     <div><b>${esc(p.rotulo)}</b><div class="sub">${p.vencimento ? "vence " + fmtData(p.vencimento) : "sem vencimento"}</div></div>
     <div class="num">${brl(p.pago ? (p.pago.valor ?? p.valor) : p.valor)}</div>
     <div>${p.pago ? `<span class="due ok-t">Pago em ${fmtData(p.pago.data)} às ${esc(p.pago.hora || "")}</span><div class="sub">${esc(p.pago.forma || "")}${p.pago.obs ? " · " + esc(p.pago.obs) : ""}</div>${compLink(p.pago.comprovante)}` : `<span class="due ${st.cls}">${esc(st.txt)}</span>`}</div>
-    <div class="acts"><button type="button" class="btn sm ${p.pago ? "" : "primary"}" data-pgto="${id}|${p.id}">${p.pago ? "Editar" : "Registrar pagamento"}</button></div>
+    <div class="acts">${p.pago ? `<button type="button" class="btn sm lima" data-recibo="${id}|${p.id}">Recibo PDF</button>` : (p.vencimento && p.vencimento <= addDias(hoje(), 7) ? `<a class="btn sm" href="${cobrarWa(S.demandas.find(x => x.id === id) || {}, p)}" target="_blank" rel="noopener">Cobrar</a>` : "")}<button type="button" class="btn sm ${p.pago ? "" : "primary"}" data-pgto="${id}|${p.id}">${p.pago ? "Editar" : "Registrar pagamento"}</button></div>
   </div>`;
 }
 function contratoCardHtml(d){
@@ -1819,6 +1899,7 @@ function abrirPagamento(id, pid){
       <label class="f span3">Comprovante (foto ou PDF)<input id="pg-comp" type="file" accept="image/*,application/pdf"></label>
       <label class="f span6">Observação<input id="pg-obs" value="${esc(pg.obs || "")}" placeholder="Ex.: pago pelo filho, banco, nº da transação…"></label>
     </div>
+    <label class="chk-line"><input type="checkbox" id="pg-recibo" ${p.pago ? "" : "checked"}> Gerar o recibo em PDF ao confirmar</label>
     ${pg.comprovante ? `<p style="margin:10px 0 0">Comprovante atual: ${compLink(pg.comprovante)}</p>` : ""}
   </form>
   <div class="dlg-f"><div>${p.pago ? `<button type="button" class="btn danger" id="pg-desfazer">Desfazer pagamento</button>` : ""}</div><div style="display:flex;gap:8px"><button type="button" class="btn" data-close>Cancelar</button><button type="submit" form="fPgto" class="btn primary" id="pg-save">${p.pago ? "Salvar alterações" : "Confirmar pagamento"}</button></div></div>`;
@@ -1839,7 +1920,9 @@ function abrirPagamento(id, pid){
     try {
       await salvarParcela(novoPago, `${p.pago ? "editou" : "registrou"} o pagamento de ${p.rotulo}: ${brl(valor)} via ${novoPago.forma} em ${fmtData(novoPago.data)} ${novoPago.hora}`);
       if (p.n === 0 && d.etapa === "Aguardando entrada" && !p.pago) await S.db.doc("demandas/" + id).update({etapa: "Campo", atualizadoEm: agoraISO(), atualizadoPor: S.me, historico: histAdd(d, "moveu de Aguardando entrada para Campo (entrada paga)")});
-      toast(p.pago ? "Pagamento atualizado" : "Pagamento registrado"); fecharDlg(); render();
+      toast(p.pago ? "Pagamento atualizado" : "Pagamento registrado");
+      if ($("#pg-recibo")?.checked) { const tenta = (n) => { const ok = (S.fin[id]?.parcelas || []).find(x => x.id === pid)?.pago; if (ok) abrirRecibo(id, pid); else if (n) setTimeout(() => tenta(n - 1), 150); else fecharDlg(); }; tenta(10); } else fecharDlg();
+      render();
     } catch (err) { falhaEscrita(err); btn.disabled = false; btn.textContent = "Confirmar pagamento"; }
   });
   dlg.querySelector("#pg-desfazer")?.addEventListener("click", async e => {
@@ -2231,6 +2314,7 @@ function processoHtml(d){
       </div>
       <div class="acts">
         <button type="button" class="btn lima" data-open="${d.id}">Abrir cartão</button>
+        ${S.somenteLeitura ? "" : `<button type="button" class="btn" data-duplicar="${d.id}">Duplicar estrutura</button>`}
         <button type="button" class="btn" data-conv="${d.id}">Conversa interna</button>
         ${tel ? `<a class="btn" href="https://wa.me/${tel}" target="_blank" rel="noopener">WhatsApp do cliente</a>` : ""}
         ${arqs.length ? `<button type="button" class="btn" data-galdem="${d.id}">Arquivos (${arqs.length})</button>` : ""}
@@ -2247,6 +2331,7 @@ function processoHtml(d){
     </section>
     ${S.podeFin ? `<div style="margin-top:16px">${contratoCardHtml(d)}</div>` : ""}
     <div style="margin-top:16px">${vinculosHtml(d)}</div>
+    <div style="margin-top:16px">${geoCardHtml(d)}</div>
     <div class="cols-3-2" style="margin-top:16px">
       <div class="card"><div class="conv-h"><h3>Linha do tempo</h3><div class="seg" role="group" aria-label="Filtrar linha do tempo">${seg("tudo", "Tudo")}${seg("etapas", "Etapas")}${seg("conversa", "Conversa")}${seg("agenda", "Agenda")}</div></div>
         <div class="tl">${tlHtml || `<p class="muted" style="margin:0">${S.conv[d.id] ? "Nada registrado neste filtro." : "Carregando…"}</p>`}</div></div>
@@ -2338,7 +2423,7 @@ function galItemHtml(a){
   const tag = d ? d.cliente : "Equipe";
   const ext = esc((String(a.nome).split(".").pop() || "arq").toUpperCase().slice(0, 4));
   const corpo = `<span class="th">${isImg(a.tipo) ? `<img data-blob="${esc(a.id)}" alt="${esc(a.nome)}" loading="lazy">` : `<span class="ext">${ext}</span>`}<span class="tag">${esc(tag)}</span></span><span class="nm">${esc(a.nome)}</span><span class="sub">${esc(primeiro(a.pessoa))} · ${fmtCurto(a.em)}</span>`;
-  return isImg(a.tipo) ? `<button type="button" class="gi" data-foto="${esc(a.id)}">${corpo}</button>` : `<a class="gi" data-blob="${esc(a.id)}" target="_blank" rel="noopener">${corpo}</a>`;
+  return isImg(a.tipo) ? `<button type="button" class="gi" data-foto="${esc(a.id)}">${corpo}</button>` : `<a class="gi" data-blob="${esc(a.id)}" data-nome="${esc(a.nome)}" target="_blank" rel="noopener">${corpo}</a>`;
 }
 function viewGaleria(){
   S.demandas.forEach(d => assinarConversa(d.id));
@@ -2420,6 +2505,465 @@ $("#view").addEventListener("input", e => {
 });
 
 
+/* =====================================================================
+   v9 — painel financeiro, alertas, recibos, pré-visualização, mapa,
+   perfis de acesso, duplicar estrutura, histórico de auditoria e busca
+   ===================================================================== */
+const MESES_CURTOS = ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+const mesRot = ym => { const [y, m] = ym.split("-").map(Number); return MESES_CURTOS[m - 1] + (y !== new Date().getFullYear() ? "/" + String(y).slice(2) : ""); };
+const somaMes = (ym, n) => { const [y, m] = ym.split("-").map(Number); const d = new Date(y, m - 1 + n, 1); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"); };
+const brlK = v => v >= 1000 ? "R$ " + (v / 1000).toLocaleString("pt-BR", {maximumFractionDigits: 1}) + " mil" : brl(v);
+
+/* ---------- 1a. Painel financeiro (gráficos) ---------- */
+function finParcelasTodas(){
+  const out = [];
+  for (const d of S.demandas) for (const p of (S.fin[d.id]?.parcelas || [])) out.push({d, p});
+  return out;
+}
+function finAlertas(){
+  if (!S.podeFin) return [];
+  const lim = addDias(hoje(), 3);
+  return finParcelasTodas().filter(x => !x.p.pago && x.p.vencimento && x.p.vencimento <= lim).sort((a, b) => a.p.vencimento < b.p.vencimento ? -1 : 1);
+}
+function cobrarWa(d, p){
+  const tel = telefone(d.contato); const nome = (d.cliente || "").split(/\s+[—–-]\s+/)[0];
+  const atras = p.vencimento < hoje();
+  const txt = `Olá, ${nome}! Aqui é ${primeiro(S.me)}, da Saotech Geotecnologia.\n\n${atras ? `Identificamos que a ${p.rotulo.toLowerCase()} do contrato, no valor de ${brl(p.valor)}, venceu em ${fmtData(p.vencimento)} e ainda não consta como paga.` : `Lembrando que a ${p.rotulo.toLowerCase()} do contrato, no valor de ${brl(p.valor)}, vence em ${fmtData(p.vencimento)}.`}\n\nSe já realizou o pagamento, pode nos enviar o comprovante por aqui. Qualquer dúvida, estamos à disposição.`;
+  return `https://wa.me/${tel}?text=${encodeURIComponent(txt)}`;
+}
+function graficoFluxo(){
+  const atual = hoje().slice(0, 7);
+  const meses = []; for (let i = -5; i <= 6; i++) meses.push(somaMes(atual, i));
+  const rec = Object.fromEntries(meses.map(m => [m, 0])), prev = Object.fromEntries(meses.map(m => [m, 0])); let atrasado = 0;
+  for (const {p} of finParcelasTodas()) {
+    if (p.pago) { const m = (p.pago.data || "").slice(0, 7); if (m in rec) rec[m] += p.pago.valor ?? p.valor ?? 0; }
+    else if (p.vencimento) { if (p.vencimento < hoje()) atrasado += p.valor || 0; else { const m = p.vencimento.slice(0, 7); if (m in prev) prev[m] += p.valor || 0; } }
+  }
+  const max = Math.max(1, ...meses.map(m => rec[m] + prev[m] + (m === atual ? atrasado : 0)));
+  const W = 720, H = 250, pl = 8, pb = 34, pt = 34, bw = (W - pl * 2) / meses.length;
+  const y = v => (H - pb) - v / max * (H - pb - pt);
+  let bars = "";
+  meses.forEach((m, i) => {
+    const x = pl + i * bw + bw * 0.18, w = bw * 0.64; let base = H - pb;
+    const seg = (v, cls, tit) => { if (!v) return ""; const h = (H - pb) - y(v); base -= h; return `<rect x="${x.toFixed(1)}" y="${base.toFixed(1)}" width="${w.toFixed(1)}" height="${Math.max(1, h).toFixed(1)}" rx="3" class="${cls}"><title>${tit}: ${brl(v)}</title></rect>`; };
+    bars += seg(rec[m], "g-rec", "Recebido em " + mesRot(m)) + seg(prev[m], "g-prev", "Previsto para " + mesRot(m)) + (m === atual ? seg(atrasado, "g-atr", "Em atraso") : "");
+    const tot = rec[m] + prev[m] + (m === atual ? atrasado : 0);
+    if (tot) bars += `<text x="${(x + w / 2).toFixed(1)}" y="${(base - 5).toFixed(1)}" class="g-v">${esc(brlK(tot).replace("R$ ", ""))}</text>`;
+    bars += `<text x="${(x + w / 2).toFixed(1)}" y="${H - pb + 16}" class="g-x ${m === atual ? "cur" : ""}">${mesRot(m)}</text>`;
+  });
+  const sep = pl + 6 * bw - 1;
+  return `<svg viewBox="0 0 ${W} ${H}" class="grafico" role="img" aria-label="Fluxo de caixa mensal: recebido, previsto e em atraso">
+    <line x1="${pl}" x2="${W - pl}" y1="${H - pb}" y2="${H - pb}" class="g-ax"/>
+    <line x1="${sep}" x2="${sep}" y1="4" y2="${H - pb}" class="g-sep"/><text x="${sep + 6}" y="12" class="g-lbl">projeção →</text><text x="${sep - 6}" y="12" class="g-lbl" text-anchor="end">← realizado</text>
+    ${bars}</svg>
+    <div class="g-leg"><span><i class="g-rec"></i>Recebido</span><span><i class="g-prev"></i>A receber (previsto)</span><span><i class="g-atr"></i>Em atraso</span></div>`;
+}
+function finDashboardHtml(){
+  const todas = finParcelasTodas();
+  const atrasadas = todas.filter(x => !x.p.pago && x.p.vencimento && x.p.vencimento < hoje()).sort((a, b) => a.p.vencimento < b.p.vencimento ? -1 : 1);
+  const valAtr = atrasadas.reduce((s, x) => s + (x.p.valor || 0), 0);
+  const recebidoTot = todas.reduce((s, x) => s + (x.p.pago ? (x.p.pago.valor ?? x.p.valor ?? 0) : 0), 0);
+  const taxa = recebidoTot + valAtr ? Math.round(valAtr / (recebidoTot + valAtr) * 1000) / 10 : 0;
+  const prox30 = todas.filter(x => !x.p.pago && x.p.vencimento >= hoje() && x.p.vencimento <= addDias(hoje(), 30)).reduce((s, x) => s + (x.p.valor || 0), 0);
+  const prox90 = todas.filter(x => !x.p.pago && x.p.vencimento >= hoje() && x.p.vencimento <= addDias(hoje(), 90)).reduce((s, x) => s + (x.p.valor || 0), 0);
+  return `<div class="cols-3-2" style="margin-bottom:16px">
+    <div class="card"><div class="conv-h"><h3>Fluxo de caixa mensal</h3><span class="sub">últimos 6 meses e próximos 6</span></div>${todas.length ? graficoFluxo() : `<p class="muted" style="margin:0">O gráfico aparece quando houver contratos com parcelas lançadas.</p>`}</div>
+    <div class="card"><h3>Inadimplência e projeção</h3>
+      <div class="fin-sum" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+        <div><span class="label">Em atraso</span><b class="${valAtr ? "crit-t" : ""}">${brl(valAtr)}</b><span class="sub">${atrasadas.length} parcela${atrasadas.length === 1 ? "" : "s"}</span></div>
+        <div><span class="label">Inadimplência</span><b class="${taxa > 10 ? "crit-t" : ""}">${String(taxa).replace(".", ",")}%</b><span class="sub">do valor já vencido</span></div>
+        <div><span class="label">Próximos 30 dias</span><b>${brl(prox30)}</b></div>
+        <div><span class="label">Próximos 90 dias</span><b>${brl(prox90)}</b></div>
+      </div>
+      ${atrasadas.length ? `<div class="label" style="margin:12px 0 4px">Parcelas em atraso</div>${atrasadas.slice(0, 8).map(({d, p}) => `<div class="fin-pg"><div><b>${esc(d.cliente)}</b><div class="sub">${esc(p.rotulo)} · ${brl(p.valor)} · venceu ${fmtData(p.vencimento)} (${-diff(p.vencimento, hoje())} d)</div></div><div><a class="btn sm" href="${cobrarWa(d, p)}" target="_blank" rel="noopener">Cobrar no WhatsApp</a><button type="button" class="btn sm ghost" data-pgto="${d.id}|${p.id}">Registrar</button></div></div>`).join("")}` : `<p class="sub" style="margin:12px 0 0">Nenhuma parcela em atraso.</p>`}
+    </div></div>`;
+}
+
+/* ---------- 1b. Alertas de vencimento (sino + faixa) ---------- */
+function renderAvisos(){
+  const b = $("#btnSino"), n = $("#sinoN"), box = $("#avisos");
+  if (!S.conectado) { b.hidden = true; box.hidden = true; return; }
+  const av = avisosPrazo(), fa = finAlertas(); b.hidden = false;
+  n.textContent = av.length + fa.length ? av.length + fa.length : "";
+  box.hidden = !S.avisosAbertos;
+  box.innerHTML = `<h4>Prazos de ${esc(primeiro(S.me))}</h4>` + (av.length ? av.map(d => { const p = prazoInfo(d); return `<div class="aviso" data-open="${d.id}"><div><b>${esc(d.codigo)}</b> · ${esc(d.cliente)}<div class="sub">${esc(d.etapa)}</div></div><span class="due ${p.cls}">${esc(p.txt)}</span></div>`; }).join("") : `<p class="sub" style="margin:4px 8px 8px">Nenhuma demanda sua com prazo nos próximos 3 dias.</p>`)
+    + (S.podeFin ? `<h4>Parcelas a receber</h4>` + (fa.length ? fa.map(({d, p}) => { const st = statusParcela(p); return `<div class="aviso" data-pgto="${d.id}|${p.id}"><div><b>${esc(d.cliente)}</b><div class="sub">${esc(p.rotulo)} · ${brl(p.valor)}</div></div><span class="due ${st.cls}">${esc(st.txt)}</span></div>`; }).join("") : `<p class="sub" style="margin:4px 8px 8px">Nenhuma parcela vencendo nos próximos 3 dias.</p>`) : "");
+}
+function alertaPrazoHtml(){
+  if (S.alertaFechado || !S.conectado) return "";
+  const av = avisosPrazo(), fa = finAlertas(); if (!av.length && !fa.length) return "";
+  const partes = [];
+  if (av.length) { const venc = av.filter(d => diff(d.prazo, hoje()) < 0).length; partes.push(`${av.length} demanda${av.length > 1 ? "s" : ""} com prazo terminando${venc ? ` (${venc} vencida${venc > 1 ? "s" : ""})` : ""}`); }
+  if (fa.length) { const atr = fa.filter(x => x.p.vencimento < hoje()).length; partes.push(`${fa.length} parcela${fa.length > 1 ? "s" : ""} a receber${atr ? ` (${atr} atrasada${atr > 1 ? "s" : ""})` : " nos próximos 3 dias"}`); }
+  return `<div class="alerta-prazo" role="alert"><span><b>${esc(primeiro(S.me))}, atenção:</b> ${partes.join(" e ")}.</span><span style="display:flex;gap:8px"><button class="btn sm" id="verAvisos">Ver quais</button><button class="btn sm ghost" id="fecharAlerta">Dispensar</button></span></div>`;
+}
+
+/* ---------- 1c. Recibo em PDF ---------- */
+function extenso(v){
+  const u = ["zero","um","dois","três","quatro","cinco","seis","sete","oito","nove","dez","onze","doze","treze","catorze","quinze","dezesseis","dezessete","dezoito","dezenove"];
+  const dz = ["","","vinte","trinta","quarenta","cinquenta","sessenta","setenta","oitenta","noventa"];
+  const ct = ["","cento","duzentos","trezentos","quatrocentos","quinhentos","seiscentos","setecentos","oitocentos","novecentos"];
+  const ate999 = n => { if (n === 100) return "cem"; const c = Math.floor(n / 100), r = n % 100; const p = []; if (c) p.push(ct[c]); if (r) p.push(r < 20 ? u[r] : dz[Math.floor(r / 10)] + (r % 10 ? " e " + u[r % 10] : "")); return p.join(" e "); };
+  const inteiro = n => { if (!n) return "zero"; const mi = Math.floor(n / 1e6), mil = Math.floor(n % 1e6 / 1000), r = n % 1000; const p = [];
+    if (mi) p.push(mi === 1 ? "um milhão" : ate999(mi) + " milhões"); if (mil) p.push(mil === 1 ? "mil" : ate999(mil) + " mil"); if (r) p.push(ate999(r));
+    return p.length > 1 && (r < 100 || r % 100 === 0) && r ? p.slice(0, -1).join(", ") + " e " + p.slice(-1) : p.join(", "); };
+  const reais = Math.floor(v + 1e-9), cent = Math.round((v - reais) * 100);
+  const parte = reais ? inteiro(reais) + (reais === 1 ? " real" : (reais % 1e6 === 0 ? " de reais" : " reais")) : "";
+  const c = cent ? inteiro(cent) + (cent === 1 ? " centavo" : " centavos") : "";
+  return [parte, c].filter(Boolean).join(" e ") || "zero real";
+}
+function abrirRecibo(id, pid){
+  const d = S.demandas.find(x => x.id === id); const f = S.fin[id]; const p = (f?.parcelas || []).find(x => x.id === pid);
+  if (!d || !p?.pago || !S.podeFin) return;
+  const pg = p.pago; const valor = pg.valor ?? p.valor;
+  const num = `${(d.codigo || "").replace("SAO-", "")}-${String((f.parcelas || []).indexOf(p) + 1).padStart(2, "0")}`;
+  const nome = (d.cliente || "").split(/\s+[—–]\s+/)[0];
+  const serv = (d.servicos || []).join(", ") || "serviços técnicos de topografia e regularização";
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "recibo", unsubs: []};
+  const dlg = $("#dlg"); dlg.className = "big";
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">Recibo nº ${esc(num)}</span><h2 style="font-size:19px">${esc(d.cliente)}</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+  <div class="dlg-b"><div id="recibo-print" class="recibo">
+    <div class="rc-top">${logoSrc() ? `<img src="${logoSrc()}" alt="Saotech Geotecnologia">` : "<b>SAOTECH GEOTECNOLOGIA</b>"}<div><div class="rc-t">RECIBO</div><div class="rc-n">Nº ${esc(num)}</div></div></div>
+    <div class="rc-valor">${brl(valor)}</div>
+    <p>Recebemos de <b>${esc(nome)}</b> a importância de <b>${brl(valor)}</b> (${esc(extenso(valor))}), referente ${p.rotulo === "À vista" ? "ao <b>pagamento à vista</b>" : `à <b>${esc(p.rotulo.toLowerCase())}</b>`} do contrato de prestação de serviços de <b>${esc(serv)}</b>${d.imovel ? `, imóvel ${esc(d.imovel)}` : ""}${d.municipio ? `, ${esc(d.municipio)}` : ""}.</p>
+    <table class="rc-tab"><tr><td>Forma de pagamento</td><td>${esc(pg.forma || "")}</td></tr><tr><td>Data e hora do pagamento</td><td>${fmtData(pg.data)} às ${esc(pg.hora || "")}</td></tr><tr><td>Processo</td><td>${esc(d.codigo)}</td></tr><tr><td>Valor do contrato</td><td>${brl(f.valorTotal)}</td></tr>${pg.obs ? `<tr><td>Observação</td><td>${esc(pg.obs)}</td></tr>` : ""}</table>
+    <p>Para clareza, firmamos o presente recibo, dando plena quitação do valor acima.</p>
+    <p class="rc-data">${esc(capital(new Date(pg.data + "T12:00:00").toLocaleDateString("pt-BR", {day: "numeric", month: "long", year: "numeric"})))}.</p>
+    <div class="rc-ass"><div class="rc-linha"></div><b>Moisés Bruno</b><span>Saotech Geotecnologia</span></div>
+  </div></div>
+  <div class="dlg-f"><span class="sub">No celular ou computador, escolha "Salvar como PDF" na janela de impressão.</span><div style="display:flex;gap:8px"><button type="button" class="btn" data-close>Fechar</button><button type="button" class="btn primary" id="rc-print">Baixar PDF / imprimir</button></div></div>`;
+  if (!dlg.open) dlg.showModal();
+  $("#rc-print").addEventListener("click", () => { document.body.classList.add("imprimindo"); setTimeout(() => { window.print(); setTimeout(() => document.body.classList.remove("imprimindo"), 400); }, 50); });
+}
+window.addEventListener("afterprint", () => document.body.classList.remove("imprimindo"));
+document.addEventListener("click", e => { const r = e.target.closest("[data-recibo]"); if (!r) return; e.stopPropagation(); const [id, pid] = r.dataset.recibo.split("|"); abrirRecibo(id, pid); }, true);
+
+/* ---------- 2a. Pré-visualização de PDF e imagens ---------- */
+const extDe = n => (String(n || "").split(".").pop() || "").toLowerCase();
+const podePrever = n => ["pdf","jpg","jpeg","png","webp","gif"].includes(extDe(n));
+function abrirPreview(blobId, nome){
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "preview", unsubs: []};
+  const dlg = $("#dlg"); dlg.className = "foto prev";
+  const pdf = extDe(nome) === "pdf";
+  dlg.innerHTML = `<div class="prev-h"><b>${esc(nome)}</b><span style="display:flex;gap:6px"><a class="btn sm lima" data-blob="${esc(blobId)}" target="_blank" rel="noopener" data-noprev>Abrir em nova aba</a><button type="button" class="btn sm" data-close>Fechar</button></span></div>
+    <div class="prev-b">${pdf ? `<iframe data-blob="${esc(blobId)}" title="${esc(nome)}"></iframe>` : `<img data-blob="${esc(blobId)}" alt="${esc(nome)}">`}</div>`;
+  if (!dlg.open) dlg.showModal();
+}
+document.addEventListener("click", e => {
+  const a = e.target.closest("a[data-blob]"); if (!a || a.hasAttribute("data-noprev") || e.ctrlKey || e.metaKey || a.closest(".lb")) return;
+  const nome = a.dataset.nome || a.title || a.textContent.trim();
+  if (!podePrever(nome)) return;
+  e.preventDefault(); e.stopPropagation(); abrirPreview(a.dataset.blob, nome);
+}, true);
+
+/* ---------- 3a. Perfis de acesso ---------- */
+const PERFIS = {admin: "Administrador · tudo, inclusive financeiro", operacional: "Operacional · edita demandas, sem valores", leitura: "Somente leitura · acompanha e conversa"};
+async function abrirPerfis(){
+  if (!S.user?.equipe) return;
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "perfis", unsubs: []};
+  const dlg = $("#dlg"); dlg.className = "";
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">Administração</span><h2 style="font-size:19px">Equipe e permissões</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div><div class="dlg-b" id="perfis-b"><p class="muted">Carregando…</p></div>
+    <div class="dlg-f"><span class="sub">A permissão vale no servidor: quem não pode, não consegue nem ler os valores.</span><button type="button" class="btn" data-close>Fechar</button></div>`;
+  if (!dlg.open) dlg.showModal();
+  try {
+    const eq = await S.user.equipe();
+    $("#perfis-b").innerHTML = eq.map(m => `<div class="perfil-row"><div><b>${esc(m.nome)}</b><div class="sub">${esc(m.email)}</div></div>
+      <select data-perfil="${esc(m.email)}" aria-label="Perfil de ${esc(m.nome)}">${Object.entries(PERFIS).map(([k, t]) => `<option value="${k}" ${(m.perfil || (m.admin ? "admin" : "operacional")) === k ? "selected" : ""}>${t}</option>`).join("")}</select></div>`).join("")
+      + `<p class="sub" style="margin:12px 0 0">Para cadastrar uma pessoa nova, peça o login pelo Claude ou crie no Supabase (Authentication → Users) e inclua o e-mail na tabela equipe.</p>`;
+  } catch (err) { $("#perfis-b").innerHTML = `<p class="banner">Não foi possível carregar a equipe (${esc(err.message || "")}).</p>`; }
+}
+document.addEventListener("change", async e => {
+  const s = e.target.closest("[data-perfil]"); if (!s) return;
+  s.disabled = true;
+  try { await S.user.definirPerfil(s.dataset.perfil, s.value); toast("Permissão atualizada. Vale no próximo acesso da pessoa."); }
+  catch (err) { falhaEscrita(err); }
+  s.disabled = false;
+});
+
+/* ---------- 4. Duplicar estrutura ---------- */
+function abrirDuplicar(id){
+  const d = S.demandas.find(x => x.id === id); if (!d || S.somenteLeitura) return;
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "duplicar", id, unsubs: []};
+  const dlg = $("#dlg"); dlg.className = "";
+  const base = (d.cliente || "").split(/\s+[—–]\s+/)[0];
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">Duplicar estrutura de ${esc(d.codigo)}</span><h2 style="font-size:19px">Novo processo a partir deste</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+  <form id="fDup" class="dlg-b">
+    <label class="f">Nome do novo processo<input id="dup-nome" required value="${esc(base)} — "></label>
+    <div class="checks" style="margin-top:12px">
+      <label><input type="checkbox" id="dup-check" checked> Serviços e checklist (itens desmarcados)</label>
+      <label><input type="checkbox" id="dup-dados" checked> Contato, município e responsável</label>
+      <label><input type="checkbox" id="dup-vinc" checked> Vincular como "mesmo cliente"</label>
+      <label><input type="checkbox" id="dup-conf"> Copiar também os confrontantes vinculados</label>
+    </div>
+    <label class="f" style="margin-top:12px">Quantas cópias<input id="dup-n" type="number" min="1" max="10" value="1"></label>
+    <p class="sub" style="margin:8px 0 0">Com mais de uma cópia, os nomes recebem a numeração (1), (2)…</p>
+  </form>
+  <div class="dlg-f"><span></span><div style="display:flex;gap:8px"><button type="button" class="btn" data-close>Cancelar</button><button type="submit" form="fDup" class="btn primary" id="dup-save">Criar</button></div></div>`;
+  if (!dlg.open) dlg.showModal();
+  $("#fDup").addEventListener("submit", async e => {
+    e.preventDefault(); const btn = $("#dup-save"); btn.disabled = true; btn.textContent = "Criando…";
+    const n = Math.min(10, Math.max(1, +$("#dup-n").value || 1)); const nome0 = $("#dup-nome").value.trim();
+    const cCheck = $("#dup-check").checked, cDados = $("#dup-dados").checked, cVinc = $("#dup-vinc").checked, cConf = $("#dup-conf").checked;
+    const criados = [];
+    try {
+      let seq = proximoCodigo();
+      for (let i = 0; i < n; i++) {
+        const ref = S.db.collection("demandas").doc(); const agora = agoraISO();
+        const vinculos = [...(cVinc ? [{id: d.id, rel: "Mesmo cliente", obs: ""}] : []), ...(cConf ? (d.vinculos || []).filter(v => v.rel === "Confrontante") : [])];
+        const corpo = {codigo: seq, cliente: n > 1 ? `${nome0} (${i + 1})` : nome0, servicos: cCheck ? [...(d.servicos || [])] : [], etapa: "Orçamento",
+          responsavel: cDados ? d.responsavel : S.me, prazo: null, contato: cDados ? d.contato || "" : "", imovel: "", municipio: cDados ? d.municipio || "" : "", areaHa: null,
+          protocoloOrgao: "", protocoloNumero: "", protocoloPrevisao: null, notas: `Estrutura duplicada de ${d.codigo} · ${d.cliente}.`, exemplo: false,
+          checklist: cCheck ? (d.checklist || []).map(it => ({id: uid(), t: it.t, doc: !!it.doc, ok: false})) : [], vinculos,
+          historico: [{em: agora, pessoa: S.me, txt: `criou a demanda duplicando a estrutura de ${d.codigo}`}], criadoEm: agora, atualizadoEm: agora, atualizadoPor: S.me};
+        await ref.set(corpo); criados.push({id: ref.id, cliente: corpo.cliente, vinculos});
+        seq = seq.replace(/(\d+)$/, m => String(+m + 1).padStart(3, "0"));
+      }
+      if (cVinc || cConf) {
+        const mapa = {};
+        for (const c of criados) for (const v of c.vinculos) (mapa[v.id] = mapa[v.id] || []).push({id: c.id, rel: v.rel, obs: "", cliente: c.cliente});
+        for (const [alvo, add] of Object.entries(mapa)) { const o = S.demandas.find(x => x.id === alvo); if (!o) continue;
+          await S.db.doc("demandas/" + alvo).update({vinculos: [...(o.vinculos || []), ...add.map(({cliente, ...v}) => v)], historico: histAdd(o, `vinculou ${add.map(a => a.cliente).join(", ")}`)}); }
+      }
+      toast(n > 1 ? `${n} processos criados` : "Processo criado"); irProcesso(criados[0].id);
+    } catch (err) { falhaEscrita(err); btn.disabled = false; btn.textContent = "Criar"; }
+  });
+}
+document.addEventListener("click", e => { const b = e.target.closest("[data-duplicar]"); if (!b) return; e.stopPropagation(); abrirDuplicar(b.dataset.duplicar); }, true);
+
+/* ---------- 5a. Histórico / auditoria ---------- */
+function eventosAuditoria(){
+  const ev = [];
+  for (const d of S.demandas) for (const h of d.historico || []) ev.push({em: h.em, pessoa: h.pessoa, txt: h.txt, alvo: d.cliente, dem: d.id, tipo: "Demandas"});
+  if (S.podeFin) for (const d of S.demandas) for (const h of (S.fin[d.id]?.log || [])) ev.push({em: h.em, pessoa: h.pessoa, txt: h.txt, alvo: d.cliente, dem: d.id, tipo: "Financeiro"});
+  for (const a of S.agenda) if (a.criadoEm) { const d = S.demandas.find(x => x.id === a.demandaId); ev.push({em: a.criadoEm, pessoa: a.criadoPor, txt: `agendou ${a.tipo.toLowerCase()} para ${fmtData(a.data)} ${a.inicio || ""}${a.titulo ? " — " + a.titulo : ""}`, alvo: d?.cliente || "", dem: d?.id, tipo: "Agenda"}); }
+  for (const x of S.expediente) { if (x.inicio) ev.push({em: x.inicio, pessoa: x.pessoa, txt: "iniciou o dia", tipo: "Expediente"}); if (x.fim) ev.push({em: x.fim, pessoa: x.pessoa, txt: "finalizou o dia", tipo: "Expediente"}); }
+  return ev.filter(e => e.em).sort((a, b) => a.em < b.em ? 1 : -1);
+}
+function viewHistorico(){
+  const dias = S.audDias || 30, lim = new Date(Date.now() - dias * 864e5).toISOString();
+  const q = (S.audBusca || "").toLowerCase();
+  let ev = eventosAuditoria().filter(e => e.em >= lim);
+  if (S.audPessoa) ev = ev.filter(e => e.pessoa === S.audPessoa);
+  if (S.audTipo) ev = ev.filter(e => e.tipo === S.audTipo);
+  if (q) ev = ev.filter(e => (e.txt + " " + (e.alvo || "") + " " + pessoa(e.pessoa).nome).toLowerCase().includes(q));
+  const tipos = ["Demandas", "Agenda", "Expediente", ...(S.podeFin ? ["Financeiro"] : [])];
+  let dia = "", h = "";
+  for (const e of ev.slice(0, 400)) {
+    const dd = new Date(e.em).toLocaleDateString("sv-SE");
+    if (dd !== dia) { dia = dd; h += `<div class="aud-dia">${dd === hoje() ? "Hoje" : esc(capital(fmtDia(dd)))}</div>`; }
+    h += `<div class="aud-it"><time>${fmtHora(e.em)}</time><span class="chip aud-${e.tipo.toLowerCase()}">${esc(e.tipo)}</span><div><b>${esc(pessoa(e.pessoa).nome)}</b> ${esc(e.txt)}${e.alvo ? ` · ${e.dem ? `<a href="#" data-proc="${e.dem}">${esc(e.alvo)}</a>` : esc(e.alvo)}` : ""}</div></div>`;
+  }
+  return `<div class="toolbar">
+    <input class="grow" id="aud-busca" type="search" placeholder="Buscar no histórico (ex.: parcela, protocolo, nome do cliente)" value="${esc(S.audBusca || "")}">
+    <select id="aud-pessoa" aria-label="Pessoa"><option value="">Toda a equipe</option>${PESSOAS.map(p => `<option value="${p.id}" ${S.audPessoa === p.id ? "selected" : ""}>${esc(p.nome)}</option>`).join("")}</select>
+    <select id="aud-tipo" aria-label="Tipo"><option value="">Todos os tipos</option>${tipos.map(t => `<option ${S.audTipo === t ? "selected" : ""}>${t}</option>`).join("")}</select>
+    <select id="aud-dias" aria-label="Período">${[7, 30, 90, 365].map(n => `<option value="${n}" ${dias === n ? "selected" : ""}>Últimos ${n} dias</option>`).join("")}</select>
+  </div>
+  <div class="card">${h || `<p class="muted" style="margin:0">Nenhuma alteração encontrada neste filtro.</p>`}${ev.length > 400 ? `<p class="sub">Mostrando as 400 mais recentes de ${ev.length}.</p>` : ""}</div>`;
+}
+document.addEventListener("input", e => { if (e.target.id !== "aud-busca") return; clearTimeout(S._audT); S.audBusca = e.target.value; S._audT = setTimeout(render, 200); });
+document.addEventListener("change", e => {
+  if (e.target.id === "aud-pessoa") { S.audPessoa = e.target.value; render(); }
+  if (e.target.id === "aud-tipo") { S.audTipo = e.target.value; render(); }
+  if (e.target.id === "aud-dias") { S.audDias = +e.target.value; render(); }
+});
+
+/* ---------- 5b. Busca global com etiquetas ---------- */
+const temArquivo = (d, ext) => (d.anexosTrello || []).some(a => !ext || extDe(a.nome) === ext) || msgsDemanda(d.id).some(m => (m.anexos || []).some(a => !ext || extDe(a.nome) === ext));
+function etiquetasBusca(){
+  const ano = String(new Date().getFullYear());
+  const t = [
+    ["vencido", "Prazo vencido", d => ATIVAS.includes(d.etapa) && d.prazo && d.prazo < hoje()],
+    ["aguardando", "Aguardando pagamento", d => S.podeFin ? !!(S.fin[d.id]?.parcelas || []).some(p => !p.pago) || d.etapa === "Aguardando entrada" : d.etapa === "Aguardando entrada"],
+    ...(S.podeFin ? [["atrasada", "Parcela atrasada", d => (S.fin[d.id]?.parcelas || []).some(p => !p.pago && p.vencimento && p.vencimento < hoje())], ["semcontrato", "Sem contrato lançado", d => ATIVAS.includes(d.etapa) && !(S.fin[d.id]?.parcelas || []).length]] : []),
+    ["semdwg", "Sem arquivo DWG", d => !temArquivo(d, "dwg")],
+    ["semarq", "Sem nenhum arquivo", d => !temArquivo(d)],
+    ["docs", "Faltam documentos do cliente", d => (d.checklist || []).some(i => i.doc && !i.ok)],
+    ["conf", "Com confrontantes", d => (d.vinculos || []).some(v => v.rel === "Confrontante")],
+    ["protocolo", "Em protocolo", d => d.etapa === "Protocolo"],
+    ["concl", "Concluídos em " + ano, d => d.etapa === "Concluída" && (d.atualizadoEm || "").startsWith(ano)],
+    ["meus", "Sob minha responsabilidade", d => d.responsavel === S.me],
+    ["semmapa", "Sem localização no mapa", d => !d.geo?.lat]
+  ];
+  return t;
+}
+function onde(d, q){
+  const campos = [["Cliente", d.cliente], ["Código", d.codigo], ["Imóvel", d.imovel], ["Município", d.municipio], ["Contato", d.contato], ["Protocolo", [d.protocoloOrgao, d.protocoloNumero].join(" ")], ["Serviço", (d.servicos || []).join(", ")], ["Observações", d.notas],
+    ["Checklist", (d.checklist || []).map(i => i.t).join(" · ")], ["Vínculos", (d.vinculos || []).map(v => S.demandas.find(x => x.id === v.id)?.cliente || "").join(" · ")], ["Arquivos", [...(d.anexosTrello || []).map(a => a.nome), ...msgsDemanda(d.id).flatMap(m => (m.anexos || []).map(a => a.nome))].join(" · ")], ["Conversa", msgsDemanda(d.id).map(m => m.texto).join(" · ")]];
+  for (const [rot, val] of campos) { const s = String(val || ""), i = s.toLowerCase().indexOf(q); if (i >= 0) return {rot, trecho: (i > 30 ? "…" : "") + s.slice(Math.max(0, i - 30), i + q.length + 50) + (s.length > i + q.length + 50 ? "…" : "")}; }
+  return null;
+}
+function resultadosBusca(){
+  const q = (S.gq || "").trim().toLowerCase(); const ativos = S.gtags || [];
+  const tags = etiquetasBusca();
+  let lista = S.demandas.map(d => ({d, hit: q ? onde(d, q) : null})).filter(x => !q || x.hit);
+  for (const k of ativos) { const t = tags.find(x => x[0] === k); if (t) lista = lista.filter(x => t[2](x.d)); }
+  lista.sort((a, b) => (ATIVAS.includes(b.d.etapa) ? 1 : 0) - (ATIVAS.includes(a.d.etapa) ? 1 : 0) || (a.d.cliente || "").localeCompare(b.d.cliente || "", "pt-BR"));
+  const ag = q ? S.agenda.filter(a => [a.titulo, a.local, a.tipo, a.obs].join(" ").toLowerCase().includes(q)).slice(0, 5) : [];
+  return {lista, ag, tags, ativos, q};
+}
+function desenharBusca(){
+  const {lista, ag, tags, ativos, q} = resultadosBusca();
+  $("#gb-tags").innerHTML = tags.map(([k, n, fn]) => { const c = S.demandas.filter(fn).length; return `<button type="button" class="tag ${ativos.includes(k) ? "on" : ""}" data-gtag="${k}">${esc(n)} <span>${c}</span></button>`; }).join("");
+  $("#gb-res").innerHTML = (q || ativos.length) ? (lista.length ? lista.slice(0, 60).map(({d, hit}) => `<button type="button" class="li gb-it" data-proc="${d.id}"><span class="t"><b>${esc(d.cliente)}</b> <span class="sub">${esc(d.codigo)}</span>${hit && hit.rot !== "Cliente" ? `<span class="gb-hit"><span class="chip">${esc(hit.rot)}</span> ${esc(hit.trecho)}</span>` : ""}</span><span class="pill ${etapaCls(d.etapa)}">${esc(d.etapa)}</span></button>`).join("") : `<p class="muted">Nada encontrado.</p>`)
+    + (ag.length ? `<div class="label" style="margin:12px 0 4px">Agenda</div>${ag.map(a => `<button type="button" class="li" data-gbev="${a.id}"><span class="t"><b>${fmtData(a.data)} ${esc(a.inicio || "")}</b> · ${esc(a.tipo)}${a.titulo ? " · " + esc(a.titulo) : ""}</span></button>`).join("")}` : "")
+    : `<p class="sub" style="margin:4px 0">Digite um nome, código, matrícula, protocolo, cidade ou palavra de uma conversa — ou combine as etiquetas acima.</p>`;
+  $("#gb-n").textContent = (q || ativos.length) ? `${lista.length} processo${lista.length === 1 ? "" : "s"}` : "";
+}
+function abrirBusca(){
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.demandas.forEach(d => assinarConversa(d.id));
+  S.dlg = {tipo: "busca", unsubs: []}; S.gtags = S.gtags || [];
+  const dlg = $("#dlg"); dlg.className = "big busca";
+  dlg.innerHTML = `<div class="gb-top"><input id="gb-q" type="search" placeholder="Buscar em toda a plataforma" value="${esc(S.gq || "")}" autocomplete="off"><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+    <div class="dlg-b"><div class="gb-tags" id="gb-tags"></div><div class="sub" id="gb-n" style="margin:8px 0 4px"></div><div id="gb-res"></div></div>`;
+  if (!dlg.open) dlg.showModal();
+  desenharBusca(); setTimeout(() => $("#gb-q")?.focus(), 30);
+  $("#gb-q").addEventListener("input", e => { S.gq = e.target.value; clearTimeout(S._gbT); S._gbT = setTimeout(desenharBusca, 120); });
+  $("#gb-tags").addEventListener("click", e => { const b = e.target.closest("[data-gtag]"); if (!b) return; const k = b.dataset.gtag; S.gtags = S.gtags.includes(k) ? S.gtags.filter(x => x !== k) : [...S.gtags, k]; desenharBusca(); });
+  $("#gb-res").addEventListener("click", e => { const ev = e.target.closest("[data-gbev]"); if (ev) { fecharDlg(); setTimeout(() => abrirEvento(ev.dataset.gbev), 50); } });
+}
+document.addEventListener("keydown", e => { if ((e.key === "/" && !e.target.closest("input,textarea,select")) || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k")) { if (!S.conectado) return; e.preventDefault(); abrirBusca(); } });
+
+/* ---------- 2b. Mapa dos imóveis (Leaflet + imagens de satélite gratuitas) ---------- */
+let leafletPromessa = null;
+function carregarLeaflet(){
+  if (window.L) return Promise.resolve(window.L);
+  if (leafletPromessa) return leafletPromessa;
+  leafletPromessa = new Promise((ok, falha) => {
+    const css = document.createElement("link"); css.rel = "stylesheet"; css.href = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"; document.head.appendChild(css);
+    const js = document.createElement("script"); js.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"; js.onload = () => ok(window.L); js.onerror = () => { leafletPromessa = null; falha(new Error("mapa indisponível")); }; document.head.appendChild(js);
+  });
+  return leafletPromessa;
+}
+const COR_ETAPA = {"Orçamento": "#92967D", "Aguardando entrada": "#B07530", "Campo": "#5C6B3D", "Escritório": "#5C6B3D", "Protocolo": "#B07530", "Entregue": "#4E8747", "Concluída": "#4E8747", "Pausada": "#92967D"};
+const centroDe = d => d.geo?.lat ? [d.geo.lat, d.geo.lng] : null;
+function camadasBase(L){
+  const sat = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {maxZoom: 19, attribution: "Imagens © Esri, Maxar, Earthstar Geographics"});
+  const rot = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", {maxZoom: 19});
+  const ruas = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {maxZoom: 19, attribution: "© OpenStreetMap"});
+  return {sat: L.layerGroup([sat, rot]), ruas};
+}
+function desenharImovel(L, grupo, d, destaque){
+  const cor = COR_ETAPA[d.etapa] || "#5C6B3D";
+  const pop = `<b>${esc(d.cliente)}</b><br><span style="color:#656B51">${esc(d.codigo)} · ${esc(d.etapa)}${d.areaHa ? " · " + String(d.areaHa).replace(".", ",") + " ha" : ""}</span><br><a href="#" data-proc="${d.id}">Ver processo</a>`;
+  if (d.geo?.poligono?.length > 2) L.polygon(d.geo.poligono, {color: destaque ? "#D9E15A" : cor, weight: destaque ? 3 : 2, fillOpacity: destaque ? .25 : .15}).bindPopup(pop).addTo(grupo);
+  if (d.geo?.lat) L.circleMarker([d.geo.lat, d.geo.lng], {radius: destaque ? 9 : 7, color: "#2E3319", weight: 2, fillColor: destaque ? "#D9E15A" : cor, fillOpacity: 1}).bindPopup(pop).bindTooltip(d.cliente.split(/\s+[—–]\s+/)[0]).addTo(grupo);
+}
+function linhasConfrontantes(L, grupo, ds){
+  const feito = new Set();
+  for (const d of ds) for (const v of d.vinculos || []) { if (v.rel !== "Confrontante") continue; const o = S.demandas.find(x => x.id === v.id); const k = [d.id, v.id].sort().join("|");
+    if (!o || feito.has(k) || !centroDe(d) || !centroDe(o)) continue; feito.add(k);
+    L.polyline([centroDe(d), centroDe(o)], {color: "#D9E15A", weight: 2, dashArray: "6 6", opacity: .9}).bindTooltip(`Confrontantes: ${d.cliente.split(/\s+[—–]\s+/)[0]} × ${o.cliente.split(/\s+[—–]\s+/)[0]}`).addTo(grupo); }
+}
+const mapas = {};
+async function montarMapas(){
+  const main = document.getElementById("mapa-main"), proc = document.getElementById("mapa-proc");
+  if (!main && !proc) return;
+  let L; try { L = await carregarLeaflet(); } catch { [main, proc].forEach(el => { if (el) el.innerHTML = `<p class="muted" style="padding:16px">Não foi possível carregar o mapa. Verifique a internet.</p>`; }); return; }
+  for (const [k, el] of [["main", main], ["proc", proc]]) {
+    if (!el || el._montado) continue;
+    const alvo = k === "main" ? S.demandas.filter(d => d.geo?.lat || d.geo?.poligono?.length) : (() => { const d = S.demandas.find(x => x.id === el.dataset.dem); return d ? [d, ...(d.vinculos || []).map(v => S.demandas.find(x => x.id === v.id)).filter(Boolean)] : []; })();
+    const sig = JSON.stringify([el.dataset.dem || "", S.marcando, alvo.map(d => [d.id, d.etapa, d.cliente, d.geo, d.vinculos])]);
+    const cache = mapas["_" + k];
+    if (cache && cache.sig === sig && cache.el !== el) { el.replaceWith(cache.el); setTimeout(() => cache.m.invalidateSize(), 30); continue; }
+    el._montado = true;
+    const antes = mapas[k]; if (antes) { try { antes.remove(); } catch {} }
+    const base = camadasBase(L);
+    const m = L.map(el, {layers: [base.sat], zoomControl: true, attributionControl: true});
+    L.control.layers({"Satélite": base.sat, "Ruas": base.ruas}, null, {position: "topright"}).addTo(m);
+    const g = L.featureGroup().addTo(m); mapas[k] = m;
+    if (k === "main") {
+      const ds = S.demandas.filter(d => d.geo?.lat || d.geo?.poligono?.length);
+      ds.forEach(d => desenharImovel(L, g, d, false)); linhasConfrontantes(L, g, ds);
+      if (S.mapaVista) m.setView(S.mapaVista.c, S.mapaVista.z); else if (ds.length) m.fitBounds(g.getBounds().pad(.2), {maxZoom: 15}); else m.setView([-20.39, -40.49], 10);
+      m.on("moveend", () => { S.mapaVista = {c: m.getCenter(), z: m.getZoom()}; });
+    } else {
+      const d = S.demandas.find(x => x.id === el.dataset.dem); if (!d) continue;
+      const viz = [d, ...(d.vinculos || []).map(v => S.demandas.find(x => x.id === v.id)).filter(Boolean)];
+      viz.forEach(x => desenharImovel(L, g, x, x.id === d.id)); linhasConfrontantes(L, g, viz);
+      if (g.getLayers().length) m.fitBounds(g.getBounds().pad(.3), {maxZoom: 16}); else m.setView([-20.39, -40.49], 10);
+      if (S.marcando === d.id) { el.classList.add("marcando"); m.once("click", async ev => { S.marcando = null; await salvarGeo(d.id, {...(d.geo || {}), lat: +ev.latlng.lat.toFixed(6), lng: +ev.latlng.lng.toFixed(6)}, "marcou a localização no mapa"); }); }
+    }
+    mapas["_" + k] = {sig, el, m};
+    setTimeout(() => m.invalidateSize(), 60);
+  }
+}
+async function salvarGeo(id, geo, txt){
+  const d = S.demandas.find(x => x.id === id); if (!d) return;
+  try { await S.db.doc("demandas/" + id).update({geo, historico: histAdd(d, txt), atualizadoEm: agoraISO()}); toast("Localização salva"); }
+  catch (err) { falhaEscrita(err); }
+}
+function lerCoordenadas(txt){
+  const m = String(txt).replace(/[°'"]/g, " ").match(/(-?\d{1,3}[.,]\d+)\s*[,;\s]\s*(-?\d{1,3}[.,]\d+)/);
+  if (!m) return null; const a = parseFloat(m[1].replace(",", ".")), b = parseFloat(m[2].replace(",", "."));
+  return Math.abs(a) <= 90 ? {lat: a, lng: b} : {lat: b, lng: a};
+}
+function lerPerimetro(texto, nome){
+  let pts = [];
+  if (/\.(geo)?json$/i.test(nome) || texto.trim().startsWith("{")) {
+    const gj = JSON.parse(texto); const geom = gj.type === "FeatureCollection" ? gj.features[0]?.geometry : gj.type === "Feature" ? gj.geometry : gj;
+    const anel = geom?.type === "Polygon" ? geom.coordinates[0] : geom?.type === "MultiPolygon" ? geom.coordinates[0][0] : null;
+    pts = (anel || []).map(([x, y]) => [y, x]);
+  } else {
+    const xml = new DOMParser().parseFromString(texto, "text/xml");
+    const c = xml.querySelector("Polygon coordinates") || xml.querySelector("LinearRing coordinates") || xml.querySelector("coordinates");
+    pts = (c?.textContent || "").trim().split(/\s+/).map(t => t.split(",").map(Number)).filter(a => a.length >= 2 && !isNaN(a[0])).map(([x, y]) => [y, x]);
+  }
+  if (pts.length < 3) throw new Error("perímetro não encontrado");
+  const lat = pts.reduce((s, p) => s + p[0], 0) / pts.length, lng = pts.reduce((s, p) => s + p[1], 0) / pts.length;
+  return {poligono: pts.map(p => [+p[0].toFixed(7), +p[1].toFixed(7)]), lat: +lat.toFixed(6), lng: +lng.toFixed(6)};
+}
+function geoCardHtml(d){
+  const g = d.geo || {}; const ed = !S.somenteLeitura;
+  const conf = (d.vinculos || []).filter(v => v.rel === "Confrontante").length;
+  return `<div class="card geo-card"><div class="conv-h"><h3>Localização do imóvel</h3>${g.lat ? `<span class="sub">${g.lat.toFixed(5)}, ${g.lng.toFixed(5)}${g.poligono?.length ? ` · perímetro com ${g.poligono.length} vértices` : ""}</span>` : ""}</div>
+    <div id="mapa-proc" class="mapa ${S.marcando === d.id ? "marcando" : ""}" data-dem="${d.id}"></div>
+    ${S.marcando === d.id ? `<p class="sub" style="margin:8px 0 0"><b>Toque no mapa</b> no ponto do imóvel. <a href="#" id="geo-cancel">Cancelar</a></p>` : ""}
+    <div class="geo-acts">
+      ${ed ? `<button type="button" class="btn sm" data-geomarcar="${d.id}">${g.lat ? "Mudar ponto no mapa" : "Marcar no mapa"}</button>
+      <form class="geo-coord" data-geocoord="${d.id}"><input name="c" placeholder="Colar coordenadas (-20.39, -40.49)" aria-label="Coordenadas"><button class="btn sm">OK</button></form>
+      <label class="btn sm filebtn">Importar perímetro (KML/GeoJSON)<input type="file" data-geoarq="${d.id}" accept=".kml,.geojson,.json,application/vnd.google-earth.kml+xml,application/geo+json"></label>` : ""}
+      ${g.lat ? `<a class="btn sm" href="https://www.google.com/maps/search/?api=1&query=${g.lat},${g.lng}" target="_blank" rel="noopener">Google Maps</a><a class="btn sm" href="https://earth.google.com/web/search/${g.lat},${g.lng}" target="_blank" rel="noopener">Google Earth</a>` : ""}
+      ${ed && g.lat ? `<button type="button" class="btn sm ghost" data-geolimpar="${d.id}">Remover</button>` : ""}
+    </div>
+    ${conf && !g.lat ? `<p class="sub" style="margin:8px 0 0">Marque este imóvel e os ${conf} confrontante${conf > 1 ? "s" : ""} para vê-los lado a lado.</p>` : ""}
+  </div>`;
+}
+function viewMapa(){
+  const com = S.demandas.filter(d => d.geo?.lat || d.geo?.poligono?.length), sem = S.demandas.filter(d => !(d.geo?.lat) && ATIVAS.includes(d.etapa));
+  return `<div class="cols-3-2 mapa-wrap">
+    <div class="card" style="padding:0;overflow:hidden"><div id="mapa-main" class="mapa grande"></div></div>
+    <div class="card"><h3>Imóveis no mapa <span class="chip">${com.length}</span></h3>
+      <div class="g-leg" style="margin:0 0 8px"><span><i style="background:#92967D"></i>Orçamento</span><span><i style="background:#5C6B3D"></i>Campo/escritório</span><span><i style="background:#B07530"></i>Entrada/protocolo</span><span><i style="background:#4E8747"></i>Entregue/concluída</span><span><i class="g-conf"></i>Confrontantes</span></div>
+      ${com.map(d => `<button type="button" class="li" data-mapfoco="${d.id}"><span class="t"><b>${esc(d.cliente)}</b></span><span class="pill ${etapaCls(d.etapa)}">${esc(d.etapa)}</span></button>`).join("") || `<p class="sub" style="margin:0">Nenhum imóvel marcado ainda.</p>`}
+      ${sem.length ? `<div class="label" style="margin:14px 0 4px">Em andamento sem localização (${sem.length})</div>${sem.slice(0, 12).map(d => `<button type="button" class="li" data-proc="${d.id}"><span class="t">${esc(d.cliente)}</span><span class="sub">marcar</span></button>`).join("")}` : ""}
+      <p class="sub" style="margin:12px 0 0">Para marcar: abra o cliente em Clientes → Localização do imóvel. Dá para tocar no mapa, colar coordenadas do Google Maps ou importar o perímetro em KML (SIGEF/Google Earth) ou GeoJSON.</p>
+    </div></div>`;
+}
+document.addEventListener("click", e => {
+  const mk = e.target.closest("[data-geomarcar]"); if (mk) { e.stopPropagation(); S.marcando = mk.dataset.geomarcar; render(); document.getElementById("mapa-proc")?.scrollIntoView({behavior: "smooth", block: "center"}); return; }
+  if (e.target.id === "geo-cancel") { e.preventDefault(); S.marcando = null; render(); return; }
+  const lp = e.target.closest("[data-geolimpar]"); if (lp) { e.stopPropagation(); if (lp.dataset.ok !== "1") { lp.dataset.ok = "1"; lp.textContent = "Confirmar remoção"; return; } salvarGeo(lp.dataset.geolimpar, null, "removeu a localização do imóvel"); return; }
+  const fc = e.target.closest("[data-mapfoco]"); if (fc) { const d = S.demandas.find(x => x.id === fc.dataset.mapfoco); const m = mapas.main; if (d && m) { if (d.geo?.poligono?.length > 2 && window.L) m.fitBounds(window.L.polygon(d.geo.poligono).getBounds(), {maxZoom: 17}); else m.setView(centroDe(d), 15); } return; }
+}, true);
+document.addEventListener("submit", e => {
+  const f = e.target.closest("[data-geocoord]"); if (!f) return; e.preventDefault();
+  const c = lerCoordenadas(f.elements.c.value); if (!c) { toast("Não reconheci as coordenadas. Use o formato -20.39, -40.49"); return; }
+  const d = S.demandas.find(x => x.id === f.dataset.geocoord); salvarGeo(d.id, {...(d.geo || {}), ...c}, "informou as coordenadas do imóvel");
+});
+document.addEventListener("change", async e => {
+  const inp = e.target.closest("[data-geoarq]"); if (!inp || !inp.files?.[0]) return;
+  const file = inp.files[0];
+  try { const geo = lerPerimetro(await file.text(), file.name); await salvarGeo(inp.dataset.geoarq, geo, `importou o perímetro do imóvel (${file.name})`); }
+  catch { toast("Não consegui ler o perímetro. Use KML do Google Earth/SIGEF ou GeoJSON com polígono."); }
+  inp.value = "";
+});
+
 /* ---------- Render ---------- */
 function render(){
   renderTabs(); renderStatus();
@@ -2431,8 +2975,8 @@ function render(){
   const ctx = S.tab + "|" + (S.tab === "conversas" ? S.convSel : S.tab === "clientes" ? S.cliSel : "");
   const mesmo = v.dataset.ctx === ctx; v.dataset.ctx = ctx; v.dataset.tab = S.tab;
   const nomeBrand = document.querySelector(".brand p"); if (nomeBrand) nomeBrand.textContent = `${saudacao()}, ${primeiro(S.me)} · ${capital(fmtDia(hoje()))}`;
-  v.innerHTML = S.tab === "inicio" ? viewInicio() : S.tab === "clientes" ? viewClientes() : S.tab === "conversas" ? viewConversas() : S.tab === "galeria" ? viewGaleria() : S.tab === "registro" ? viewRegistro() : S.tab === "produtividade" ? viewProdutividade() : S.tab === "financeiro" ? viewFinanceiro() : S.tab === "agenda" ? viewAgenda() : viewDemandas();
-  if (mesmo) for (const [id, val] of Object.entries(keep)) { if (["busca","fResp","pPessoa","pDias","r-pessoa","g-dem","g-pes","cl-busca","cv-busca"].includes(id)) continue; const el = document.getElementById(id); if (!el || !v.contains(el)) continue; if (el.type === "checkbox") el.checked = val; else if (el.tagName !== "SELECT" || [...el.options].some(o => o.value === val)) el.value = val; }
+  v.innerHTML = S.tab === "inicio" ? viewInicio() : S.tab === "clientes" ? viewClientes() : S.tab === "conversas" ? viewConversas() : S.tab === "galeria" ? viewGaleria() : S.tab === "mapa" ? viewMapa() : S.tab === "historico" ? viewHistorico() : S.tab === "registro" ? viewRegistro() : S.tab === "produtividade" ? viewProdutividade() : S.tab === "financeiro" ? viewFinanceiro() : S.tab === "agenda" ? viewAgenda() : viewDemandas();
+  if (mesmo) for (const [id, val] of Object.entries(keep)) { if (["busca","fResp","pPessoa","pDias","r-pessoa","g-dem","g-pes","cl-busca","cv-busca","aud-pessoa","aud-tipo","aud-dias","aud-busca"].includes(id)) continue; const el = document.getElementById(id); if (!el || !v.contains(el)) continue; if (el.type === "checkbox") el.checked = val; else if (el.tagName !== "SELECT" || [...el.options].some(o => o.value === val)) el.value = val; }
   if (mesmo && fileSel?.length) { const fi = v.querySelector("#mu-file"); try { fi.files = fileSel; } catch {} }
   const f = focusId && document.getElementById(focusId);
   if (f && v.contains(f) && (f.tagName === "INPUT" || f.tagName === "TEXTAREA")) { f.focus(); try { f.setSelectionRange(pos, pos); } catch {} }
@@ -2442,6 +2986,7 @@ function render(){
     const c = $("#cv-chat"); if (c) c.scrollTop = (!mesmo || cvFim) ? c.scrollHeight : cvTop;
   }
   renderDlgPanes();
+  montarMapas();
 }
 
 /* ---------- Eventos da view ---------- */
@@ -2543,7 +3088,8 @@ render();
   const use = n => window.claude?.use?.(n) ?? Promise.resolve(null);
   const [db, user, assets, mcp] = await Promise.all([use("db"), use("user"), use("assets"), use("mcp")]);
   if (!db) { S.erro = "Não foi possível conectar ao banco de dados. Verifique a internet e recarregue a página."; render(); return; }
-  S.db = db; S.assets = assets; S.mcp = mcp;
+  S.db = db; S.assets = assets; S.mcp = mcp; S.user = user;
+  $("#btnBusca").addEventListener("click", () => abrirBusca()); $("#btnEquipe").addEventListener("click", () => abrirPerfis());
   try { S.podeLimpar = S.finAcesso = !!(user && (user.isOwner() || user.canEdit())); } catch {}
   S.finCol = db.collection("data/fin/demandas");
   try {
@@ -2558,6 +3104,7 @@ render();
     S.contaMoises = minhaPessoa ? minhaPessoa === "moises-bruno" : /moises\s+bruno/.test(norm(nome));
   } catch {}
   try { const w = user?.can?.("data.write"); if (w === false) S.somenteLeitura = true; } catch {}
+  if (S.finAcesso && user?.equipe) $("#btnEquipe").hidden = false;
   let prontos = 0; const pronto = () => { if (++prontos >= 2 && !S.conectado) { S.conectado = true; setTimeout(() => mostrarBoasVindas(), 700); } render(); };
   const onErr = err => { if (err.code === "revoked") S.erro = "O acesso a este painel mudou. Recarregue a página."; else S.erro = "A conexão com o banco caiu. Recarregue a página."; render(); };
   db.collection("demandas").onSnapshot(s => { S.demandas = s.docs.map(d => ({id: d.id, ...d.data()})); pronto(); }, onErr);

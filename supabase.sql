@@ -89,3 +89,26 @@ grant select on public.equipe to authenticated;
 grant select, insert, update, delete on public.docs to authenticated;
 grant execute on function public.e_membro() to authenticated;
 grant execute on function public.e_admin() to authenticated;
+
+-- 9) Perfis de acesso (admin = tudo e financeiro; operacional = edita sem valores; leitura = acompanha e conversa)
+alter table public.equipe add column if not exists perfil text not null default 'operacional';
+update public.equipe set perfil = 'admin' where admin and perfil <> 'admin';
+alter table public.equipe drop constraint if exists equipe_perfil_ck;
+alter table public.equipe add constraint equipe_perfil_ck check (perfil in ('admin','operacional','leitura'));
+create or replace function public.e_editor() returns boolean
+language sql stable security definer set search_path = public as $$
+  select exists (select 1 from public.equipe where email = lower(coalesce(auth.jwt() ->> 'email', '')) and perfil <> 'leitura');
+$$;
+revoke execute on function public.e_editor() from public, anon;
+grant execute on function public.e_editor() to authenticated;
+alter policy "docs_inserir" on public.docs
+  with check (public.e_membro() and (col not like 'data/fin%' or public.e_admin()) and (public.e_editor() or col = 'mural' or col like 'demandas/%/conversa'));
+alter policy "docs_alterar" on public.docs
+  using (public.e_membro() and (col not like 'data/fin%' or public.e_admin()) and (public.e_editor() or col = 'mural' or col like 'demandas/%/conversa'))
+  with check (public.e_membro() and (col not like 'data/fin%' or public.e_admin()) and (public.e_editor() or col = 'mural' or col like 'demandas/%/conversa'));
+alter policy "docs_apagar" on public.docs
+  using (public.e_membro() and (col not like 'data/fin%' or public.e_admin()) and public.e_editor());
+do $$ begin
+  create policy "equipe_admin_altera" on public.equipe for update to authenticated using (public.e_admin()) with check (public.e_admin());
+exception when duplicate_object then null; end $$;
+grant update (perfil, admin, nome) on public.equipe to authenticated;

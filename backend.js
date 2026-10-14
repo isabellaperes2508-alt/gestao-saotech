@@ -253,7 +253,7 @@
     }
     for (const e of els) {
       const u = urls.get(e.dataset.blob)?.url; if (!u) continue;
-      if (e.tagName === "IMG") e.src = u; else e.href = u;
+      if (e.tagName === "IMG" || e.tagName === "IFRAME") e.src = u; else e.href = u;
       e.setAttribute("data-blob-ok", "");
     }
   }
@@ -267,7 +267,11 @@
       if (nome === "db") return db;
       if (nome === "assets") return assets;
       if (nome === "user") return {
-        isOwner: () => !!membro.admin, canEdit: () => !!membro.admin, can: () => true,
+        isOwner: () => !!membro.admin, canEdit: () => !!membro.admin,
+        can: acao => acao === "data.write" ? (membro.perfil || "operacional") !== "leitura" : true,
+        perfil: () => membro.perfil || (membro.admin ? "admin" : "operacional"),
+        async equipe(){ const {data, error} = await sb.from("equipe").select("email,pessoa,nome,admin,perfil").order("nome"); if (error) throw erroDb(error); return data || []; },
+        async definirPerfil(email, perfil){ const {error} = await sb.from("equipe").update({perfil, admin: perfil === "admin"}).eq("email", email); if (error) throw erroDb(error); },
         id: async () => session.user.id, name: async () => membro.nome, pessoa: () => membro.pessoa,
         me: async () => ({id: session.user.id, name: membro.nome, email: membro.email})
       };
