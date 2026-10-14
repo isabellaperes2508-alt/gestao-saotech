@@ -528,6 +528,16 @@ dialog.foto .sub{color:var(--creme-2)}
 .lb-nav:hover,.lb-x:hover{background:var(--musgo);color:var(--lima)}
 .lb-f{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 16px;flex-wrap:wrap;font-size:13px}
 .dlg-h .btn.sm{background:transparent;color:var(--creme);border-color:var(--musgo-line)}
+.vin{display:flex;align-items:center;gap:6px;border-top:1px solid var(--line)}
+.vin:first-of-type{border-top:0}
+.vin .li{border-top:0;flex:1;min-width:0}
+.vin .li .t{white-space:normal}
+.chip.rel-conf{background:var(--musgo);border-color:var(--musgo);color:var(--lima)}
+.chip.rel-cli{background:var(--accent-soft);color:var(--accent)}
+.vin-add{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line-2)}
+.vin-add select,.vin-add input{flex:1 1 160px;width:auto}
+a.li{text-decoration:none}
+a.li .ic{width:14px;height:14px;vertical-align:-2px}
 </style>
 
 
@@ -662,6 +672,7 @@ const ICON = {
   clip: '<svg class="ic" viewBox="0 0 24 24"><path d="M21 11.5l-8.6 8.6a5 5 0 0 1-7.1-7.1l8.6-8.6a3.5 3.5 0 0 1 5 5l-8.6 8.6a2 2 0 0 1-2.8-2.8l7.9-7.9"/></svg>',
   cal: '<svg class="ic" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
   check: '<svg class="ic" viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg>',
+  link: '<svg class="ic" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>',
   file: '<svg class="ic" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>'
 };
 
@@ -827,6 +838,7 @@ function cardHtml(d){
       ${cl.length ? `<span>${ICON.check} ${ok}/${cl.length}</span>` : ""}
       ${d.prazo ? `<span class="due ${p.cls}">${esc(p.txt)}</span>` : ""}
       ${pc ? `<span>${ICON.cal} ${fmtDM(pc.data)}</span>` : ""}
+      ${(d.vinculos || []).length ? `<span title="Processos vinculados (confrontantes)">${ICON.link} ${d.vinculos.length}</span>` : ""}
     </div>
     <div class="mv"><button type="button" data-mv="${d.id}|-1" aria-label="Voltar etapa" ${i <= 0 ? "disabled" : ""}>‹</button><button type="button" data-mv="${d.id}|1" aria-label="Avançar etapa" ${i >= ETAPAS.length - 1 ? "disabled" : ""}>›</button></div>
   </article>`;
@@ -1835,6 +1847,58 @@ function viewInicio(){
   </div>`;
 }
 
+
+/* ---------- Vínculos entre processos (confrontantes, mesmo cliente) ---------- */
+const RELACOES = ["Confrontante", "Mesmo cliente", "Relacionado"];
+function vinculosDe(d){
+  const out = [];
+  for (const v of d.vinculos || []) { const o = S.demandas.find(x => x.id === v.id); if (o) out.push({o, rel: v.rel || "Relacionado", obs: v.obs || ""}); }
+  for (const o of S.demandas) if (o.id !== d.id && !out.some(x => x.o.id === o.id) && baseCliente(o.cliente) && baseCliente(o.cliente) === baseCliente(d.cliente)) out.push({o, rel: "Mesmo cliente", obs: "", auto: true});
+  const ordem = r => RELACOES.indexOf(r);
+  return out.sort((a, b) => ordem(a.rel) - ordem(b.rel) || (a.o.cliente || "").localeCompare(b.o.cliente || "", "pt-BR"));
+}
+function vinculosHtml(d){
+  const vs = vinculosDe(d); const podeEd = !S.somenteLeitura;
+  const conf = vs.filter(v => v.rel === "Confrontante").length;
+  const opcoes = S.demandas.filter(o => o.id !== d.id && !vs.some(v => v.o.id === o.id)).sort((a, b) => (a.cliente || "").localeCompare(b.cliente || "", "pt-BR"));
+  return `<div class="card"><h3>Confrontantes e vínculos${conf ? ` <span class="chip">${conf} confrontante${conf > 1 ? "s" : ""}</span>` : ""}</h3>
+    ${vs.map(v => `<div class="vin"><button type="button" class="li" data-proc="${v.o.id}"><span class="t"><span class="chip rel-${v.rel === "Confrontante" ? "conf" : v.rel === "Mesmo cliente" ? "cli" : "out"}">${esc(v.rel)}</span> <b>${esc(v.o.cliente)}</b>${v.obs ? ` <span class="sub">· ${esc(v.obs)}</span>` : ""}</span><span class="pill ${etapaCls(v.o.etapa)}">${esc(v.o.etapa)}</span></button>${podeEd && !v.auto ? `<button type="button" class="btn sm ghost" data-vinrm="${d.id}|${v.o.id}" aria-label="Remover vínculo" title="Remover vínculo">✕</button>` : ""}</div>`).join("") || `<p class="sub" style="margin:0">Nenhum vínculo. Ligue aqui os confrontantes deste imóvel ou outros processos do mesmo cliente.</p>`}
+    ${podeEd && opcoes.length ? `<form class="vin-add" id="fVin" data-dem="${d.id}">
+      <select id="vin-dem" aria-label="Processo" required><option value="">Vincular a…</option>${opcoes.map(o => `<option value="${o.id}">${esc(o.cliente)} · ${esc(o.codigo)}</option>`).join("")}</select>
+      <select id="vin-rel" aria-label="Tipo de vínculo">${RELACOES.map(r => `<option>${r}</option>`).join("")}</select>
+      <input id="vin-obs" placeholder="Lado ou observação (opcional)" aria-label="Observação">
+      <button class="btn">Vincular</button></form>` : ""}
+  </div>`;
+}
+function trelloArqHtml(d){
+  const a = d.anexosTrello || []; if (!a.length) return "";
+  return `<div class="card"><h3>Arquivos no Trello <span class="chip">${a.length}</span></h3>
+    <p class="sub" style="margin:0 0 6px">Abrem no Trello (é preciso estar conectado à conta da equipe).</p>
+    ${a.map(x => `<a class="li" href="${esc(x.url)}" target="_blank" rel="noopener"><span class="t">${ICON.file} ${esc(x.nome)}</span><span class="sub">${esc(x.origem || "")}</span></a>`).join("")}</div>`;
+}
+async function salvarVinculo(aId, bId, rel, obs, remover){
+  const a = S.demandas.find(x => x.id === aId), b = S.demandas.find(x => x.id === bId); if (!a || !b) return;
+  const semB = (a.vinculos || []).filter(v => v.id !== bId), semA = (b.vinculos || []).filter(v => v.id !== aId);
+  const va = remover ? semB : [...semB, {id: bId, rel, obs}];
+  const vb = remover ? semA : [...semA, {id: aId, rel, obs: ""}];
+  const txtA = remover ? `removeu o vínculo com ${b.cliente}` : `vinculou ${b.cliente} como ${rel.toLowerCase()}`;
+  const txtB = remover ? `removeu o vínculo com ${a.cliente}` : `vinculou ${a.cliente} como ${rel.toLowerCase()}`;
+  try {
+    await S.db.doc("demandas/" + aId).update({vinculos: va, historico: histAdd(a, txtA), atualizadoEm: agoraISO()});
+    await S.db.doc("demandas/" + bId).update({vinculos: vb, historico: histAdd(b, txtB), atualizadoEm: agoraISO()});
+    toast(remover ? "Vínculo removido" : "Vínculo criado nos dois processos");
+  } catch (err) { falhaEscrita(err); }
+}
+document.addEventListener("submit", e => {
+  if (e.target.id !== "fVin") return; e.preventDefault();
+  const b = $("#vin-dem").value; if (!b) return;
+  salvarVinculo(e.target.dataset.dem, b, $("#vin-rel").value, $("#vin-obs").value.trim());
+});
+document.addEventListener("click", e => {
+  const r = e.target.closest("[data-vinrm]"); if (!r) return; e.stopPropagation();
+  const [a, b] = r.dataset.vinrm.split("|"); salvarVinculo(a, b, "", "", true);
+}, true);
+
 /* ---------- View: Clientes (processo completo de cada cliente) ---------- */
 const baseCliente = c => String(c || "").split(/\s+[—–-]\s+/)[0].trim().toLowerCase();
 function datasEtapas(d){
@@ -1872,7 +1936,6 @@ function processoHtml(d){
   const pc = proximoCampo(d.id); const p = prazoInfo(d);
   const f = S.fin[d.id]; const ent = S.podeFin ? entradaInfo(f) : null;
   const tel = telefone(d.contato);
-  const outros = S.demandas.filter(x => x.id !== d.id && baseCliente(x.cliente) && baseCliente(x.cliente) === baseCliente(d.cliente));
 
   const tl = linhaDoTempo(d).filter(x => S.tlFiltro === "tudo" || (S.tlFiltro === "etapas" ? x.k === "etapa" || x.k === "hist" : S.tlFiltro === "conversa" ? x.k === "msg" : x.k === "agenda"));
   const tlHtml = tl.slice(0, 80).map(x => {
@@ -1915,6 +1978,7 @@ function processoHtml(d){
       ${d.protocoloOrgao || d.protocoloNumero ? `<div class="pst"><span class="label">Protocolo</span><b style="font-size:16px">${esc(d.protocoloNumero || "—")}</b><span class="sub">${esc(d.protocoloOrgao || "")}${d.protocoloPrevisao ? " · retorno " + fmtDM(d.protocoloPrevisao) : ""}</span></div>` : ""}
       ${S.podeFin ? `<div class="pst dark"><span class="label">Financeiro</span><b>${f?.valorTotal ? brl(f.valorTotal) : "—"}</b><span class="sub">${ent ? esc(ent.txt) : f?.aceiteEm ? "" : "proposta não aceita"}${f?.saldoPagoEm ? " · saldo pago " + fmtDM(f.saldoPagoEm) : ""}</span></div>` : ""}
     </section>
+    <div style="margin-top:16px">${vinculosHtml(d)}</div>
     <div class="cols-3-2" style="margin-top:16px">
       <div class="card"><div class="conv-h"><h3>Linha do tempo</h3><div class="seg" role="group" aria-label="Filtrar linha do tempo">${seg("tudo", "Tudo")}${seg("etapas", "Etapas")}${seg("conversa", "Conversa")}${seg("agenda", "Agenda")}</div></div>
         <div class="tl">${tlHtml || `<p class="muted" style="margin:0">${S.conv[d.id] ? "Nada registrado neste filtro." : "Carregando…"}</p>`}</div></div>
@@ -1926,7 +1990,7 @@ function processoHtml(d){
         </div>
         ${arqs.length ? `<div class="card"><h3>Arquivos recentes</h3><div class="gal2 mini">${arqs.slice(0, 6).map(galItemHtml).join("")}</div>${arqs.length > 6 ? `<button type="button" class="btn sm" style="margin-top:10px" data-galdem="${d.id}">Ver todos os ${arqs.length} na Galeria</button>` : ""}</div>` : ""}
         ${d.notas ? `<div class="card"><h3>Observações</h3><div class="notas">${esc(d.notas)}</div></div>` : ""}
-        ${outros.length ? `<div class="card"><h3>Outros processos do cliente</h3>${outros.map(o => `<button type="button" class="li" data-proc="${o.id}"><span class="t"><b>${esc(o.codigo)}</b> · ${esc((o.servicos || []).join(", ") || o.cliente)}</span><span class="pill ${etapaCls(o.etapa)}">${esc(o.etapa)}</span></button>`).join("")}</div>` : ""}
+        ${trelloArqHtml(d)}
       </div>
     </div>
   </div>`;
@@ -1944,7 +2008,7 @@ function viewClientes(){
     <div class="seg" role="group" aria-label="Filtro"><button type="button" data-clif="ativas" aria-pressed="${S.cliFiltro === "ativas"}">Em andamento</button><button type="button" data-clif="todas" aria-pressed="${S.cliFiltro === "todas"}">Todos</button></div>
     <div class="lst">${lista.map(d => { const cl = d.checklist || []; const ok = cl.filter(i => i.ok).length; return `<button type="button" class="side-it" data-cli="${d.id}" aria-current="${d.id === S.cliSel}">
       <span class="r1"><b>${esc(d.cliente)}</b>${temNovidade(d) ? `<span class="ndot" title="Mensagem nova"></span>` : ""}</span>
-      <span class="prev">${esc(d.codigo)} · ${esc(d.etapa)}${d.municipio ? " · " + esc(d.municipio) : ""}</span>
+      <span class="prev">${esc(d.codigo)} · ${esc(d.etapa)}${d.municipio ? " · " + esc(d.municipio) : ""}${(d.vinculos || []).some(v => v.rel === "Confrontante") ? " · " + d.vinculos.filter(v => v.rel === "Confrontante").length + " confrontante(s)" : ""}</span>
       ${cl.length ? `<span class="prog"><i style="width:${Math.round(ok / cl.length * 100)}%"></i></span>` : ""}
     </button>`; }).join("") || `<p class="sub" style="padding:8px 12px">${S.conectado ? "Nenhum cliente encontrado." : "Carregando…"}</p>`}</div>
   </aside>`;
