@@ -538,6 +538,69 @@ dialog.foto .sub{color:var(--creme-2)}
 .vin-add select,.vin-add input{flex:1 1 160px;width:auto}
 a.li{text-decoration:none}
 a.li .ic{width:14px;height:14px;vertical-align:-2px}
+/* v8: celular — nada pode ficar mais largo que a tela */
+html,body{max-width:100%;overflow-x:hidden}
+@supports (overflow:clip){html,body{overflow-x:clip}}
+.wrap{min-width:0}
+#view,#view>*{min-width:0;max-width:100%}
+@media (max-width:860px){.cols,.cols-3-2{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:900px){.split{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:760px){.ini-grid{grid-template-columns:minmax(0,1fr)}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.card,.panel,.side,.chatbox,.proc,.hero,.proc-h{min-width:0}
+.notas,.tx,.li .t,.sub{overflow-wrap:anywhere}
+@media (max-width:640px){
+  header.top{padding:18px 16px 16px}
+  .hero{padding:20px 18px}
+  .hero .acts{width:100%}
+  .proc-h{padding:18px 16px}
+  .card{padding:14px}
+  .toolbar{flex-wrap:wrap}
+  .toolbar>*{min-width:0}
+  .toolbar select,.toolbar input{flex:1 1 100%}
+  .quick{flex-wrap:wrap}
+  .quick input,.quick select{flex:1 1 100%;min-width:0}
+  .li{flex-wrap:wrap}
+  .li .t{white-space:normal}
+  .conv .chatbox .chat{height:60vh}
+  .msg{max-width:100%}
+}
+/* contrato e pagamentos */
+.fin-card{border-top:3px solid var(--musgo)}
+.fin-sum{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:6px}
+fieldset .fin-sum{grid-template-columns:repeat(3,minmax(0,1fr))}
+.fin-sum>div{display:flex;flex-direction:column;gap:2px}
+.fin-sum b{font-family:var(--f-display);font-size:19px;font-weight:600;color:var(--musgo)}
+.ok-t{color:var(--good)!important} .crit-t{color:var(--crit)!important}
+.fin-list{display:flex;flex-direction:column}
+.fin-row{display:grid;grid-template-columns:minmax(0,1.2fr) auto minmax(0,1.6fr) auto;gap:10px 14px;align-items:center;padding:10px 0;border-top:1px solid var(--line);font-size:13px}
+.fin-row:first-child{border-top:0}
+.fin-row.pago{background:linear-gradient(90deg,var(--good-soft),transparent 70%);margin-inline:-8px;padding-inline:8px;border-radius:8px}
+.fin-row .num{font-weight:600;font-variant-numeric:tabular-nums}
+.fin-row .acts{justify-self:end}
+a.comp{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--accent);text-decoration:underline;margin-top:2px}
+a.comp .ic{width:13px;height:13px}
+.fin-edit{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.fin-edit-row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,.9fr) 40px;gap:6px;align-items:center}
+.fin-edit-row.pago input{background:var(--good-soft)}
+.fin-edit>.btn{align-self:flex-start}
+.fin-ct{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr);gap:8px 16px;align-items:center;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:12px 0;font:inherit;color:inherit;cursor:pointer}
+.card h3+.fin-ct{border-top:0}
+.fin-ct:hover b{color:var(--accent)}
+.fin-ct .a,.fin-ct .b,.fin-ct .c{display:flex;flex-direction:column;gap:4px;min-width:0}
+.fin-pg{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:13px}
+.card h3+.fin-pg{border-top:0}
+.fin-pg>div:last-child{display:flex;flex-direction:column;align-items:flex-end}
+@media (max-width:640px){
+  .fin-sum{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fin-row{grid-template-columns:minmax(0,1fr) auto}
+  .fin-row>div:nth-child(3){grid-column:1/-1}
+  .fin-row .acts{grid-column:1/-1;justify-self:stretch}.fin-row .acts .btn{width:100%;justify-content:center}
+  .fin-edit-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 40px}
+  .fin-edit-row input[data-pk="rotulo"]{grid-column:1/-1}
+  .fin-ct{grid-template-columns:minmax(0,1fr)}
+  .mini-pipe{display:flex;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  .mini-pipe button{flex:0 0 112px}
+}
 </style>
 
 
@@ -984,17 +1047,11 @@ function paneResumo(d, novo){
         </div>
       </details>
       <datalist id="orgaos"><option>SIGEF / INCRA</option><option>Cartório de Registro de Imóveis</option><option>SICAR / órgão ambiental</option><option>Receita Federal (ITR)</option><option>Prefeitura</option></datalist>
-      ${S.podeFin ? `
-      <fieldset><legend>Financeiro · visível só para Moisés Bruno</legend>
-        <div class="fgrid">
-          <label class="f span2">Valor total (R$)<input id="d-valor" inputmode="decimal" value="${esc(f.valorTotal ?? "")}"></label>
-          <label class="f span2">Entrada (R$)<input id="d-entrada" inputmode="decimal" value="${esc(f.entradaValor ?? "")}"></label>
-          <label class="f span2">Aceite da proposta<input id="d-aceite" type="date" value="${esc(f.aceiteEm)}"></label>
-          <label class="f span3">Entrada paga em<input id="d-entpaga" type="date" value="${esc(f.entradaPagaEm)}"></label>
-          <label class="f span3">Saldo pago em<input id="d-saldopago" type="date" value="${esc(f.saldoPagoEm)}"></label>
-        </div>
-        <p class="sub" style="margin:8px 0 0">A entrada vence 3 dias após o aceite. O trabalho de campo só começa com a entrada paga.</p>
-      </fieldset>` : ""}
+      ${S.podeFin && !novo ? (() => { const r = finResumo(f); return `
+      <fieldset><legend>Contrato e pagamentos · só Moisés Bruno</legend>
+        ${r.ps.length ? `<div class="fin-sum"><div><span class="label">Contrato</span><b>${brl(r.total)}</b></div><div><span class="label">Recebido</span><b class="ok-t">${brl(r.pago)}</b></div><div><span class="label">Em aberto</span><b class="${r.atrasadas ? "crit-t" : ""}">${brl(r.aberto)}</b></div></div>` : `<p class="sub" style="margin:0 0 8px">${r.legado ? "Valor lançado no formato antigo: " + brl(f.valorTotal) + "." : "Nenhum contrato lançado."}</p>`}
+        <button type="button" class="btn sm primary" data-contrato="${d.id}">${r.ps.length ? "Ver parcelas e registrar pagamento" : "Lançar contrato fechado"}</button>
+      </fieldset>`; })() : ""}
     </div>
     <div class="dlg-f">
       <div>${!novo ? `<button type="button" class="btn danger" id="d-del">Excluir</button>` : ""}</div>
@@ -1038,13 +1095,6 @@ function ligarResumo(d, novo){
     delete body.id;
     try {
       await ref.set(body);
-      if (S.podeFin) {
-        await S.finCol.doc(ref.id).set({
-          valorTotal: num($("#d-valor").value), entradaValor: num($("#d-entrada").value),
-          aceiteEm: $("#d-aceite").value || null, entradaPagaEm: $("#d-entpaga").value || null, saldoPagoEm: $("#d-saldopago").value || null,
-          exemplo: !!atual.exemplo, atualizadoEm: agoraISO()
-        });
-      }
       toast(novo ? "Demanda criada com checklist" : "Demanda salva");
       if (novo) { fecharDlg(); abrirDemanda(ref.id, "checklist"); } else { btn.disabled = false; btn.textContent = "Salvar"; }
     } catch (err) { falhaEscrita(err); btn.disabled = false; btn.textContent = "Salvar"; }
@@ -1554,36 +1604,254 @@ function viewProdutividade(){
 
 /* ---------- View: Financeiro ---------- */
 function viewFinanceiro(){
-  const linhas = S.demandas.map(d => ({d, f: S.fin[d.id] || {}})).filter(x => x.f.valorTotal || x.f.aceiteEm);
-  let receber = 0, entVenc = 0, entAberto = 0, saldoAberto = 0;
-  for (const {d, f} of linhas) {
-    const tot = f.valorTotal || 0, ent = f.entradaValor || 0;
-    if (!f.entradaPagaEm && f.aceiteEm) { receber += ent; entAberto++; if (entradaInfo(f)?.vencida) entVenc++; }
-    if (!f.saldoPagoEm) { receber += Math.max(0, tot - (f.entradaPagaEm ? ent : (f.aceiteEm ? ent : 0))); if (["Entregue","Concluída"].includes(d.etapa)) saldoAberto++; }
+  const linhas = S.demandas.map(d => ({d, f: S.fin[d.id] || {}})).map(x => ({...x, r: finResumo(x.f)})).filter(x => x.r.ps.length || x.r.legado);
+  const mes = hoje().slice(0, 7);
+  let receber = 0, atrasadas = 0, recebidoMes = 0, ativos = 0;
+  const pagamentos = [];
+  for (const x of linhas) {
+    receber += x.r.aberto; atrasadas += x.r.atrasadas; if (!x.r.quitado && x.r.aberto > 0) ativos++;
+    for (const p of x.r.ps) if (p.pago) { pagamentos.push({d: x.d, p}); if ((p.pago.data || "").startsWith(mes)) recebidoMes += p.pago.valor ?? p.valor ?? 0; }
   }
-  linhas.sort((a, b) => (entradaInfo(b.f)?.vencida ? 1 : 0) - (entradaInfo(a.f)?.vencida ? 1 : 0));
+  linhas.sort((a, b) => b.r.atrasadas - a.r.atrasadas || ((a.r.proxima?.vencimento || "9") < (b.r.proxima?.vencimento || "9") ? -1 : 1));
+  pagamentos.sort((a, b) => (b.p.pago.data + b.p.pago.hora) > (a.p.pago.data + a.p.pago.hora) ? 1 : -1);
+  const semContrato = S.demandas.filter(d => ATIVAS.includes(d.etapa) && d.etapa !== "Orçamento" && !(S.fin[d.id]?.parcelas || []).length);
   return `
   <section class="kpis">
-    <div class="kpi"><span class="label">A receber</span><span class="v" style="font-size:24px">${brl(receber)}</span><span class="s">entradas e saldos em aberto</span></div>
-    <div class="kpi ${entVenc ? "alert" : ""}"><span class="label">Entradas vencidas</span><span class="v">${entVenc}</span><span class="s">mais de 3 dias após o aceite</span></div>
-    <div class="kpi ${entAberto ? "warn" : ""}"><span class="label">Entradas em aberto</span><span class="v">${entAberto}</span><span class="s">aguardando pagamento</span></div>
-    <div class="kpi ${saldoAberto ? "alert" : ""}"><span class="label">Entregues sem saldo pago</span><span class="v">${saldoAberto}</span><span class="s">cobrar o restante</span></div>
+    <div class="kpi"><span class="label">A receber</span><span class="v" style="font-size:24px">${brl(receber)}</span><span class="s">${ativos} contrato${ativos === 1 ? "" : "s"} em aberto</span></div>
+    <div class="kpi"><span class="label">Recebido no mês</span><span class="v" style="font-size:24px">${brl(recebidoMes)}</span><span class="s">${esc(new Date().toLocaleDateString("pt-BR", {month: "long"}))}</span></div>
+    <div class="kpi ${atrasadas ? "alert" : ""}"><span class="label">Parcelas atrasadas</span><span class="v">${atrasadas}</span><span class="s">cobrar o cliente</span></div>
+    <div class="kpi ${semContrato.length ? "warn" : ""}"><span class="label">Sem contrato lançado</span><span class="v">${semContrato.length}</span><span class="s">processos já em andamento</span></div>
   </section>
-  <div class="panel" style="overflow-x:auto">
-    <table style="width:100%;border-collapse:collapse;min-width:640px;font-size:13px">
-      <thead><tr class="label" style="text-align:left">${["Demanda","Etapa","Valor total","Entrada","Situação da entrada","Saldo"].map(h => `<th style="padding:10px 16px;font-weight:600">${h}</th>`).join("")}</tr></thead>
-      <tbody>${linhas.map(({d, f}) => { const e = entradaInfo(f); const saldo = Math.max(0, (f.valorTotal || 0) - (f.entradaValor || 0)); return `<tr data-open="${d.id}" style="border-top:1px solid var(--line);cursor:pointer">
-        <td style="padding:10px 16px"><span class="mono">${esc(d.codigo)}</span><div class="sub">${esc(d.cliente)}</div></td>
-        <td style="padding:10px 16px"><span class="pill ${etapaCls(d.etapa)}">${esc(d.etapa)}</span></td>
-        <td style="padding:10px 16px" class="num">${brl(f.valorTotal)}</td>
-        <td style="padding:10px 16px" class="num">${brl(f.entradaValor)}</td>
-        <td style="padding:10px 16px" class="due ${e?.cls === "ok" ? "" : e?.cls || ""}">${e ? esc(e.txt) : `<span class="muted">sem aceite</span>`}</td>
-        <td style="padding:10px 16px" class="num">${f.saldoPagoEm ? `<span style="color:var(--good)">pago ${fmtData(f.saldoPagoEm)}</span>` : brl(saldo)}</td></tr>`; }).join("") || `<tr><td colspan="6" class="empty">Nenhum valor lançado. Abra uma demanda e preencha a parte financeira.</td></tr>`}</tbody>
-    </table>
+  <div class="card"><h3>Contratos</h3>
+    ${linhas.map(({d, f, r}) => { const pct = r.total ? Math.min(100, Math.round(r.pago / r.total * 100)) : 0; const st = r.quitado ? {txt: "Quitado", cls: ""} : r.proxima ? statusParcela(r.proxima) : {txt: r.legado ? "lançar parcelas" : "—", cls: ""};
+      return `<button type="button" class="fin-ct" data-proc="${d.id}">
+        <span class="a"><b>${esc(d.cliente)}</b><span class="sub">${esc(d.codigo)} · ${esc(f.modo || "valor antigo")} · <span class="pill ${etapaCls(d.etapa)}">${esc(d.etapa)}</span></span></span>
+        <span class="b"><span class="num"><b>${brl(r.pago)}</b> <span class="sub">de ${brl(r.total)}</span></span><span class="prog"><i style="width:${pct}%"></i></span></span>
+        <span class="c"><span class="due ${st.cls}">${esc(r.quitado ? "Quitado" : st.txt)}</span>${r.proxima && !r.quitado ? `<span class="sub">${esc(r.proxima.rotulo)} · ${fmtData(r.proxima.vencimento)} · ${brl(r.proxima.valor)}</span>` : ""}</span>
+      </button>`; }).join("") || `<p class="muted" style="margin:0">Nenhum contrato lançado. Abra um cliente em Clientes e toque em "Lançar contrato fechado".</p>`}
   </div>
-  <p class="sub" style="margin-top:10px">Esta aba aparece quando o usuário selecionado é Moisés Bruno. Os valores ficam protegidos no servidor e só podem ser lidos pelos administradores cadastrados (Moisés Bruno e Isabella Cleto).</p>`;
+  ${semContrato.length ? `<div class="card" style="margin-top:16px"><h3>Processos em andamento sem contrato</h3>${semContrato.map(d => `<div class="vin"><button type="button" class="li" data-proc="${d.id}"><span class="t"><b>${esc(d.cliente)}</b> · ${esc(d.etapa)}</span></button><button type="button" class="btn sm" data-contrato="${d.id}">Lançar</button></div>`).join("")}</div>` : ""}
+  <div class="card" style="margin-top:16px"><h3>Últimos pagamentos</h3>
+    ${pagamentos.slice(0, 30).map(({d, p}) => `<div class="fin-pg"><div><b>${brl(p.pago.valor ?? p.valor)}</b> · ${esc(p.pago.forma || "")}<div class="sub">${esc(d.cliente)} · ${esc(p.rotulo)}</div></div><div style="text-align:right"><span class="sub">${fmtData(p.pago.data)} ${esc(p.pago.hora || "")}</span>${compLink(p.pago.comprovante)}</div></div>`).join("") || `<p class="muted" style="margin:0">Nenhum pagamento registrado ainda.</p>`}
+  </div>
+  <p class="sub" style="margin-top:10px">Esta aba e os valores aparecem só quando o usuário é Moisés Bruno. Os dados ficam protegidos no servidor e só os administradores conseguem lê-los.</p>`;
 }
 
+
+
+/* ---------- Contrato e pagamentos (só Moisés Bruno / administradores) ---------- */
+const FORMAS_PG = ["Pix", "Transferência / TED", "Boleto", "Dinheiro", "Cartão de crédito", "Cartão de débito", "Cheque"];
+const MODOS = ["À vista", "Parcelado", "Entrada + parcelas"];
+const numBR = v => { if (v == null || v === "") return null; const t = String(v).trim().replace(/[R$\s]/g, ""); const n = parseFloat(t.includes(",") ? t.replace(/\./g, "").replace(",", ".") : t); return isNaN(n) ? null : Math.round(n * 100) / 100; };
+const fmtNum = v => v == null ? "" : Number(v).toLocaleString("pt-BR", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const addMeses = (iso, n) => { const d = new Date(iso + "T12:00:00"); const dia = d.getDate(); d.setDate(1); d.setMonth(d.getMonth() + n); const ult = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate(); d.setDate(Math.min(dia, ult)); return d.toLocaleDateString("sv-SE"); };
+function finResumo(f){
+  f = f || {};
+  const ps = f.parcelas || [];
+  if (!ps.length) {
+    const total = f.valorTotal || 0, ent = f.entradaValor || 0;
+    const pago = (f.entradaPagaEm ? ent : 0) + (f.saldoPagoEm ? Math.max(0, total - ent) : 0);
+    return {total, pago, aberto: Math.max(0, total - pago), atrasadas: entradaInfo(f)?.vencida ? 1 : 0, proxima: null, ps, legado: !!(total || f.aceiteEm)};
+  }
+  const total = f.valorTotal || ps.reduce((s, p) => s + (p.valor || 0), 0);
+  const pago = ps.reduce((s, p) => s + (p.pago ? (p.pago.valor ?? p.valor ?? 0) : 0), 0);
+  const abertas = ps.filter(p => !p.pago).sort((a, b) => (a.vencimento || "9") < (b.vencimento || "9") ? -1 : 1);
+  return {total, pago, aberto: Math.max(0, total - pago), atrasadas: abertas.filter(p => p.vencimento && p.vencimento < hoje()).length, proxima: abertas[0] || null, ps, quitado: !abertas.length};
+}
+const statusParcela = p => p.pago ? {txt: "Pago", cls: "ok"} : !p.vencimento ? {txt: "Sem vencimento", cls: ""} : p.vencimento < hoje() ? {txt: `Atrasada ${-diff(p.vencimento, hoje())} d`, cls: "crit"} : p.vencimento === hoje() ? {txt: "Vence hoje", cls: "warn"} : diff(p.vencimento, hoje()) <= 7 ? {txt: `Vence em ${diff(p.vencimento, hoje())} d`, cls: "warn"} : {txt: "Em aberto", cls: ""};
+function compLink(c){ return c ? `<a class="comp" data-blob="${esc(c.id)}" target="_blank" rel="noopener">${ICON.clip} ${esc(c.nome || "comprovante")}</a>` : ""; }
+function parcelaRowHtml(id, p){
+  const st = statusParcela(p);
+  return `<div class="fin-row ${p.pago ? "pago" : ""}">
+    <div><b>${esc(p.rotulo)}</b><div class="sub">${p.vencimento ? "vence " + fmtData(p.vencimento) : "sem vencimento"}</div></div>
+    <div class="num">${brl(p.pago ? (p.pago.valor ?? p.valor) : p.valor)}</div>
+    <div>${p.pago ? `<span class="due ok-t">Pago em ${fmtData(p.pago.data)} às ${esc(p.pago.hora || "")}</span><div class="sub">${esc(p.pago.forma || "")}${p.pago.obs ? " · " + esc(p.pago.obs) : ""}</div>${compLink(p.pago.comprovante)}` : `<span class="due ${st.cls}">${esc(st.txt)}</span>`}</div>
+    <div class="acts"><button type="button" class="btn sm ${p.pago ? "" : "primary"}" data-pgto="${id}|${p.id}">${p.pago ? "Editar" : "Registrar pagamento"}</button></div>
+  </div>`;
+}
+function contratoCardHtml(d){
+  if (!S.podeFin) return "";
+  const f = S.fin[d.id] || {}; const r = finResumo(f);
+  if (!r.ps.length) return `<div class="card fin-card"><div class="conv-h"><h3>Contrato e pagamentos</h3><span class="chip">só Moisés Bruno</span></div>
+    ${r.legado ? `<p class="sub" style="margin:0 0 10px">Valor lançado: ${brl(f.valorTotal)}${f.entradaValor ? ` · entrada ${brl(f.entradaValor)}` : ""}. Lance o contrato para controlar cada parcela.</p>` : `<p class="sub" style="margin:0 0 10px">Nenhum contrato lançado para este cliente.</p>`}
+    <button type="button" class="btn primary" data-contrato="${d.id}">Lançar contrato fechado</button></div>`;
+  const pct = r.total ? Math.min(100, Math.round(r.pago / r.total * 100)) : 0;
+  return `<div class="card fin-card"><div class="conv-h"><div><span class="label">Contrato ${f.aceiteEm ? "fechado em " + fmtData(f.aceiteEm) : ""} · ${esc(f.modo || "")}</span><h3>Contrato e pagamentos</h3></div><button type="button" class="btn sm" data-contrato="${d.id}">Editar contrato</button></div>
+    <div class="fin-sum">
+      <div><span class="label">Valor do contrato</span><b>${brl(r.total)}</b></div>
+      <div><span class="label">Recebido</span><b class="ok-t">${brl(r.pago)}</b></div>
+      <div><span class="label">Em aberto</span><b class="${r.atrasadas ? "crit-t" : ""}">${brl(r.aberto)}</b></div>
+      <div><span class="label">Situação</span><b style="font-size:15px">${r.quitado ? "Quitado" : r.atrasadas ? `${r.atrasadas} atrasada${r.atrasadas > 1 ? "s" : ""}` : r.proxima ? "Próx. " + fmtDM(r.proxima.vencimento) : "—"}</b></div>
+    </div>
+    <div class="prog" style="margin:4px 0 12px"><i style="width:${pct}%"></i></div>
+    ${f.obsContrato ? `<p class="sub" style="margin:0 0 8px">${esc(f.obsContrato)}</p>` : ""}
+    <div class="fin-list">${r.ps.map(p => parcelaRowHtml(d.id, p)).join("")}</div>
+  </div>`;
+}
+function gerarParcelas(modo, total, aceite, o){
+  const out = []; const id = () => uid();
+  total = total || 0;
+  if (modo === "À vista") return [{id: id(), n: 0, rotulo: "À vista", valor: total, vencimento: o.venc1 || aceite}];
+  let resto = total, n = Math.max(1, o.n || 1), venc = o.venc1 || addDias(aceite, 30);
+  if (modo === "Entrada + parcelas") {
+    const ent = Math.min(total, o.entrada || 0);
+    out.push({id: id(), n: 0, rotulo: "Entrada", valor: ent, vencimento: o.vencEnt || addDias(aceite, 3)});
+    resto = Math.round((total - ent) * 100) / 100;
+  }
+  const base = Math.floor(resto / n * 100) / 100;
+  for (let i = 0; i < n; i++) {
+    const v = i === n - 1 ? Math.round((resto - base * (n - 1)) * 100) / 100 : base;
+    out.push({id: id(), n: i + 1, rotulo: `Parcela ${i + 1}/${n}`, valor: v, vencimento: addMeses(venc, i)});
+  }
+  return out;
+}
+function sincronizarLegado(f){
+  const ps = f.parcelas || []; if (!ps.length) return f;
+  const p0 = ps[0];
+  f.entradaValor = p0.valor; f.entradaPagaEm = p0.pago ? p0.pago.data : null;
+  const todas = ps.every(p => p.pago);
+  f.saldoPagoEm = todas ? ps.map(p => p.pago.data).sort().slice(-1)[0] : null;
+  return f;
+}
+async function salvarFin(id, f, logTxt){
+  const corpo = sincronizarLegado({...f, atualizadoEm: agoraISO()});
+  if (logTxt) corpo.log = [...(f.log || []).slice(-199), {em: agoraISO(), pessoa: S.me, txt: logTxt}];
+  delete corpo.id;
+  await S.finCol.doc(id).set(corpo);
+}
+
+/* diálogo: lançar / editar contrato */
+function abrirContrato(id){
+  const d = S.demandas.find(x => x.id === id); if (!d || !S.podeFin) return;
+  const f = S.fin[id] || {};
+  const temPago = (f.parcelas || []).some(p => p.pago);
+  S.dlg = {tipo: "contrato", id, unsubs: [], parcelas: (f.parcelas || []).map(p => ({...p}))};
+  const dlg = $("#dlg"); dlg.className = "big";
+  const modo = f.modo || "Entrada + parcelas";
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">${esc(d.codigo)} · contrato</span><h2 style="font-size:19px">${esc(d.cliente)}</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+  <form id="fContrato" class="dlg-b" autocomplete="off">
+    <div class="fgrid">
+      <label class="f span2">Valor do contrato (R$)<input id="ct-total" inputmode="decimal" required value="${esc(fmtNum(f.valorTotal))}" placeholder="0,00"></label>
+      <label class="f span2">Contrato fechado em<input id="ct-aceite" type="date" required value="${esc(f.aceiteEm || hoje())}"></label>
+      <label class="f span2">Forma de pagamento<select id="ct-modo">${MODOS.map(m => `<option ${m === modo ? "selected" : ""}>${m}</option>`).join("")}</select></label>
+    </div>
+    <div class="fgrid" id="ct-op" style="margin-top:12px"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <b>Parcelas</b>
+      <button type="button" class="btn sm" id="ct-gerar">${S.dlg.parcelas.length ? "Recalcular parcelas" : "Gerar parcelas"}</button>
+    </div>
+    ${temPago ? `<p class="sub" style="margin:4px 0 0">Parcelas já pagas ficam travadas. Recalcular refaz só as parcelas em aberto, com o valor que falta.</p>` : ""}
+    <div id="ct-lista" class="fin-edit"></div>
+    <div id="ct-soma" class="sub" style="margin-top:6px"></div>
+    <label class="f" style="margin-top:12px">Observações do contrato<textarea id="ct-obs" rows="2" placeholder="Ex.: desconto, condições, contrato assinado em…">${esc(f.obsContrato || "")}</textarea></label>
+  </form>
+  <div class="dlg-f"><span class="sub">Visível apenas para Moisés Bruno.</span><div style="display:flex;gap:8px"><button type="button" class="btn" data-close>Cancelar</button><button type="submit" form="fContrato" class="btn primary" id="ct-save">Salvar contrato</button></div></div>`;
+  if (!dlg.open) dlg.showModal();
+  const opHtml = () => {
+    const m = $("#ct-modo").value, ac = $("#ct-aceite").value || hoje();
+    const ps = S.dlg.parcelas; const ent = ps.find(p => p.n === 0 && p.rotulo === "Entrada"); const nP = ps.filter(p => p.n > 0).length || 3;
+    $("#ct-op").innerHTML = m === "À vista"
+      ? `<label class="f span3">Vencimento do pagamento<input id="ct-venc1" type="date" value="${esc(ps[0]?.vencimento || addDias(ac, 3))}"></label>`
+      : `${m === "Entrada + parcelas" ? `<label class="f span2">Entrada (R$)<input id="ct-ent" inputmode="decimal" value="${esc(fmtNum(ent?.valor ?? f.entradaValor))}"></label><label class="f span2">Vencimento da entrada<input id="ct-vent" type="date" value="${esc(ent?.vencimento || addDias(ac, 3))}"></label>` : ""}
+         <label class="f span1">Nº de parcelas<input id="ct-n" type="number" min="1" max="60" value="${nP}"></label>
+         <label class="f span1">1ª parcela vence<input id="ct-venc1" type="date" value="${esc(ps.find(p => p.n === 1)?.vencimento || addDias(ac, 30))}"></label>`;
+  };
+  const lista = () => {
+    const ps = S.dlg.parcelas;
+    $("#ct-lista").innerHTML = ps.length ? ps.map((p, i) => `<div class="fin-edit-row ${p.pago ? "pago" : ""}">
+      <input data-pi="${i}" data-pk="rotulo" value="${esc(p.rotulo)}" ${p.pago ? "disabled" : ""} aria-label="Descrição">
+      <input data-pi="${i}" data-pk="vencimento" type="date" value="${esc(p.vencimento || "")}" ${p.pago ? "disabled" : ""} aria-label="Vencimento">
+      <input data-pi="${i}" data-pk="valor" inputmode="decimal" value="${esc(fmtNum(p.valor))}" ${p.pago ? "disabled" : ""} aria-label="Valor">
+      ${p.pago ? `<span class="chip">pago</span>` : `<button type="button" class="btn sm ghost" data-prm="${i}" aria-label="Remover parcela">✕</button>`}
+    </div>`).join("") + `<button type="button" class="btn sm ghost" id="ct-add">+ Adicionar parcela</button>` : `<p class="muted" style="margin:8px 0 0">Preencha o valor e a forma de pagamento e toque em Gerar parcelas.</p>`;
+    const soma = ps.reduce((s, p) => s + (p.valor || 0), 0), tot = numBR($("#ct-total").value) || 0;
+    const dif = Math.round((tot - soma) * 100) / 100;
+    $("#ct-soma").innerHTML = ps.length ? `Soma das parcelas: <b>${brl(soma)}</b>${Math.abs(dif) >= 0.01 ? ` <span class="due crit">· diferença de ${brl(dif)} para o valor do contrato</span>` : " · confere com o valor do contrato"}` : "";
+  };
+  const gerar = () => {
+    const m = $("#ct-modo").value, tot = numBR($("#ct-total").value) || 0, ac = $("#ct-aceite").value || hoje();
+    const pagas = S.dlg.parcelas.filter(p => p.pago); const jaPago = pagas.reduce((s, p) => s + (p.pago.valor ?? p.valor ?? 0), 0);
+    const novas = gerarParcelas(pagas.length && m !== "À vista" ? "Parcelado" : m, Math.max(0, tot - jaPago), ac, {
+      n: +($("#ct-n")?.value || 1), venc1: $("#ct-venc1")?.value, entrada: numBR($("#ct-ent")?.value), vencEnt: $("#ct-vent")?.value});
+    if (pagas.length) novas.forEach((p, i) => { p.n = pagas.length + i; p.rotulo = `Parcela ${pagas.length + i + 1 - (pagas.some(x => x.rotulo === "Entrada") ? 1 : 0)}`; });
+    S.dlg.parcelas = [...pagas, ...novas]; lista();
+  };
+  opHtml(); lista();
+  dlg.querySelector("#ct-modo").addEventListener("change", () => { opHtml(); });
+  dlg.querySelector("#ct-total").addEventListener("input", lista);
+  dlg.querySelector("#ct-gerar").addEventListener("click", gerar);
+  dlg.querySelector("#ct-lista").addEventListener("input", e => { const i = e.target.dataset.pi; if (i == null) return; const k = e.target.dataset.pk; S.dlg.parcelas[i][k] = k === "valor" ? numBR(e.target.value) : e.target.value; if (k === "valor") { const sv = $("#ct-soma"); const soma = S.dlg.parcelas.reduce((s, p) => s + (p.valor || 0), 0); const dif = Math.round(((numBR($("#ct-total").value) || 0) - soma) * 100) / 100; sv.innerHTML = `Soma das parcelas: <b>${brl(soma)}</b>${Math.abs(dif) >= 0.01 ? ` <span class="due crit">· diferença de ${brl(dif)} para o valor do contrato</span>` : " · confere com o valor do contrato"}`; } });
+  dlg.querySelector("#ct-lista").addEventListener("click", e => {
+    const r = e.target.closest("[data-prm]"); if (r) { S.dlg.parcelas.splice(+r.dataset.prm, 1); lista(); return; }
+    if (e.target.id === "ct-add") { const ult = S.dlg.parcelas.slice(-1)[0]; S.dlg.parcelas.push({id: uid(), n: S.dlg.parcelas.length, rotulo: `Parcela ${S.dlg.parcelas.length + 1}`, valor: 0, vencimento: ult?.vencimento ? addMeses(ult.vencimento, 1) : hoje()}); lista(); }
+  });
+  dlg.querySelector("#fContrato").addEventListener("submit", async e => {
+    e.preventDefault();
+    if (!S.dlg.parcelas.length) gerar();
+    const tot = numBR($("#ct-total").value);
+    if (!tot) { toast("Informe o valor do contrato"); return; }
+    const btn = $("#ct-save"); btn.disabled = true; btn.textContent = "Salvando…";
+    const atual = S.fin[id] || {};
+    const novo = {...atual, valorTotal: tot, aceiteEm: $("#ct-aceite").value || hoje(), modo: $("#ct-modo").value, obsContrato: $("#ct-obs").value.trim(), parcelas: S.dlg.parcelas.map((p, i) => ({...p, n: i})), exemplo: !!d.exemplo};
+    try {
+      await salvarFin(id, novo, atual.parcelas?.length ? "editou o contrato" : `lançou o contrato de ${brl(tot)} (${novo.modo})`);
+      if (d.etapa === "Orçamento") await S.db.doc("demandas/" + id).update({etapa: "Aguardando entrada", atualizadoEm: agoraISO(), atualizadoPor: S.me, historico: histAdd(d, "moveu de Orçamento para Aguardando entrada (contrato fechado)")});
+      toast("Contrato salvo"); fecharDlg(); render();
+    } catch (err) { falhaEscrita(err); btn.disabled = false; btn.textContent = "Salvar contrato"; }
+  });
+}
+
+/* diálogo: registrar pagamento de uma parcela */
+function abrirPagamento(id, pid){
+  const d = S.demandas.find(x => x.id === id); const f = S.fin[id]; if (!d || !f || !S.podeFin) return;
+  const p = (f.parcelas || []).find(x => x.id === pid); if (!p) return;
+  const pg = p.pago || {};
+  S.dlg = {tipo: "pagamento", id, pid, unsubs: []};
+  const dlg = $("#dlg"); dlg.className = "";
+  const agora = new Date();
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">${esc(d.cliente)}</span><h2 style="font-size:19px">${esc(p.rotulo)} · ${brl(p.valor)}</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+  <form id="fPgto" class="dlg-b" autocomplete="off">
+    <div class="fgrid">
+      <label class="f span2">Valor pago (R$)<input id="pg-valor" inputmode="decimal" required value="${esc(fmtNum(pg.valor ?? p.valor))}"></label>
+      <label class="f span2">Data do pagamento<input id="pg-data" type="date" required value="${esc(pg.data || hoje())}"></label>
+      <label class="f span2">Hora<input id="pg-hora" type="time" required value="${esc(pg.hora || agora.toTimeString().slice(0, 5))}"></label>
+      <label class="f span3">Forma de pagamento<select id="pg-forma">${FORMAS_PG.map(x => `<option ${x === (pg.forma || "Pix") ? "selected" : ""}>${x}</option>`).join("")}</select></label>
+      <label class="f span3">Comprovante (foto ou PDF)<input id="pg-comp" type="file" accept="image/*,application/pdf"></label>
+      <label class="f span6">Observação<input id="pg-obs" value="${esc(pg.obs || "")}" placeholder="Ex.: pago pelo filho, banco, nº da transação…"></label>
+    </div>
+    ${pg.comprovante ? `<p style="margin:10px 0 0">Comprovante atual: ${compLink(pg.comprovante)}</p>` : ""}
+  </form>
+  <div class="dlg-f"><div>${p.pago ? `<button type="button" class="btn danger" id="pg-desfazer">Desfazer pagamento</button>` : ""}</div><div style="display:flex;gap:8px"><button type="button" class="btn" data-close>Cancelar</button><button type="submit" form="fPgto" class="btn primary" id="pg-save">${p.pago ? "Salvar alterações" : "Confirmar pagamento"}</button></div></div>`;
+  if (!dlg.open) dlg.showModal();
+  const salvarParcela = async (novoPago, txt) => {
+    const atual = S.fin[id];
+    const parcelas = (atual.parcelas || []).map(x => x.id === pid ? {...x, pago: novoPago} : x);
+    await salvarFin(id, {...atual, parcelas}, txt);
+  };
+  dlg.querySelector("#fPgto").addEventListener("submit", async e => {
+    e.preventDefault();
+    const btn = $("#pg-save"); btn.disabled = true; btn.textContent = "Salvando…";
+    let comprovante = pg.comprovante || null;
+    const file = $("#pg-comp").files?.[0];
+    if (file) { const up = await enviarArquivos([file], null); if (up[0]) comprovante = up[0]; else { btn.disabled = false; btn.textContent = "Confirmar pagamento"; return; } }
+    const valor = numBR($("#pg-valor").value) ?? p.valor;
+    const novoPago = {valor, data: $("#pg-data").value, hora: $("#pg-hora").value, forma: $("#pg-forma").value, obs: $("#pg-obs").value.trim(), comprovante, por: S.me, registradoEm: agoraISO()};
+    try {
+      await salvarParcela(novoPago, `${p.pago ? "editou" : "registrou"} o pagamento de ${p.rotulo}: ${brl(valor)} via ${novoPago.forma} em ${fmtData(novoPago.data)} ${novoPago.hora}`);
+      if (p.n === 0 && d.etapa === "Aguardando entrada" && !p.pago) await S.db.doc("demandas/" + id).update({etapa: "Campo", atualizadoEm: agoraISO(), atualizadoPor: S.me, historico: histAdd(d, "moveu de Aguardando entrada para Campo (entrada paga)")});
+      toast(p.pago ? "Pagamento atualizado" : "Pagamento registrado"); fecharDlg(); render();
+    } catch (err) { falhaEscrita(err); btn.disabled = false; btn.textContent = "Confirmar pagamento"; }
+  });
+  dlg.querySelector("#pg-desfazer")?.addEventListener("click", async e => {
+    if (e.target.dataset.ok !== "1") { e.target.dataset.ok = "1"; e.target.textContent = "Confirmar: desfazer"; return; }
+    try { await salvarParcela(null, `desfez o pagamento de ${p.rotulo}`); toast("Pagamento desfeito"); fecharDlg(); render(); } catch (err) { falhaEscrita(err); }
+  });
+}
+document.addEventListener("click", e => {
+  const soltar = () => { if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} }); };
+  const c = e.target.closest("[data-contrato]"); if (c) { e.stopPropagation(); e.preventDefault(); soltar(); abrirContrato(c.dataset.contrato); return; }
+  const g = e.target.closest("[data-pgto]"); if (g) { e.stopPropagation(); e.preventDefault(); const [id, pid] = g.dataset.pgto.split("|"); soltar(); abrirPagamento(id, pid); }
+}, true);
 
 /* ---------- Avisos de prazo (por responsável) ---------- */
 function avisosPrazo(){
@@ -1976,8 +2244,8 @@ function processoHtml(d){
       <div class="pst"><span class="label">Próximo campo</span><b>${pc ? fmtDM(pc.data) : "—"}</b><span class="sub">${pc ? esc(pc.tipo + (pc.inicio ? " · " + pc.inicio : "")) : "não agendado"}</span></div>
       <div class="pst ${p.cls}"><span class="label">Prazo</span><b>${d.prazo ? fmtDM(d.prazo) : "—"}</b><span class="sub">${d.prazo ? esc(p.txt) : "sem prazo definido"}</span></div>
       ${d.protocoloOrgao || d.protocoloNumero ? `<div class="pst"><span class="label">Protocolo</span><b style="font-size:16px">${esc(d.protocoloNumero || "—")}</b><span class="sub">${esc(d.protocoloOrgao || "")}${d.protocoloPrevisao ? " · retorno " + fmtDM(d.protocoloPrevisao) : ""}</span></div>` : ""}
-      ${S.podeFin ? `<div class="pst dark"><span class="label">Financeiro</span><b>${f?.valorTotal ? brl(f.valorTotal) : "—"}</b><span class="sub">${ent ? esc(ent.txt) : f?.aceiteEm ? "" : "proposta não aceita"}${f?.saldoPagoEm ? " · saldo pago " + fmtDM(f.saldoPagoEm) : ""}</span></div>` : ""}
     </section>
+    ${S.podeFin ? `<div style="margin-top:16px">${contratoCardHtml(d)}</div>` : ""}
     <div style="margin-top:16px">${vinculosHtml(d)}</div>
     <div class="cols-3-2" style="margin-top:16px">
       <div class="card"><div class="conv-h"><h3>Linha do tempo</h3><div class="seg" role="group" aria-label="Filtrar linha do tempo">${seg("tudo", "Tudo")}${seg("etapas", "Etapas")}${seg("conversa", "Conversa")}${seg("agenda", "Agenda")}</div></div>
