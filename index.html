@@ -774,6 +774,7 @@ body.modo-portal #bv{display:none}
 .pt-push-ok{align-self:center;white-space:nowrap}
 .conf-lista{display:flex;flex-direction:column}
 .conf-it{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);flex-wrap:wrap} .conf-it:first-child{border-top:0} .conf-it .grow{flex:1;min-width:200px}
+.cf-bloco{border:1px solid var(--line-2);border-radius:12px;padding:10px 12px 12px;margin:0 0 12px;position:relative} .cf-bloco legend{font-family:var(--f-display);font-weight:700;padding:0 6px;color:var(--accent)} .cf-rm{position:absolute;top:4px;right:6px}
 .cf-props{display:flex;flex-direction:column;gap:6px} .cf-prop{display:flex;gap:8px;align-items:center;flex-wrap:wrap;border:1px solid var(--line);border-radius:10px;padding:8px 10px} .cf-prop .chk{flex:1;min-width:180px} .cf-prop select{width:auto}
 .cad-sec{margin:14px 0 6px} .cad-sec:first-of-type{margin-top:0}
 .cad-qtd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:16px 0 6px;padding-top:12px;border-top:1px solid var(--line)}
@@ -4822,6 +4823,38 @@ function confrontantesCardHtml(d){
   </div>`;
 }
 
+function confBlocoHtml(i, c, props, demId, outros, unico){
+  const vin = id => (c?.vinculos || []).find(v => v.demanda === id);
+  return `<fieldset class="cf-bloco" data-cfb="${i}">${unico ? "" : `<legend>Confrontante ${i}</legend>${i > 1 ? `<button type="button" class="btn sm ghost cf-rm" data-cfrm="${i}" aria-label="Remover este bloco">✕</button>` : ""}`}
+    ${!c && outros.length ? `<label class="f">Já cadastrado em outro processo?<select data-k="existente"><option value="">Não, cadastrar novo confrontante</option>${outros.map(x => `<option value="${x.id}">${esc(nomeConfTxt(x))}</option>`).join("")}</select></label>` : ""}
+    <div class="cf-dados">
+    <div class="fgrid">
+      <label class="f span4">Nome completo<input data-k="nome" value="${esc(c?.nome || "")}"></label>
+      <label class="f span2">CPF / CNPJ<input data-k="cpf" inputmode="numeric" value="${esc(c?.cpf || "")}"><small class="doc-msg"></small></label>
+      <label class="f span2">Telefone<input data-k="telefone" inputmode="tel" value="${esc(c?.telefone || "")}" placeholder="(27) 99999-0000"></label>
+      <label class="f span4">Endereço<input data-k="endereco" value="${esc(c?.endereco || "")}"></label>
+      <label class="f span4">Cônjuge<input data-k="conjugeNome" value="${esc(c?.conjuge?.nome || "")}"></label>
+      <label class="f span2">CPF do cônjuge<input data-k="conjugeCpf" inputmode="numeric" value="${esc(c?.conjuge?.cpf || "")}"><small class="doc-msg"></small></label>
+    </div>
+    <div class="label cad-sec">Imóvel do confrontante</div>
+    <div class="fgrid">
+      <label class="f span3">Denominação<input data-k="denominacao" value="${esc(c?.imovel?.denominacao || "")}"></label>
+      <label class="f span3">Matrícula<input data-k="matricula" value="${esc(c?.imovel?.matricula || "")}"></label>
+      <label class="f span2">Código do imóvel rural<input data-k="codigoIR" value="${esc(c?.imovel?.codigoIR || "")}"></label>
+      <label class="f span2">CCIR<input data-k="ccir" value="${esc(c?.imovel?.ccir || "")}"></label>
+      <label class="f span2">CAR<input data-k="car" value="${esc(c?.imovel?.car || "")}"></label>
+      <label class="f span2">Certificação SIGEF<input data-k="sigef" value="${esc(c?.imovel?.sigef || "")}" placeholder="se já certificado"></label>
+    </div>
+    </div>
+    <div class="label cad-sec">Confronta com</div>
+    <div class="cf-props">${props.map(p => { const v = vin(p.id) || (p.id === demId && !c ? {} : null); return `<div class="cf-prop">
+      <label class="chk"><input type="checkbox" data-cfp="${p.id}" ${v ? "checked" : ""}> <b>${p.propriedadeN ? "Propriedade " + p.propriedadeN + " · " : ""}${esc(p.imovelDados?.denominacao || p.imovel || p.codigo)}</b></label>
+      <select data-cfl="${p.id}" aria-label="Lado">${LADOS.map(l => `<option value="${l}" ${v?.lado === l ? "selected" : ""}>${l || "Lado (opcional)"}</option>`).join("")}</select>
+      <select data-cfa="${p.id}" aria-label="Anuência">${Object.entries(ANUENCIA).map(([k, [t]]) => `<option value="${k}" ${(v?.anuencia || "pendente") === k ? "selected" : ""}>${t}</option>`).join("")}</select>
+    </div>`; }).join("")}</div>
+    <label class="f" style="margin-top:10px">Observações<textarea data-k="obs" rows="2" placeholder="Ex.: prefere contato à tarde; divisa por cerca de arame">${esc(c?.obs || "")}</textarea></label>
+  </fieldset>`;
+}
 function abrirConfrontante(demId, confId){
   const d = S.demandas.find(x => x.id === demId); if (!d) return;
   const c = confId ? S.confrontantes.find(x => x.id === confId) : null;
@@ -4829,75 +4862,70 @@ function abrirConfrontante(demId, confId){
   if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
   S.dlg = {tipo: "confrontante", unsubs: []};
   const dlg = $("#dlg"); dlg.className = "big";
-  const vin = id => (c?.vinculos || []).find(v => v.demanda === id);
-  const outros = S.confrontantes.filter(x => !x.vinculos?.some(v => v.demanda === demId));
-  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">${esc(d.cliente)}</span><h2 style="font-size:19px">${c ? "Editar confrontante" : "Adicionar confrontante"}</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+  const outros = S.confrontantes.filter(x => !x.vinculos?.some(v => v.demanda === demId)).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">${esc(d.cliente)}</span><h2 style="font-size:19px">${c ? "Editar confrontante" : "Adicionar confrontantes"}</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
   <form id="fConf" class="dlg-b" autocomplete="off" novalidate>
-    ${!c && outros.length ? `<label class="f">Já cadastrado em outro processo?<select id="cf-existente"><option value="">Não, cadastrar novo confrontante</option>${outros.sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR")).map(x => `<option value="${x.id}">${esc(nomeConfTxt(x))}</option>`).join("")}</select></label>` : ""}
-    <div id="cf-dados">
-    <div class="label cad-sec">Confrontante <span class="sub" style="text-transform:none;letter-spacing:0">(não é cliente e não tem acesso à plataforma)</span></div>
-    <div class="fgrid">
-      <label class="f span4">Nome completo<input name="nome" required value="${esc(c?.nome || "")}"></label>
-      <label class="f span2">CPF / CNPJ<input name="cpf" inputmode="numeric" value="${esc(c?.cpf || "")}"><small class="doc-msg" data-docmsg="cpf"></small></label>
-      <label class="f span2">Telefone<input name="telefone" inputmode="tel" value="${esc(c?.telefone || "")}" placeholder="(27) 99999-0000"></label>
-      <label class="f span4">Endereço<input name="endereco" value="${esc(c?.endereco || "")}"></label>
-      <label class="f span4">Cônjuge<input name="conjugeNome" value="${esc(c?.conjuge?.nome || "")}"></label>
-      <label class="f span2">CPF do cônjuge<input name="conjugeCpf" inputmode="numeric" value="${esc(c?.conjuge?.cpf || "")}"><small class="doc-msg" data-docmsg="conjugeCpf"></small></label>
-    </div>
-    <div class="label cad-sec">Imóvel do confrontante</div>
-    <div class="fgrid">
-      <label class="f span3">Denominação<input name="denominacao" value="${esc(c?.imovel?.denominacao || "")}"></label>
-      <label class="f span3">Matrícula<input name="matricula" value="${esc(c?.imovel?.matricula || "")}"></label>
-      <label class="f span2">Código do imóvel rural<input name="codigoIR" value="${esc(c?.imovel?.codigoIR || "")}"></label>
-      <label class="f span2">CCIR<input name="ccir" value="${esc(c?.imovel?.ccir || "")}"></label>
-      <label class="f span2">CAR<input name="car" value="${esc(c?.imovel?.car || "")}"></label>
-      <label class="f span2">Certificação SIGEF<input name="sigef" value="${esc(c?.imovel?.sigef || "")}" placeholder="se já certificado"></label>
-    </div>
-    </div>
-    <div class="label cad-sec">Confronta com quais propriedades do cliente</div>
-    <div class="cf-props">${props.map(p => { const v = vin(p.id) || (p.id === demId && !c ? {} : null); return `<div class="cf-prop">
-      <label class="chk"><input type="checkbox" data-cfp="${p.id}" ${v ? "checked" : ""}> <b>${p.propriedadeN ? "Propriedade " + p.propriedadeN + " · " : ""}${esc(p.imovelDados?.denominacao || p.imovel || p.codigo)}</b></label>
-      <select data-cfl="${p.id}" aria-label="Lado">${LADOS.map(l => `<option value="${l}" ${v?.lado === l ? "selected" : ""}>${l || "Lado (opcional)"}</option>`).join("")}</select>
-      <select data-cfa="${p.id}" aria-label="Anuência">${Object.entries(ANUENCIA).map(([k, [t]]) => `<option value="${k}" ${(v?.anuencia || "pendente") === k ? "selected" : ""}>${t}</option>`).join("")}</select>
-    </div>`; }).join("")}</div>
-    <label class="f" style="margin-top:10px">Observações<textarea name="obs" rows="2" placeholder="Ex.: prefere ser contatado à tarde; divisa por cerca de arame">${esc(c?.obs || "")}</textarea></label>
+    <p class="sub" style="margin-top:0">Confrontantes não são clientes e não têm acesso à plataforma: só a equipe vê estes dados.</p>
+    <div id="cf-blocos">${confBlocoHtml(1, c, props, demId, outros, !!c)}</div>
+    ${c ? "" : `<button type="button" class="btn sm" id="cf-mais">+ Adicionar outro confrontante</button>`}
     <p class="ag-erro" id="cf-erro" hidden></p>
   </form>
-  <div class="dlg-f"><div>${c && !S.somenteLeitura ? `<button type="button" class="btn danger" id="cf-del">Remover</button>` : ""}</div><div style="display:flex;gap:8px"><button type="button" class="btn" data-close>Cancelar</button><button type="submit" form="fConf" class="btn primary">Salvar</button></div></div>`;
+  <div class="dlg-f"><div>${c && !S.somenteLeitura ? `<button type="button" class="btn danger" id="cf-del">Remover</button>` : ""}</div><div style="display:flex;gap:8px"><button type="button" class="btn" data-close>Cancelar</button><button type="submit" form="fConf" class="btn primary" id="cf-salvar">Salvar</button></div></div>`;
   if (!dlg.open) dlg.showModal();
   const f = $("#fConf");
-  const valDoc = n => { const i = f.elements[n]; const m = f.querySelector(`[data-docmsg="${n}"]`); const v = i.value.trim(); if (!v) { m.textContent = ""; return true; } const r = validarDocs(v); m.textContent = r.ok ? "válido" : r.msg; m.className = "doc-msg " + (r.ok ? "ok" : "erro"); return r.ok; };
-  f.addEventListener("input", e => { if (["cpf", "conjugeCpf"].includes(e.target.name)) valDoc(e.target.name); });
-  f.addEventListener("focusout", e => { const i = e.target; if (["cpf", "conjugeCpf"].includes(i.name) && i.value.trim() && validarDocs(i.value).ok) i.value = formatarDocs(i.value); if (i.name === "telefone") i.value = fmtTel(i.value); if (i.name === "codigoIR") i.value = fmtCodIR(i.value); });
-  $("#cf-existente")?.addEventListener("change", e => { $("#cf-dados").hidden = !!e.target.value; });
+  const renumerar = () => f.querySelectorAll(".cf-bloco").forEach((b, i) => { b.dataset.cfb = i + 1; const lg = b.querySelector("legend"); if (lg) lg.textContent = "Confrontante " + (i + 1); });
+  $("#cf-mais")?.addEventListener("click", () => {
+    const n = f.querySelectorAll(".cf-bloco").length + 1;
+    $("#cf-blocos").insertAdjacentHTML("beforeend", confBlocoHtml(n, null, props, demId, outros, false));
+    if (n === 2) { const b1 = f.querySelector('.cf-bloco[data-cfb="1"]'); if (!b1.querySelector("legend")) b1.insertAdjacentHTML("afterbegin", `<legend>Confrontante 1</legend>`); }
+    const novo = f.querySelector(`.cf-bloco[data-cfb="${n}"]`); novo.scrollIntoView({behavior: "smooth", block: "start"}); novo.querySelector('[data-k="nome"]')?.focus();
+    $("#cf-salvar").textContent = `Salvar ${n} confrontantes`;
+  });
+  // primeiro bloco também ganha legenda quando houver mais de um
+  if (!c) f.querySelector('.cf-bloco[data-cfb="1"]').insertAdjacentHTML("afterbegin", "");
+  f.addEventListener("click", e => { const r = e.target.closest("[data-cfrm]"); if (!r) return; r.closest(".cf-bloco").remove(); renumerar(); const n = f.querySelectorAll(".cf-bloco").length; $("#cf-salvar").textContent = n > 1 ? `Salvar ${n} confrontantes` : "Salvar"; });
+  f.addEventListener("change", e => { if (e.target.dataset.k === "existente") e.target.closest(".cf-bloco").querySelector(".cf-dados").hidden = !!e.target.value; });
+  const valDocEl = i => { const m = i.parentElement.querySelector(".doc-msg"); const v = i.value.trim(); if (!v) { if (m) m.textContent = ""; return true; } const r = validarDocs(v); if (m) { m.textContent = r.ok ? "válido" : r.msg; m.className = "doc-msg " + (r.ok ? "ok" : "erro"); } return r.ok; };
+  f.addEventListener("input", e => { if (["cpf", "conjugeCpf"].includes(e.target.dataset.k)) valDocEl(e.target); });
+  f.addEventListener("focusout", e => { const i = e.target, k = i.dataset.k; if (["cpf", "conjugeCpf"].includes(k) && i.value.trim() && validarDocs(i.value).ok) i.value = formatarDocs(i.value); if (k === "telefone") i.value = fmtTel(i.value); if (k === "codigoIR") i.value = fmtCodIR(i.value); });
   f.addEventListener("submit", async ev => {
     ev.preventDefault();
-    const erro = t => { const e = $("#cf-erro"); e.textContent = t; e.hidden = !t; };
-    const exist = $("#cf-existente")?.value;
-    const sel = [...f.querySelectorAll("[data-cfp]:checked")].map(i => ({demanda: i.dataset.cfp, lado: f.querySelector(`[data-cfl="${i.dataset.cfp}"]`).value, anuencia: f.querySelector(`[data-cfa="${i.dataset.cfp}"]`).value}));
-    if (!sel.length) return erro("Marque pelo menos uma propriedade com a qual ele confronta.");
-    const v = k => (f.elements[k]?.value || "").trim();
-    let doc, ref;
-    if (exist) {
-      const x = S.confrontantes.find(y => y.id === exist); ref = S.db.doc("confrontantes/" + exist);
-      const outrosVin = (x.vinculos || []).filter(y => !sel.some(s => s.demanda === y.demanda));
-      doc = {...x, vinculos: [...outrosVin, ...sel], obs: v("obs") || x.obs || ""}; delete doc.id;
-    } else {
-      if (!v("nome")) return erro("Informe o nome do confrontante.");
-      if (!valDoc("cpf") || !valDoc("conjugeCpf")) return erro("Confira o CPF/CNPJ informado.");
-      ref = c ? S.db.doc("confrontantes/" + c.id) : S.db.collection("confrontantes").doc();
-      const propsIds = props.map(p => p.id);
-      const fora = (c?.vinculos || []).filter(y => !propsIds.includes(y.demanda)); // vínculos com propriedades de outros clientes
-      doc = {nome: v("nome"), cpf: formatarDocs(v("cpf")), telefone: fmtTel(v("telefone")), endereco: v("endereco"),
-        conjuge: v("conjugeNome") || v("conjugeCpf") ? {nome: v("conjugeNome"), cpf: formatarDocs(v("conjugeCpf"))} : null,
-        imovel: {denominacao: v("denominacao"), matricula: v("matricula"), codigoIR: fmtCodIR(v("codigoIR")), ccir: v("ccir"), car: v("car").toUpperCase(), sigef: v("sigef")},
-        obs: v("obs"), vinculos: [...fora, ...sel], criadoEm: c?.criadoEm || agoraISO(), criadoPor: c?.criadoPor || S.me, atualizadoEm: agoraISO(), atualizadoPor: S.me};
+    const erro = t => { const e = $("#cf-erro"); e.textContent = t; e.hidden = !t; if (t) e.scrollIntoView({block: "center"}); };
+    const blocos = [...f.querySelectorAll(".cf-bloco")];
+    const planos = [];
+    for (const [bi, b] of blocos.entries()) {
+      const v = k => (b.querySelector(`[data-k="${k}"]`)?.value || "").trim();
+      const sel = [...b.querySelectorAll("[data-cfp]:checked")].map(i => ({demanda: i.dataset.cfp, lado: b.querySelector(`[data-cfl="${i.dataset.cfp}"]`).value, anuencia: b.querySelector(`[data-cfa="${i.dataset.cfp}"]`).value}));
+      const rot = blocos.length > 1 ? `Confrontante ${bi + 1}: ` : "";
+      const exist = v("existente");
+      if (!exist && !v("nome")) { if (blocos.length > 1 && !sel.length) continue; return erro(rot + "informe o nome."); }
+      if (!sel.length) return erro(rot + "marque pelo menos uma propriedade com a qual ele confronta.");
+      if (!exist && ![...b.querySelectorAll('[data-k="cpf"],[data-k="conjugeCpf"]')].every(valDocEl)) return erro(rot + "confira o CPF/CNPJ.");
+      let doc, ref;
+      if (exist) {
+        const x = S.confrontantes.find(y => y.id === exist); ref = S.db.doc("confrontantes/" + exist);
+        doc = {...x, vinculos: [...(x.vinculos || []).filter(y => !sel.some(s => s.demanda === y.demanda)), ...sel], obs: v("obs") || x.obs || ""}; delete doc.id;
+      } else {
+        ref = c ? S.db.doc("confrontantes/" + c.id) : S.db.collection("confrontantes").doc();
+        const propsIds = props.map(p => p.id);
+        const fora = (c?.vinculos || []).filter(y => !propsIds.includes(y.demanda));
+        doc = {nome: v("nome"), cpf: formatarDocs(v("cpf")), telefone: fmtTel(v("telefone")), endereco: v("endereco"),
+          conjuge: v("conjugeNome") || v("conjugeCpf") ? {nome: v("conjugeNome"), cpf: formatarDocs(v("conjugeCpf"))} : null,
+          imovel: {denominacao: v("denominacao"), matricula: v("matricula"), codigoIR: fmtCodIR(v("codigoIR")), ccir: v("ccir"), car: v("car").toUpperCase(), sigef: v("sigef")},
+          obs: v("obs"), vinculos: [...fora, ...sel], criadoEm: c?.criadoEm || agoraISO(), criadoPor: c?.criadoPor || S.me, atualizadoEm: agoraISO(), atualizadoPor: S.me};
+      }
+      planos.push({ref, doc, sel});
     }
+    if (!planos.length) return erro("Preencha pelo menos um confrontante.");
+    erro("");
+    const btn = $("#cf-salvar"); btn.disabled = true;
     try {
-      await ref.set(doc);
-      for (const s of sel) { const p = S.demandas.find(y => y.id === s.demanda); if (p && !(c?.vinculos || []).some(y => y.demanda === s.demanda)) await S.db.doc("demandas/" + p.id).update({historico: histAdd(p, `adicionou ${doc.nome} como confrontante${s.lado ? " (" + s.lado + ")" : ""}`)}); }
-      fecharDlg(); toast("Confrontante salvo");
-    } catch (err) { falhaEscrita(err); }
+      for (const {ref, doc, sel} of planos) {
+        await ref.set(doc);
+        for (const s of sel) { const p = S.demandas.find(y => y.id === s.demanda); if (p && !(c?.vinculos || []).some(y => y.demanda === s.demanda)) await S.db.doc("demandas/" + p.id).update({historico: histAdd(S.demandas.find(y => y.id === s.demanda) || p, `adicionou ${doc.nome} como confrontante${s.lado ? " (" + s.lado + ")" : ""}`)}); }
+      }
+      fecharDlg(); toast(planos.length > 1 ? `${planos.length} confrontantes salvos` : "Confrontante salvo");
+    } catch (err) { falhaEscrita(err); btn.disabled = false; }
   });
   $("#cf-del")?.addEventListener("click", async e => {
     if (e.target.dataset.ok !== "1") { e.target.dataset.ok = "1"; e.target.textContent = "Remover deste processo?"; return; }
