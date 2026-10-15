@@ -20,6 +20,25 @@
   });
   window.sb = sb;
 
+  /* ---------- Modo sem internet: cópia local + fila de envio ---------- */
+  const LS_CACHE = "sao.off.cache", LS_FILA = "sao.off.fila", LS_MEMBRO = "sao.off.membro";
+  const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } };
+  const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+  const semRede = err => !navigator.onLine || /failed to fetch|networkerror|load failed|network request failed|fetch failed|timeout|ERR_INTERNET/i.test(String(err?.message || err || ""));
+  // IndexedDB só para fotos/arquivos que esperam envio
+  const idb = (() => {
+    let p = null;
+    const abrir = () => p || (p = new Promise((ok, falha) => { const r = indexedDB.open("saotech-offline", 1); r.onupgradeneeded = () => r.result.createObjectStore("arquivos"); r.onsuccess = () => ok(r.result); r.onerror = () => falha(r.error); }));
+    const tx = async (modo, f) => { const db = await abrir(); return new Promise((ok, falha) => { const t = db.transaction("arquivos", modo); const st = t.objectStore("arquivos"); const r = f(st); t.oncomplete = () => ok(r?.result); t.onerror = () => falha(t.error); }); };
+    return {
+      put: (k, v) => tx("readwrite", st => st.put(v, k)),
+      get: k => tx("readonly", st => st.get(k)),
+      del: k => tx("readwrite", st => st.delete(k)),
+      keys: () => tx("readonly", st => st.getAllKeys())
+    };
+  })();
+  const blobsLocais = new Map(); // id -> objectURL de arquivos ainda não enviados
+
   /* ---------- Login ---------- */
   let resolverPronto; const pronto = new Promise(r => { resolverPronto = r; });
   let entrou = false;
@@ -42,7 +61,9 @@
   async function entrar2(session){
     if (entrou) return;
     const email = (session.user.email || "").toLowerCase();
-    const {data: membro, error} = await sb.from("equipe").select("*").eq("email", email).maybeSingle();
+    let {data: membro, error} = await sb.from("equipe").select("*").eq("email", email).maybeSingle();
+    if (error && semRede(error)) { const salvo = lsGet(LS_MEMBRO, null); if (salvo && salvo.email === email) { membro = salvo; error = null; offline.semConexaoInicial = true; } }
+    else if (membro) lsSet(LS_MEMBRO, membro);
     if (!error && !membro) {
       const {data: portal, error: ePortal} = await sb.rpc("portal_dados");
       if (!ePortal && portal) { entrou = true; esconderLogin(); document.body.classList.add("modo-portal"); window.SaotechPortal?.iniciar(sb, portal); return; }
@@ -54,9 +75,13 @@
       return;
     }
     entrou = true; esconderLogin();
-    const sair = $("#btnSair"); if (sair) { sair.hidden = false; sair.onclick = async () => { await sb.auth.signOut(); location.reload(); }; }
+    if (lsGet("sao.off.dono", "") !== email) { localStorage.removeItem(LS_CACHE); lsSet("sao.off.dono", email); }
+    restaurarCache();
+    const sair = $("#btnSair"); if (sair) { sair.hidden = false; sair.onclick = async () => { await enviarFila().catch(() => {}); if (fila().length && !confirm("Ainda há alterações feitas sem internet que não foram enviadas. Sair mesmo assim? Elas serão perdidas.")) return; [LS_CACHE, LS_FILA, LS_MEMBRO].forEach(k => localStorage.removeItem(k)); await sb.auth.signOut(); location.reload(); }; }
+    membroAtual = membro;
     iniciarTempoReal();
     resolverPronto({session, membro});
+    setTimeout(avisarSync, 500);
   }
 
   document.addEventListener("DOMContentLoaded", async () => {
@@ -90,7 +115,12 @@
       if (evento === "SIGNED_IN" && session && !document.querySelector('#login [data-modo="nova"]:not([hidden])')) entrar(session);
     });
     const {data: {session}} = await sb.auth.getSession();
-    if (session && !/type=recovery/.test(location.hash)) entrar(session); else if (!session) { mostrarLogin(""); modo("entrar"); }
+    if (session && !/type=recovery/.test(location.hash)) entrar(session);
+    else if (!session) {
+      const salvo = lsGet(LS_MEMBRO, null);
+      if (salvo && !navigator.onLine) { offline.semConexaoInicial = true; entrar({user: {email: salvo.email, id: salvo.email}}); }
+      else { mostrarLogin(""); modo("entrar"); }
+    }
   });
 
   /* ---------- Banco de documentos ---------- */
@@ -119,14 +149,72 @@
     let de = 0; const passo = 1000; const vistos = new Set();
     for (;;) {
       const {data, error} = await sb.from("docs").select("path,data").eq("col", col).range(de, de + passo - 1);
+      if (error && semRede(error) && cacheLocal.cols.includes(col)) { carregadas.add(col); offline.on = true; avisarSync(); return; }
       if (error) throw erroDb(error);
       data.forEach(r => { cache.set(r.path, r.data); vistos.add(r.path); });
       if (data.length < passo) break;
       de += passo;
     }
     if (forcar) for (const p of [...cache.keys()]) if (colDe(p) === col && !vistos.has(p)) cache.delete(p);
-    carregadas.add(col);
+    // alterações ainda na fila continuam valendo por cima do que veio do servidor
+    for (const it of fila()) if (it.t === "doc" && colDe(it.path) === col) cache.set(it.path, it.data);
+    carregadas.add(col); salvarCacheDepois();
   }
+  /* cópia local para abrir sem internet */
+  const cacheLocal = {cols: []};
+  function restaurarCache(){
+    const c = lsGet(LS_CACHE, null); if (!c) return;
+    cacheLocal.cols = c.cols || [];
+    for (const [p, d] of c.docs || []) if (!cache.has(p)) cache.set(p, d);
+  }
+  let tSalvar = null;
+  function salvarCacheDepois(){
+    clearTimeout(tSalvar);
+    tSalvar = setTimeout(() => {
+      const cols = [...carregadas].filter(c => !/^data\/fin/.test(c) || membroAtual?.admin);
+      const docs = [...cache].filter(([p]) => cols.includes(colDe(p)) || /\/conversa\//.test(p));
+      lsSet(LS_CACHE, {cols, docs, em: new Date().toISOString()});
+      cacheLocal.cols = cols;
+    }, 1500);
+  }
+  let membroAtual = null;
+  /* fila de envio */
+  const offline = {on: !navigator.onLine, semConexaoInicial: false, enviando: false};
+  const fila = () => lsGet(LS_FILA, []);
+  function enfileirar(item){
+    const f = fila().filter(x => !(item.t === "doc" && x.t === "doc" && x.path === item.path));
+    f.push({...item, em: new Date().toISOString()}); lsSet(LS_FILA, f); avisarSync();
+  }
+  function avisarSync(){
+    const f = fila();
+    window.dispatchEvent(new CustomEvent("saotech-sync", {detail: {offline: offline.on || !navigator.onLine, pendentes: f.length, arquivos: f.filter(x => x.t === "arq").length, enviando: offline.enviando}}));
+  }
+  async function enviarFila(){
+    if (offline.enviando || !navigator.onLine) { avisarSync(); return; }
+    let f = fila(); if (!f.length) { if (offline.on) { offline.on = false; avisarSync(); } return; }
+    offline.enviando = true; avisarSync();
+    try {
+      for (const it of f.filter(x => x.t === "arq")) {
+        const blob = await idb.get(it.id).catch(() => null);
+        if (blob) {
+          const {error} = await sb.storage.from(BUCKET).upload(it.id, blob, {contentType: it.tipo || blob.type || "application/octet-stream", upsert: true});
+          if (error) { if (semRede(error)) throw error; console.warn("arquivo da fila recusado", it.id, error.message); }
+        }
+        await idb.del(it.id).catch(() => {});
+        lsSet(LS_FILA, fila().filter(x => !(x.t === "arq" && x.id === it.id)));
+      }
+      for (const it of fila().filter(x => x.t === "doc")) {
+        const {error} = await sb.from("docs").upsert({path: it.path, col: colDe(it.path), data: it.data, updated_at: new Date().toISOString()});
+        if (error) { if (semRede(error)) throw error; console.warn("alteração da fila recusada", it.path, error.message); }
+        lsSet(LS_FILA, fila().filter(x => !(x.t === "doc" && x.path === it.path && x.em === it.em)));
+      }
+      offline.on = false;
+    } catch (e) { offline.on = true; }
+    finally { offline.enviando = false; avisarSync(); }
+  }
+  window.addEventListener("online", () => { enviarFila(); setTimeout(ressincronizar, 1500); });
+  window.addEventListener("offline", () => { offline.on = true; avisarSync(); });
+  setInterval(() => { if (fila().length) enviarFila(); }, 30000);
   function snapDoc(path){
     const d = cache.get(path);
     return {id: idDe(path), exists: d !== undefined, data: () => (d === undefined ? undefined : congelar(d)), metadata: {fromCache: false, hasPendingWrites: false}};
@@ -156,8 +244,12 @@
     const anterior = cache.get(path);
     const limpo = JSON.parse(JSON.stringify(data));
     cache.set(path, limpo); avisar(path);
+    if (!navigator.onLine) { enfileirar({t: "doc", path, data: limpo}); salvarCacheDepois(); return; }
     const {error} = await sb.from("docs").upsert({path, col: colDe(path), data: limpo, updated_at: new Date().toISOString()});
+    if (error && semRede(error)) { offline.on = true; enfileirar({t: "doc", path, data: limpo}); salvarCacheDepois(); return; }
     if (error) { if (anterior === undefined) cache.delete(path); else cache.set(path, anterior); avisar(path); throw erroDb(error); }
+    salvarCacheDepois();
+    if (fila().length) enviarFila();
   }
   function docRef(path){
     return {
@@ -215,14 +307,16 @@
         if (ev.eventType === "DELETE") { const p = ev.old?.path; if (p && cache.has(p)) { cache.delete(p); avisar(p); } return; }
         const r = ev.new; if (!r?.path) return;
         if (!carregadas.has(r.col) && !subsDoc.has(r.path)) return;
-        cache.set(r.path, r.data); avisar(r.path);
+        if (fila().some(x => x.t === "doc" && x.path === r.path)) return; // a versão local ainda vai subir
+        cache.set(r.path, r.data); avisar(r.path); salvarCacheDepois();
       })
       .subscribe(status => {
-        if (status === "SUBSCRIBED") { if (conectouAntes) ressincronizar(); conectouAntes = true; }
+        if (status === "SUBSCRIBED") { enviarFila(); if (conectouAntes || offline.semConexaoInicial) ressincronizar(); conectouAntes = true; offline.semConexaoInicial = false; }
       });
     document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") ressincronizar(); });
   }
   let ressinc = null;
+  async function ressincronizarJa(){ for (const c of [...carregadas]) { try { await carregarColecao(c, true); (subsCol.get(c) || new Set()).forEach(f => f()); } catch {} } }
   function ressincronizar(){
     clearTimeout(ressinc);
     ressinc = setTimeout(async () => {
@@ -240,7 +334,10 @@
       const id = `${pasta}/${rid()}-${nome}`;
       const tipo = file.type || "application/octet-stream";
       if (file.size > 20 * 1024 * 1024) throw {code: "too_large", message: "Arquivo maior que 20 MB"};
+      const guardar = async () => { await idb.put(id, file); blobsLocais.set(id, URL.createObjectURL(file)); enfileirar({t: "arq", id, tipo}); return {id, url: "", sizeBytes: file.size, contentType: tipo, pendente: true}; };
+      if (!navigator.onLine) return guardar();
       const {error} = await sb.storage.from(BUCKET).upload(id, file, {contentType: tipo, upsert: false});
+      if (error && semRede(error)) { offline.on = true; return guardar(); }
       if (error) throw {code: /size|large/i.test(error.message) ? "too_large" : /quota|limit/i.test(error.message) ? "quota_or_state" : "upstream_error", message: error.message};
       return {id, url: "", sizeBytes: file.size, contentType: tipo};
     },
@@ -253,8 +350,9 @@
     const els = [...document.querySelectorAll("[data-blob]:not([data-blob-ok])")];
     if (!els.length) return;
     const agora = Date.now();
+    for (const id of new Set(els.map(e => e.dataset.blob))) if (blobsLocais.has(id)) urls.set(id, {url: blobsLocais.get(id), ate: agora + 864e5});
     const faltam = [...new Set(els.map(e => e.dataset.blob))].filter(id => !(urls.get(id)?.ate > agora + 60000));
-    if (faltam.length) {
+    if (faltam.length && navigator.onLine) {
       const {data} = await sb.storage.from(BUCKET).createSignedUrls(faltam, 6 * 3600);
       (data || []).forEach(x => { if (x.signedUrl) urls.set(x.path, {url: x.signedUrl, ate: agora + 6 * 3600 * 1000}); });
     }
@@ -278,10 +376,23 @@
         can: acao => acao === "data.write" ? (membro.perfil || "operacional") !== "leitura" : true,
         perfil: () => membro.perfil || (membro.admin ? "admin" : "operacional"),
         async equipe(){ const {data, error} = await sb.from("equipe").select("email,pessoa,nome,admin,perfil").order("nome"); if (error) throw erroDb(error); return data || []; },
-        async portalAcessos(){ const {data, error} = await sb.from("clientes_acesso").select("usuario,nome,demandas"); if (error) throw erroDb(error); return data || []; },
+        async portalAcessos(){ const {data, error} = await sb.from("clientes_acesso").select("usuario,nome,demandas,senha"); if (error) throw erroDb(error); return data || []; },
+        async definirSenhaCliente(usuario){ const {data, error} = await sb.rpc("portal_definir_senha", {p_usuario: usuario}); if (error) throw erroDb(error); return data; },
         async criarAcessoCliente(demanda, usuario){ const {data, error} = await sb.rpc("garantir_acesso_cliente", {p_demanda: demanda, p_usuario: usuario || null}); if (error) throw erroDb(error); return data; },
         async responderCliente(usuario, texto, anexos){ const {data, error} = await sb.rpc("portal_resposta", {p_usuario: usuario, p_texto: texto || "", p_anexos: anexos || []}); if (error) throw erroDb(error); return data; },
         async agendarCliente(usuario, acao, ag){ const {data, error} = await sb.rpc("portal_agendar", {p_usuario: usuario, p_acao: acao, p_ag: ag}); if (error) throw {code: "upstream_error", message: error.message}; return data; },
+        async lixeira(){ const {data, error} = await sb.from("lixeira").select("path,col,data,apagado_em,apagado_por").order("apagado_em", {ascending: false}); if (error) throw erroDb(error); return data || []; },
+        async restaurarLixeira(path){ const {data, error} = await sb.rpc("restaurar_lixeira", {p_path: path}); if (error) throw erroDb(error); await ressincronizarJa(); return data; },
+        async expurgarLixeira(path){ const {data, error} = await sb.rpc("expurgar_lixeira", {p_path: path}); if (error) throw erroDb(error); return data; },
+        async backups(){ const {data, error} = await sb.from("backups").select("id,criado_em,tipo,docs,bytes").order("criado_em", {ascending: false}).limit(12); if (error) throw erroDb(error); return data || []; },
+        async backupDados(id){ const {data, error} = await sb.from("backups").select("dados").eq("id", id).single(); if (error) throw erroDb(error); return data.dados; },
+        async fazerBackup(){ const {data, error} = await sb.rpc("fazer_backup", {p_tipo: "manual"}); if (error) throw erroDb(error); return data; },
+        async baixarArquivo(id){ const {data, error} = await sb.storage.from(BUCKET).download(id); if (error) throw {code: "upstream_error", message: error.message}; return data; },
+        async copiarArquivo(de, para){ const {error} = await sb.storage.from(BUCKET).copy(de, para); if (error) throw {code: "upstream_error", message: error.message}; return para; },
+        async salvarPush(sub){ const {error} = await sb.rpc("salvar_push", {p_sub: sub, p_ua: navigator.userAgent}); if (error) throw erroDb(error); },
+        async removerPush(endpoint){ await sb.rpc("remover_push", {p_endpoint: endpoint}); },
+        sincronia: () => ({offline: offline.on || !navigator.onLine, pendentes: fila().length}),
+        enviarPendentes: () => enviarFila(),
         async definirPerfil(email, perfil){ const {error} = await sb.from("equipe").update({perfil, admin: perfil === "admin"}).eq("email", email); if (error) throw erroDb(error); },
         id: async () => session.user.id, name: async () => membro.nome, pessoa: () => membro.pessoa,
         me: async () => ({id: session.user.id, name: membro.nome, email: membro.email})

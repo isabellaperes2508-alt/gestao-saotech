@@ -87,6 +87,32 @@
   }
   window.SaotechAg = {formHtml, lerForm, cardHtml, ultimasPorAg, localTxt, prepararImagem, STATUS};
 
+  /* ================= Notificações (Web Push), usadas pela equipe e pelo portal ================= */
+  window.SaotechPush = (() => {
+    const VAPID = "BKdUPtWQQ9vbr6sclHK_-sJddstUogtQPWvnHpqVnFBHIInREdG0Imw-sBbHWzbgL3bXoCVz6IJULu3r2LGY1PM";
+    const chave = s => { const p = "=".repeat((4 - s.length % 4) % 4); const r = atob((s + p).replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from([...r].map(c => c.charCodeAt(0))); };
+    const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const instalado = () => window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+    const suportado = () => "serviceWorker" in navigator && "PushManager" in window && "Notification" in window && location.protocol === "https:";
+    const reg = () => Promise.race([navigator.serviceWorker.ready, new Promise((_, f) => setTimeout(() => f(new Error("O app ainda está carregando. Tente de novo em alguns segundos.")), 6000))]);
+    async function estado(){
+      if (!suportado()) return ios && !instalado() ? "ios-instalar" : "sem-suporte";
+      if (Notification.permission === "denied") return "bloqueado";
+      try { const s = await (await reg()).pushManager.getSubscription(); return s && Notification.permission === "granted" ? "ativo" : "inativo"; } catch { return "inativo"; }
+    }
+    async function ativar(salvar){
+      const perm = await Notification.requestPermission();
+      if (perm !== "granted") throw new Error(perm === "denied" ? "bloqueado" : "Permissão não concedida.");
+      const r = await reg();
+      let s = await r.pushManager.getSubscription();
+      if (!s) s = await r.pushManager.subscribe({userVisibleOnly: true, applicationServerKey: chave(VAPID)});
+      await salvar(s.toJSON()); return true;
+    }
+    async function desativar(remover){ const s = await (await reg()).pushManager.getSubscription(); if (s) { try { await remover(s.endpoint); } catch {} await s.unsubscribe(); } }
+    async function renovar(salvar){ try { if (!suportado() || Notification.permission !== "granted") return; const s = await (await reg()).pushManager.getSubscription(); if (s) await salvar(s.toJSON()); } catch {} }
+    return {estado, ativar, desativar, renovar, ios, instalado};
+  })();
+
   /* ================= Portal do cliente ================= */
   const ETAPAS = ["Orçamento", "Aguardando entrada", "Campo", "Escritório", "Protocolo", "Entregue", "Concluída"];
   const EXPLICA = {
@@ -101,7 +127,24 @@
   };
   const fDia = ts => { const d = new Date(ts).toLocaleDateString("sv-SE"); return d === hoje() ? "Hoje" : new Date(ts).toLocaleDateString("pt-BR", {weekday: "long", day: "2-digit", month: "short"}); };
   const saud = () => { const h = new Date().getHours(); return h < 5 ? "Boa noite" : h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite"; };
-  let sb = null, dados = null, timer = null, enviando = false, form = null, erroForm = "";
+  let sb = null, dados = null, timer = null, enviando = false, form = null, erroForm = "", avEditar = null, avNota = 0, pushEst = "";
+  const fTam = b => !b ? "" : b > 1048576 ? (b / 1048576).toLocaleString("pt-BR", {maximumFractionDigits: 1}) + " MB" : Math.max(1, Math.round(b / 1024)) + " KB";
+  function docsHtml(p){
+    const ds = p.docs || [];
+    if (!ds.length) return "";
+    return `<div class="card" style="margin-top:12px" id="pt-docs"><h3>Documentos para baixar</h3>${ds.slice().reverse().map(d => `<a class="pt-baixar" data-blob="${esc(d.id)}" data-noprev target="_blank" rel="noopener" download="${esc(d.nome)}"><span class="ic-doc">📄</span><span class="grow"><b>${esc(d.rotulo || "Documento")}</b><span class="sub">${esc(d.nome)}${d.tam ? " · " + fTam(d.tam) : ""}${d.em ? " · " + fData(d.em) : ""}</span></span><span class="btn sm">Baixar</span></a>`).join("")}</div>`;
+  }
+  function avaliacaoHtml(p){
+    if (!["Entregue", "Concluída"].includes(p.etapa)) return "";
+    const av = (dados.avaliacoes || []).find(a => a.demanda === p.id);
+    if (av && avEditar !== p.id) return `<div class="card pt-aval" style="margin-top:12px"><h3>Obrigado pela avaliação!</h3><div class="estrelas">${"★".repeat(av.nota)}<span>${"★".repeat(5 - av.nota)}</span></div>${av.comentario ? `<p>“${esc(av.comentario)}”</p>` : ""}<button type="button" class="btn sm ghost" data-avedit="${esc(p.id)}">Alterar avaliação</button></div>`;
+    const nota = avNota || av?.nota || 0;
+    return `<form class="card pt-aval" style="margin-top:12px" id="pt-aval" data-dem="${esc(p.id)}"><h3>Como foi o nosso serviço?</h3><p class="sub" style="margin:0 0 8px">Sua opinião ajuda a Saotech a melhorar. Leva menos de um minuto.</p>
+      <div class="av-estrelas" role="radiogroup" aria-label="Nota de 1 a 5">${[1, 2, 3, 4, 5].map(n => `<button type="button" role="radio" aria-checked="${nota === n}" aria-label="${n} estrela${n > 1 ? "s" : ""}" data-avnota="${n}" class="${n <= nota ? "on" : ""}">★</button>`).join("")}</div>
+      <textarea id="av-com" rows="3" placeholder="Conte como foi sua experiência (opcional)">${esc(av?.comentario || "")}</textarea>
+      <label class="av-aut"><input type="checkbox" id="av-aut" ${av?.autoriza ? "checked" : ""}> Autorizo a Saotech a publicar meu comentário como depoimento (com meu primeiro nome).</label>
+      <div style="display:flex;gap:8px;justify-content:flex-end">${av ? `<button type="button" class="btn sm ghost" data-avcancel>Cancelar</button>` : ""}<button class="btn primary" ${nota ? "" : "disabled"}>Enviar avaliação</button></div></form>`;
+  }
 
   function etapaDatas(p){
     const out = {};
@@ -137,6 +180,8 @@
       </div>
       ${docs.length ? `<div class="card" style="margin-top:12px"><h3>Precisamos destes documentos</h3>${docs.map(d => `<div class="pt-doc">📄 ${esc(d.t)}</div>`).join("")}<p class="sub" style="margin:8px 0 0">Envie foto ou PDF pelo chat (botão 📎).</p></div>` : ""}
       ${ag.length ? `<div class="card" style="margin-top:12px"><h3>Agenda</h3>${ag.map(a => `<div class="pt-doc">📅 <b>${fData(a.data)}${a.prazo && a.prazo > a.data ? " a " + fData(a.prazo) : ""}</b>${a.inicio ? " · " + esc(a.inicio) : ""} · ${esc(a.tipo || "")}</div>`).join("")}</div>` : ""}
+      ${avaliacaoHtml(p)}
+      ${docsHtml(p)}
       ${hist ? `<div class="card" style="margin-top:12px"><h3>Histórico do processo</h3><div class="tl">${hist}</div></div>` : ""}
     </section>`;
   }
@@ -166,6 +211,7 @@
   function render(){
     const el = document.getElementById("portal"); if (!el || !dados) return;
     const rasc = el.querySelector("#pt-txt")?.value || "";
+    const avTxt = el.querySelector("#av-com")?.value, avAut = el.querySelector("#av-aut")?.checked;
     const formVals = form ? Object.fromEntries(new FormData(el.querySelector(".ag-form") || document.createElement("form"))) : null;
     const chat = el.querySelector("#pt-chat"); const noFim = !chat || chat.scrollHeight - chat.scrollTop - chat.clientHeight < 60;
     const primeiro = (dados.nome || "").split(/\s+/)[0];
@@ -174,7 +220,7 @@
     el.innerHTML = `
       <header class="top pt-top">
         <div class="brand">${window.__logo ? `<img src="${window.__logo}" alt="Saotech Geotecnologia">` : "<b>SAOTECH</b>"}<h1>Portal do cliente</h1><p>${saud()}, ${esc(primeiro)} · ${new Date().toLocaleDateString("pt-BR", {weekday: "long", day: "numeric", month: "long"})}</p></div>
-        <div class="hdr-acts"><button type="button" class="btn sm ghost" id="pt-sair">Sair</button></div>
+        <div class="hdr-acts">${pushEst === "inativo" || pushEst === "ios-instalar" ? `<button type="button" class="btn sm lima" id="pt-push">🔔 Receber avisos</button>` : pushEst === "ativo" ? `<span class="sub pt-push-ok" title="Você recebe avisos neste aparelho">🔔 avisos ativos</span>` : ""}<button type="button" class="btn sm ghost" id="pt-sair">Sair</button></div>
       </header>
       ${procs.length > 1 ? `<nav class="tabs" role="tablist">${procs.map((p, i) => `<button role="tab" aria-selected="${(window.__ptSel || 0) === i}" data-ptsel="${i}">${esc(p.codigo)} · ${esc((p.servicos || [])[0] || p.cliente)}</button>`).join("")}</nav>` : ""}
       <main class="pt-grid">
@@ -189,9 +235,11 @@
       <p class="sub pt-rodape">Saotech Geotecnologia · Este acesso mostra apenas os seus processos.</p>`;
     if (formVals) { const f = el.querySelector(".ag-form"); if (f) for (const [k, v] of Object.entries(formVals)) { const inp = f.elements[k]; if (!inp) continue; if (inp instanceof RadioNodeList) { [...inp].forEach(r => r.checked = r.value === v); } else inp.value = v; } }
     const c = el.querySelector("#pt-chat"); if (c && noFim) c.scrollTop = c.scrollHeight;
+    if (avTxt !== undefined && el.querySelector("#av-com")) { el.querySelector("#av-com").value = avTxt; el.querySelector("#av-aut").checked = !!avAut; }
   }
   async function atualizar(){
     if (form) return; // não interrompe quem está preenchendo o agendamento
+    if (document.activeElement?.id === "av-com") return;
     try { const {data, error} = await sb.rpc("portal_dados"); if (!error && data) { const antes = JSON.stringify(dados); dados = data; if (JSON.stringify(dados) !== antes) render(); } } catch {}
   }
   async function enviarArquivos(files){
@@ -209,8 +257,12 @@
     if (pend) pend.textContent = "";
     return out;
   }
+  async function atualizarJa(){ try { const {data} = await sb.rpc("portal_dados"); if (data) { dados = data; render(); } } catch {} }
   function iniciar(cliente, inicial){
     sb = cliente; dados = inicial;
+    window.SaotechPush.estado().then(e => { pushEst = e; render(); });
+    window.SaotechPush.renovar(sub => sb.rpc("salvar_push", {p_sub: sub, p_ua: navigator.userAgent}));
+    navigator.serviceWorker?.addEventListener("message", e => { if (e.data?.tipo === "abrir") atualizarJa(); });
     window.__logo = document.querySelector(".brand img")?.src || "";
     try { window.__curvas = typeof curvasSVG === "function" ? curvasSVG() : ""; } catch { window.__curvas = ""; }
     let el = document.getElementById("portal");
@@ -218,6 +270,15 @@
     render();
     el.addEventListener("click", async e => {
       if (e.target.id === "pt-sair") { await sb.auth.signOut(); location.reload(); return; }
+      if (e.target.closest("#pt-push")) {
+        if (pushEst === "ios-instalar") { alert("No iPhone: toque em Compartilhar (quadrado com seta) → Adicionar à Tela de Início. Depois abra o portal pelo ícone e toque em Receber avisos."); return; }
+        try { await window.SaotechPush.ativar(sub => sb.rpc("salvar_push", {p_sub: sub, p_ua: navigator.userAgent}).then(r => { if (r.error) throw r.error; })); pushEst = "ativo"; render(); alert("Pronto! Você vai receber um aviso quando a equipe responder, agendar ou seu processo avançar."); }
+        catch (err) { alert(/bloqueado/.test(err.message || "") ? "As notificações estão bloqueadas neste navegador. Libere nas configurações do site e tente de novo." : "Não foi possível ativar: " + (err.message || err)); }
+        return;
+      }
+      const an = e.target.closest("[data-avnota]"); if (an) { avNota = +an.dataset.avnota; render(); return; }
+      const ae = e.target.closest("[data-avedit]"); if (ae) { avEditar = ae.dataset.avedit; avNota = 0; render(); return; }
+      if (e.target.closest("[data-avcancel]")) { avEditar = null; avNota = 0; render(); return; }
       const t = e.target.closest("[data-ptsel]"); if (t) { window.__ptSel = +t.dataset.ptsel; render(); return; }
       if (e.target.closest("#pt-agendar")) { form = {modo: "novo"}; erroForm = ""; render(); el.querySelector(".ag-form")?.scrollIntoView({behavior: "smooth", block: "center"}); return; }
       if (e.target.closest("[data-agfechar]")) { form = null; erroForm = ""; render(); return; }
@@ -237,6 +298,15 @@
         const {error} = await sb.rpc("portal_agendar", {p_usuario: null, p_acao: r.acao, p_ag: r.ag});
         if (error) { erroForm = error.message; render(); return; }
         form = null; erroForm = ""; await atualizar(); return;
+      }
+      if (e.target.id === "pt-aval") {
+        e.preventDefault();
+        const dem = e.target.dataset.dem; const av = (dados.avaliacoes || []).find(a => a.demanda === dem);
+        const nota = avNota || av?.nota || 0; if (!nota) return;
+        e.target.querySelector(".btn.primary").disabled = true;
+        const {error} = await sb.rpc("portal_avaliar", {p_demanda: dem, p_nota: nota, p_comentario: el.querySelector("#av-com").value, p_autoriza: el.querySelector("#av-aut").checked});
+        if (error) { alert("Não foi possível enviar: " + error.message); render(); return; }
+        avEditar = null; avNota = 0; el.querySelector("#av-com").value = ""; await atualizarJa(); return;
       }
       if (e.target.id !== "pt-form") return; e.preventDefault();
       const txt = el.querySelector("#pt-txt"); const fileEl = el.querySelector("#pt-file"); const texto = txt.value.trim(); const files = fileEl?.files || [];

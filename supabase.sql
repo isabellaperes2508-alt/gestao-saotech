@@ -119,3 +119,14 @@ grant update (perfil, admin, nome) on public.equipe to authenticated;
 -- Usuário = primeiro nome + último sobrenome (ex.: eduardo.rocha), e-mail interno usuario@clientes.saotech.com.br,
 -- senha padrão definida pela Saotech. O cliente não lê a tabela docs: só recebe os próprios dados pelas funções.
 -- As definições completas estão nas migrações "portal_do_cliente", "portal_usuario_ajustes" e "portal_responder" do projeto Supabase.
+
+-- 11) v12 (já aplicado no projeto via migrações; resumo para referência)
+--  * clientes_acesso.senha + senha_cliente()/portal_definir_senha(): senha = 4 últimos dígitos do telefone (sem telefone: 423833)
+--  * lixeira: gatilho para_lixeira (após DELETE em docs) guarda demandas, conversas, agenda e contratos;
+--    restaurar_lixeira(path), expurgar_lixeira(path) [admin]; limpar_lixeira() roda todo dia (pg_cron) e apaga o conteúdo após 30 dias
+--  * backups: fazer_backup() roda todo domingo 05:00 UTC (pg_cron); guarda as 10 últimas cópias (só admins leem)
+--  * portal: portal_dados() devolve docs publicados (docsCliente) e avaliações; portal_avaliar(demanda, nota, comentario, autoriza)
+--  * Web Push: push_subs, salvar_push(), remover_push(), push_teste(); gatilho push_docs (mensagens, portal, atribuição, etapa)
+--    e push_prazos() diário 11:00 UTC; envio pela função de borda enviar-push (supabase/functions/enviar-push).
+--    A chave VAPID privada fica no Vault (nome: saotech_vapid_privada), nunca no código.
+--  Fonte do gatilho de notificações: supabase/sql/tg_push.sql

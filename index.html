@@ -720,6 +720,52 @@ body.modo-portal #bv{display:none}
 .ag-locais label{display:flex;align-items:center;gap:5px} .ag-locais input{width:auto;accent-color:var(--accent)}
 .ag-erro{background:var(--crit-soft);color:var(--crit);border-radius:8px;padding:6px 10px;margin:0 0 8px;font-size:13px}
 .pt-chatbox .ag-wrap{max-height:none}
+/* v12 */
+.card-h{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px} .card-h h3{margin:2px 0 0} #funil-dias{width:auto;max-width:100%}
+.doc-msg{display:block;font-size:11.5px;min-height:14px;margin-top:2px;color:var(--ink-2)} .doc-msg.ok{color:#4C7A2A} .doc-msg.erro{color:var(--crit)}
+.pend-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#FAF1DF;border:1px solid #EBD9B0;border-radius:12px;padding:10px 14px;margin-top:12px;font-size:13.5px}
+.pend-chip{display:inline-block;background:#fff;border:1px solid var(--line-2);border-radius:999px;padding:1px 9px;font-size:12px;margin:2px 2px 2px 0;white-space:nowrap}
+.pend-chip.grave{background:var(--crit-soft);border-color:transparent;color:var(--crit);font-weight:600}
+.pend-n{display:inline-block;background:#FAF1DF;color:#8A6416;border-radius:999px;padding:0 7px;font-size:11px;font-weight:600}
+.pend-resumo{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+.pend-row,.lix-row,.aval-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+.pend-row .grow,.lix-row .grow,.aval-row .grow{flex:1;min-width:180px}
+.pend-chips{margin-top:4px} .pend-acts{display:flex;gap:6px;flex-wrap:wrap}
+.lix-dias{font-weight:600;font-size:13px;white-space:nowrap}
+.hist-abas{margin-bottom:12px;flex-wrap:wrap}
+.bkp-ok{background:var(--accent-soft);border-radius:10px;padding:8px 12px;font-size:13.5px;margin-bottom:8px}
+.docs-cli{display:flex;flex-direction:column;gap:6px}
+.doc-cli{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+.doc-cli .file{flex:1;min-width:180px;display:flex;align-items:center;gap:6px;text-decoration:none;color:inherit}
+.pd-lista{max-height:220px;overflow:auto;border:1px solid var(--line);border-radius:10px}
+.pd-it{display:flex;align-items:center;gap:8px;padding:7px 10px;border-top:1px solid var(--line);font-size:13.5px} .pd-it:first-child{border-top:0} .pd-it span:nth-child(2){flex:1;min-width:0;overflow-wrap:anywhere} .pd-it input{width:auto}
+.estrelas{color:#C9A227;letter-spacing:1px;font-size:16px;white-space:nowrap} .estrelas span{color:var(--line-2)}
+.aval-box{margin-top:12px;background:var(--accent-soft);border-radius:12px;padding:10px 12px} .aval-box p,.aval-row p{margin:4px 0}
+.aval-media{display:flex;align-items:center;gap:8px} .aval-media b{font-family:var(--f-display);font-size:26px}
+.fbar{display:grid;grid-template-columns:minmax(0,130px) minmax(0,1fr) auto;align-items:center;gap:8px;font-size:13px;margin:5px 0}
+.fbar>div{height:10px;background:var(--line);border-radius:6px;overflow:hidden} .fbar i{display:block;height:100%;background:var(--accent);border-radius:6px} .fbar.t i{background:#C9A227}
+.fbar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .fbar b{font-size:12.5px;white-space:nowrap}
+.tl-it.k-ficha{border-left-color:#C9A227}
+.ficha-tl{display:grid;gap:6px;margin:6px 0;font-size:13.5px;background:#FBFAEE;border-radius:10px;padding:8px 10px} .ficha-tl .label{display:block}
+.gps-box{margin-top:10px;background:var(--accent-soft);border-radius:10px;padding:8px 12px;font-size:13.5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fotos-btn{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.fc-fotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px;margin-top:10px}
+.fc-fotos figure{position:relative;margin:0} .fc-fotos img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;display:block}
+.fc-fotos figcaption{font-size:11px;color:var(--ink-2)} .fc-fotos button{position:absolute;top:4px;right:4px;border:0;border-radius:50%;width:24px;height:24px;background:rgba(0,0,0,.6);color:#fff;cursor:pointer}
+#fFicha input[type=number]{width:100%}
+#sync-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:150;max-width:calc(100% - 32px);background:#2E3319;color:#F7F7DC;border-radius:12px;padding:9px 14px;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.25);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#sync-bar.pend{background:#5C6B3D}
+.bell.on{background:#2E3319;color:#D9E15A;border-color:#2E3319}
+.notif-sug{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#2E3319;color:#F7F7DC;border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:13.5px}
+.notif-est{border-radius:12px;padding:10px 12px;background:var(--line)} .notif-est.ativo{background:var(--accent-soft)} .notif-est.bloqueado{background:var(--crit-soft)}
+.notif-lista{margin:0;padding-left:18px;font-size:13.5px;line-height:1.6}
+@media (max-width:600px){ .fbar{grid-template-columns:minmax(0,96px) minmax(0,1fr) auto} }
+.pt-baixar{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);text-decoration:none;color:inherit} .pt-baixar:first-of-type{border-top:0}
+.pt-baixar .grow{flex:1;min-width:0;display:flex;flex-direction:column} .pt-baixar .sub{overflow-wrap:anywhere} .pt-baixar .ic-doc{font-size:22px}
+.pt-aval p{margin:6px 0} .pt-aval textarea{width:100%;margin:8px 0}
+.av-estrelas{display:flex;gap:4px} .av-estrelas button{border:0;background:none;font-size:34px;line-height:1;color:var(--line-2);cursor:pointer;padding:2px} .av-estrelas button.on{color:#C9A227}
+.av-aut{display:flex;gap:8px;align-items:flex-start;font-size:13px;margin-bottom:10px} .av-aut input{width:auto;margin-top:3px}
+.pt-push-ok{align-self:center;white-space:nowrap}
 </style>
 
 
@@ -772,6 +818,7 @@ body.sem-login .wrap{visibility:hidden}
     <div class="hdr-acts">
       <button type="button" class="btn dia" id="btnDia" hidden></button>
       <button type="button" class="bell" id="btnSino" aria-label="Avisos de prazo" hidden><svg viewBox="0 0 24 24" class="ic" style="width:18px;height:18px"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg><span class="bell-n" id="sinoN"></span></button>
+      <button type="button" class="bell" id="btnNotif" aria-label="Avisos no celular" title="Avisos no celular (notificações)"><svg viewBox="0 0 24 24" class="ic" style="width:18px;height:18px"><rect x="7" y="2.5" width="10" height="19" rx="2.2"/><path d="M11 18.5h2"/><path d="M3.5 9v6M20.5 9v6"/></svg></button>
       <button type="button" class="bell" id="btnBusca" aria-label="Buscar (atalho: /)" title="Buscar em tudo (atalho: /)"><svg viewBox="0 0 24 24" class="ic" style="width:18px;height:18px"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
       <div class="avisos" id="avisos" hidden></div>
       <button type="button" class="btn sm ghost" id="btnEquipe" title="Equipe e permissões" hidden>Equipe</button>
@@ -1154,8 +1201,9 @@ function paneResumo(d, novo){
         <label class="f span2">Etapa<select id="d-etapa">${ETAPAS.map(e => `<option ${d.etapa === e.k ? "selected" : ""}>${esc(e.k)}</option>`).join("")}</select></label>
         <label class="f span2">Responsável<select id="d-resp">${PESSOAS.map(p => `<option value="${p.id}" ${d.responsavel === p.id ? "selected" : ""}>${esc(p.nome)}</option>`).join("")}</select></label>
         <label class="f span2">Prazo<input id="d-prazo" type="date" value="${esc(d.prazo)}"></label>
-        <label class="f span3">WhatsApp / contato do cliente<input id="d-contato" value="${esc(d.contato)}" placeholder="(34) 99999-0000"></label>
-        <label class="f span3">Município / UF<input id="d-municipio" value="${esc(d.municipio)}"></label>
+        <label class="f span2">WhatsApp / contato<input id="d-contato" value="${esc(d.contato)}" inputmode="tel" placeholder="(27) 99999-0000"></label>
+        <label class="f span2">CPF / CNPJ<input id="d-documento" value="${esc(d.documento || "")}" inputmode="numeric" placeholder="000.000.000-00" autocomplete="off"><small class="doc-msg" id="d-doc-msg" aria-live="polite"></small></label>
+        <label class="f span2">Município / UF<input id="d-municipio" value="${esc(d.municipio)}"></label>
       </div>
       <details class="mais" ${[d.imovel, d.areaHa, d.protocoloOrgao, d.protocoloNumero, d.notas].some(Boolean) ? "open" : ""}>
         <summary>Mais detalhes <span class="sub">(opcional: imóvel, protocolo, observações)</span></summary>
@@ -1187,12 +1235,14 @@ function ligarResumo(d, novo){
   const numHa = v => { const n = parseFloat(String(v).replace(",", ".")); return isNaN(n) ? null : n; };
   dlg.querySelector("#fDem").addEventListener("submit", async ev => {
     ev.preventDefault();
+    const vDoc = validarDocs($("#d-documento").value);
+    if (!vDoc.ok) { const i = $("#d-documento"); i.setCustomValidity(vDoc.msg); i.reportValidity(); i.focus(); return; }
     const btn = $("#d-save"); btn.disabled = true; btn.textContent = "Salvando…";
     const atual = S.demandas.find(x => x.id === id) || d;
     const ref = id ? S.db.doc("demandas/" + id) : S.db.collection("demandas").doc();
     const servicos = [...dlg.querySelectorAll(".checks input:checked")].map(i => i.value);
     const campos = {
-      cliente: $("#d-cliente").value.trim(), contato: $("#d-contato").value.trim(),
+      cliente: $("#d-cliente").value.trim(), contato: $("#d-contato").value.trim(), documento: formatarDocs($("#d-documento").value),
       imovel: $("#d-imovel").value.trim(), municipio: $("#d-municipio").value.trim(), areaHa: numHa($("#d-area").value),
       servicos, etapa: $("#d-etapa").value, responsavel: $("#d-resp").value, prazo: $("#d-prazo").value || null,
       protocoloOrgao: $("#d-orgao").value.trim(), protocoloNumero: $("#d-protnum").value.trim(), protocoloPrevisao: $("#d-protprev").value || null,
@@ -1222,8 +1272,8 @@ function ligarResumo(d, novo){
     } catch (err) { falhaEscrita(err); btn.disabled = false; btn.textContent = "Salvar"; }
   });
   dlg.querySelector("#d-del")?.addEventListener("click", async e => {
-    if (!S.confirmDel) { S.confirmDel = true; e.target.textContent = "Confirmar exclusão"; return; }
-    try { await S.db.doc("demandas/" + id).delete(); if (S.fin[id] && S.finCol) await S.finCol.doc(id).delete(); fecharDlg(); toast("Demanda excluída"); }
+    if (!S.confirmDel) { S.confirmDel = true; e.target.textContent = "Mover para a lixeira?"; return; }
+    try { await S.db.doc("demandas/" + id).delete(); if (S.fin[id] && S.finCol) await S.finCol.doc(id).delete(); fecharDlg(); toast("Demanda movida para a lixeira. Dá para recuperar por 30 dias em Histórico → Lixeira."); }
     catch (err) { falhaEscrita(err); }
   });
 }
@@ -2138,7 +2188,7 @@ function assinarConversa(id){
   }, () => { S.conv[id] = S.conv[id] || []; });
 }
 const msgsDemanda = id => (S.conv[id] || []).flatMap(doc => (doc.msgs || []).map(m => ({...m, pessoa: doc.pessoa}))).sort((a, b) => a.em < b.em ? -1 : 1);
-function irProcesso(id){ S.tab = "clientes"; S.cliSel = id; S.cliBusca = ""; ls.set("sao.tab", S.tab); ls.set("sao.cli", id); if (S.cliFiltro === "ativas" && !ATIVAS.includes(S.demandas.find(d => d.id === id)?.etapa)) S.cliFiltro = "todas"; fecharDlg(); render(); window.scrollTo({top: 0}); }
+function irProcesso(id){ S.tab = "clientes"; S.cliSel = id; S.cliBusca = ""; ls.set("sao.tab", S.tab); ls.set("sao.cli", id); if (S.cliFiltro === "pendencias") S.cliFiltro = "todas"; if (S.cliFiltro === "ativas" && !ATIVAS.includes(S.demandas.find(d => d.id === id)?.etapa)) S.cliFiltro = "todas"; fecharDlg(); render(); window.scrollTo({top: 0}); }
 function irConversa(id){ S.tab = "conversas"; S.convSel = id; ls.set("sao.tab", S.tab); ls.set("sao.conv", id); fecharDlg(); render(); window.scrollTo({top: 0}); }
 const novasDemandas = () => S.demandas.filter(d => temNovidade(d) && !(S.tab === "conversas" && S.convSel === d.id));
 
@@ -2313,7 +2363,7 @@ function linhaDoTempo(d){
     const em = new Date(a.data + "T" + (a.inicio || "08:00") + ":00").toISOString();
     it.push({em, k: "agenda", a, futuro: prazoEv(a) >= hoje()});
   }
-  for (const m of msgsDemanda(d.id)) it.push({em: m.em, k: "msg", pessoa: m.pessoa, txt: m.texto, anexos: m.anexos});
+  for (const m of msgsDemanda(d.id)) it.push({em: m.em, k: m.ficha ? "ficha" : "msg", pessoa: m.pessoa, txt: m.texto, anexos: m.anexos, ficha: m.ficha});
   return it.sort((a, b) => a.em < b.em ? 1 : -1);
 }
 function processoHtml(d){
@@ -2333,9 +2383,10 @@ function processoHtml(d){
   const f = S.fin[d.id]; const ent = S.podeFin ? entradaInfo(f) : null;
   const tel = telefone(d.contato);
 
-  const tl = linhaDoTempo(d).filter(x => S.tlFiltro === "tudo" || (S.tlFiltro === "etapas" ? x.k === "etapa" || x.k === "hist" : S.tlFiltro === "conversa" ? x.k === "msg" : x.k === "agenda"));
+  const tl = linhaDoTempo(d).filter(x => S.tlFiltro === "tudo" || (S.tlFiltro === "etapas" ? x.k === "etapa" || x.k === "hist" : S.tlFiltro === "conversa" ? x.k === "msg" || x.k === "ficha" : x.k === "agenda"));
   const tlHtml = tl.slice(0, 80).map(x => {
     if (x.k === "agenda") { const a = x.a; return `<div class="tl-it k-agenda ${x.futuro ? "futuro" : ""}"><time>${x.futuro ? "Agendado · " : ""}${fmtData(a.data)}${prazoEv(a) > a.data ? " a " + fmtData(prazoEv(a)) : ""} · ${esc(a.inicio || "")}</time><div><b>${esc(a.tipo)}</b>${a.titulo ? " · " + esc(a.titulo) : ""}${a.local ? " · " + esc(a.local) : ""}${(a.pessoas || []).length ? ` <span class="sub">com ${esc(a.pessoas.map(primeiro).join(", "))}</span>` : ""}</div></div>`; }
+    if (x.k === "ficha") return fichaTlHtml(x);
     if (x.k === "msg") return `<div class="tl-it k-msg"><time>${fmtQuando(x.em)} · conversa</time><div><b>${esc(primeiro(x.pessoa))}:</b> ${x.txt ? esc(corta(x.txt, 220)) : `<span class="sub">enviou ${x.anexos?.length || 0} arquivo(s)</span>`}</div>${attsHtml(x.anexos)}</div>`;
     return `<div class="tl-it k-${x.k}"><time>${fmtQuando(x.em)}</time><div><b>${esc(primeiro(x.pessoa))}</b> ${esc(x.txt)}</div></div>`;
   }).join("");
@@ -2356,17 +2407,20 @@ function processoHtml(d){
         ${d.areaHa ? `<span>${esc(String(d.areaHa).replace(".", ","))} ha</span>` : ""}
         <span>Responsável: <b>${esc(pessoa(d.responsavel).nome)}</b></span>
         ${d.contato ? `<span>Contato: <b>${esc(d.contato)}</b></span>` : ""}
+        ${d.documento ? `<span>CPF/CNPJ: <b>${esc(d.documento)}</b></span>` : ""}
       </div>
       <div class="acts">
         <button type="button" class="btn lima" data-open="${d.id}">Abrir cartão</button>
         ${S.somenteLeitura ? "" : `<button type="button" class="btn" data-duplicar="${d.id}">Duplicar estrutura</button>`}
         <button type="button" class="btn" data-conv="${d.id}">Conversa interna</button>
+        ${S.somenteLeitura ? "" : `<button type="button" class="btn" data-ficha="${d.id}">Ficha de campo</button>`}
         ${tel ? `<a class="btn" href="https://wa.me/${tel}" target="_blank" rel="noopener">WhatsApp do cliente</a>` : ""}
         ${arqs.length ? `<button type="button" class="btn" data-galdem="${d.id}">Arquivos (${arqs.length})</button>` : ""}
       </div>
     </section>
     ${d.etapa === "Pausada" ? `<div class="banner" style="margin-top:12px">Processo pausado na etapa <b>&nbsp;${esc(atual)}</b>.</div>` : ""}
     <div class="card" style="margin-top:12px"><div class="stepper">${stepper}</div></div>
+    ${pendenciasBanner(d)}
     <section class="pstats">
       <div class="pst"><span class="label">Checklist</span><b>${ok}/${cl.length}</b>${cl.length ? `<div class="prog"><i style="width:${Math.round(ok / cl.length * 100)}%"></i></div>` : `<span class="sub">sem itens</span>`}</div>
       <div class="pst ${docs.length - docsOk ? "warn" : ""}"><span class="label">Documentos do cliente</span><b>${docsOk}/${docs.length}</b><span class="sub">${docs.length - docsOk ? `faltam ${docs.length - docsOk}` : docs.length ? "todos recebidos" : "nenhum pedido"}</span></div>
@@ -2376,6 +2430,7 @@ function processoHtml(d){
     </section>
     ${S.podeFin ? `<div style="margin-top:16px">${contratoCardHtml(d)}</div>` : ""}
     <div style="margin-top:16px">${acessoCardHtml(d)}</div>
+    ${docsClienteHtml(d)}
     <div style="margin-top:16px">${vinculosHtml(d)}</div>
     <div style="margin-top:16px">${geoCardHtml(d)}</div>
     <div class="cols-3-2" style="margin-top:16px">
@@ -2398,19 +2453,22 @@ function viewClientes(){
   const q = (S.cliBusca || "").toLowerCase();
   let lista = S.demandas.slice();
   if (S.cliFiltro === "ativas") lista = lista.filter(d => ATIVAS.includes(d.etapa) || d.etapa === "Pausada");
-  if (q) lista = lista.filter(d => [d.codigo, d.cliente, d.imovel, d.municipio, d.contato].join(" ").toLowerCase().includes(q));
+  if (S.cliFiltro === "pendencias") lista = lista.filter(d => !d.exemplo && pendenciasDe(d).length);
+  const nPend = S.demandas.filter(d => !d.exemplo && pendenciasDe(d).length).length;
+  if (q) lista = lista.filter(d => [d.codigo, d.cliente, d.imovel, d.municipio, d.contato, d.documento, soDig(d.documento)].join(" ").toLowerCase().includes(q));
   lista.sort((a, b) => (a.cliente || "").localeCompare(b.cliente || "", "pt-BR"));
   if (!lista.some(d => d.id === S.cliSel)) S.cliSel = lista[0]?.id || null;
   const sel = S.demandas.find(d => d.id === S.cliSel);
   const side = `<aside class="side card">
     <input id="cl-busca" type="search" placeholder="Buscar cliente, imóvel, código" value="${esc(S.cliBusca || "")}">
-    <div class="seg" role="group" aria-label="Filtro"><button type="button" data-clif="ativas" aria-pressed="${S.cliFiltro === "ativas"}">Em andamento</button><button type="button" data-clif="todas" aria-pressed="${S.cliFiltro === "todas"}">Todos</button></div>
+    <div class="seg" role="group" aria-label="Filtro"><button type="button" data-clif="ativas" aria-pressed="${S.cliFiltro === "ativas"}">Em andamento</button><button type="button" data-clif="todas" aria-pressed="${S.cliFiltro === "todas"}">Todos</button><button type="button" data-clif="pendencias" aria-pressed="${S.cliFiltro === "pendencias"}" title="Cadastros incompletos">Pendências${nPend ? ` <span class="nbadge">${nPend}</span>` : ""}</button></div>
     <div class="lst">${lista.map(d => { const cl = d.checklist || []; const ok = cl.filter(i => i.ok).length; return `<button type="button" class="side-it" data-cli="${d.id}" aria-current="${d.id === S.cliSel}">
       <span class="r1"><b>${esc(d.cliente)}</b>${temNovidade(d) ? `<span class="ndot" title="Mensagem nova"></span>` : ""}</span>
-      <span class="prev">${esc(d.codigo)} · ${esc(d.etapa)}${d.municipio ? " · " + esc(d.municipio) : ""}${(d.vinculos || []).some(v => v.rel === "Confrontante") ? " · " + d.vinculos.filter(v => v.rel === "Confrontante").length + " confrontante(s)" : ""}</span>
+      <span class="prev">${pendenciasDe(d).length && !d.exemplo ? `<span class="pend-n" title="Cadastro incompleto">${pendenciasDe(d).length} pendência${pendenciasDe(d).length > 1 ? "s" : ""}</span> ` : ""}${esc(d.codigo)} · ${esc(d.etapa)}${d.municipio ? " · " + esc(d.municipio) : ""}${(d.vinculos || []).some(v => v.rel === "Confrontante") ? " · " + d.vinculos.filter(v => v.rel === "Confrontante").length + " confrontante(s)" : ""}</span>
       ${cl.length ? `<span class="prog"><i style="width:${Math.round(ok / cl.length * 100)}%"></i></span>` : ""}
     </button>`; }).join("") || `<p class="sub" style="padding:8px 12px">${S.conectado ? "Nenhum cliente encontrado." : "Carregando…"}</p>`}</div>
   </aside>`;
+  if (S.cliFiltro === "pendencias") return `<div class="split">${side}<div>${pendenciasViewHtml(lista)}</div></div>`;
   return `<div class="split">${side}<div>${sel ? processoHtml(sel) : `<div class="card empty">Selecione um cliente para ver o processo completo.</div>`}</div></div>`;
 }
 
@@ -3039,7 +3097,7 @@ const portalNovas = p => { const ult = (p.msgs || []).filter(m => m.de === "clie
 const portaisNaoLidos = () => S.portais.filter(p => portalNovas(p) && !(S.tab === "conversas" && S.convSel === "portal:" + p.usuario)).length;
 function msgWaAcesso(d, a){
   const nome = (a?.nome || d.cliente || "").split(/\s+/)[0];
-  const txt = `Olá, ${nome}! Aqui é ${primeiro(S.me)}, da Saotech Geotecnologia.\n\nCriamos o seu acesso ao Portal do Cliente, onde você acompanha a etapa e a evolução do seu processo e conversa diretamente com a nossa equipe.\n\nAcesse: ${LINK_PORTAL()}\nUsuário: ${a.usuario}\nSenha: ${SENHA_CLIENTE}\n\nQualquer dúvida, estamos à disposição.`;
+  const txt = `Olá, ${nome}! Aqui é ${primeiro(S.me)}, da Saotech Geotecnologia.\n\nCriamos o seu acesso ao Portal do Cliente, onde você acompanha a etapa e a evolução do seu processo e conversa diretamente com a nossa equipe.\n\nAcesse: ${LINK_PORTAL()}\nUsuário: ${a.usuario}\nSenha: ${a.senha || SENHA_CLIENTE}\n\nQualquer dúvida, estamos à disposição.`;
   return `https://wa.me/${telefone(d.contato)}?text=${encodeURIComponent(txt)}`;
 }
 function acessoCardHtml(d){
@@ -3051,13 +3109,14 @@ function acessoCardHtml(d){
   return `<div class="card acesso-card"><div class="conv-h"><div><span class="label">Portal do cliente</span><h3>Acesso de ${esc(a.nome)}</h3></div>${p && portalNovas(p) ? `<span class="nbadge">nova mensagem</span>` : ""}</div>
     <div class="acesso-dados">
       <div><span class="label">Usuário</span><b class="mono">${esc(a.usuario)}</b></div>
-      <div><span class="label">Senha</span><b class="mono">${SENHA_CLIENTE}</b></div>
+      <div><span class="label">Senha</span><b class="mono">${esc(a.senha || SENHA_CLIENTE)}</b><small class="muted" style="display:block;font-size:11px">${(a.senha || SENHA_CLIENTE) === SENHA_CLIENTE ? "padrão · sem telefone cadastrado" : "4 últimos dígitos do telefone"}</small></div>
       <div><span class="label">Vê também</span><b style="font-size:13px">${outros.length ? esc(outros.join(", ")) : "só este processo"}</b></div>
     </div>
     <p class="sub" style="margin:8px 0 10px">O cliente vê apenas a etapa, o andamento, os documentos pendentes, a agenda e a conversa com a equipe. Não vê valores, anotações nem conversas internas.</p>
     <div class="acts" style="display:flex;gap:6px;flex-wrap:wrap">
       <a class="btn sm lima" href="${msgWaAcesso(d, a)}" target="_blank" rel="noopener">Enviar acesso pelo WhatsApp</a>
       <button type="button" class="btn sm" data-copiaracesso="${d.id}">Copiar dados de acesso</button>
+      ${!S.somenteLeitura ? `<button type="button" class="btn sm" data-redefsenha="${esc(a.usuario)}" title="Usa os 4 últimos dígitos do telefone do processo">Redefinir senha</button>` : ""}
       <button type="button" class="btn sm" data-conv="portal:${esc(a.usuario)}">Conversa com o cliente</button>
     </div></div>`;
 }
@@ -3081,8 +3140,10 @@ function portalChatHtml(msgs, ags){
 document.addEventListener("click", async e => {
   const c = e.target.closest("[data-criaracesso]");
   if (c) { e.stopPropagation(); c.disabled = true; try { const u = await S.user.criarAcessoCliente(c.dataset.criaracesso); toast(`Acesso criado: ${u}`); S.acessos = await S.user.portalAcessos(); render(); } catch (err) { falhaEscrita(err); c.disabled = false; } return; }
+  const rs = e.target.closest("[data-redefsenha]");
+  if (rs) { e.stopPropagation(); rs.disabled = true; try { const nova = await S.user.definirSenhaCliente(rs.dataset.redefsenha); toast(`Senha definida: ${nova}`); S.acessos = await S.user.portalAcessos(); render(); } catch (err) { falhaEscrita(err); rs.disabled = false; } return; }
   const cp = e.target.closest("[data-copiaracesso]");
-  if (cp) { e.stopPropagation(); const d = S.demandas.find(x => x.id === cp.dataset.copiaracesso); const a = acessoDe(d.id); const t = `Portal do Cliente Saotech\n${LINK_PORTAL()}\nUsuário: ${a.usuario}\nSenha: ${SENHA_CLIENTE}`;
+  if (cp) { e.stopPropagation(); const d = S.demandas.find(x => x.id === cp.dataset.copiaracesso); const a = acessoDe(d.id); const t = `Portal do Cliente Saotech\n${LINK_PORTAL()}\nUsuário: ${a.usuario}\nSenha: ${a.senha || SENHA_CLIENTE}`;
     try { await navigator.clipboard.writeText(t); toast("Dados de acesso copiados"); } catch { toast(t); } }
 }, true);
 document.addEventListener("submit", async e => {
@@ -3244,6 +3305,545 @@ function falhaEscrita(err){
   else if (err?.code === "quota_exceeded") toast("O banco atingiu o limite de registros. Apague exemplos ou registros antigos.");
   else toast("Não foi possível salvar agora. Tente de novo em instantes." + (err?.message ? " (" + err.message + ")" : ""));
 }
+
+
+/* ====================================================================
+   v12 · segurança, campo, cadastro, funil, portal e notificações
+   ==================================================================== */
+
+/* ---------- CPF / CNPJ ---------- */
+const soDig = t => String(t || "").replace(/\D/g, "");
+function cpfOk(c){
+  c = soDig(c); if (c.length !== 11 || /^(\d)\1+$/.test(c)) return false;
+  const dv = n => { let s = 0; for (let i = 0; i < n; i++) s += +c[i] * (n + 1 - i); const r = (s * 10) % 11; return r === 10 ? 0 : r; };
+  return dv(9) === +c[9] && dv(10) === +c[10];
+}
+function cnpjOk(c){
+  c = soDig(c); if (c.length !== 14 || /^(\d)\1+$/.test(c)) return false;
+  const dv = n => { const pesos = n === 12 ? [5,4,3,2,9,8,7,6,5,4,3,2] : [6,5,4,3,2,9,8,7,6,5,4,3,2]; let s = 0; for (let i = 0; i < n; i++) s += +c[i] * pesos[i]; const r = s % 11; return r < 2 ? 0 : 11 - r; };
+  return dv(12) === +c[12] && dv(13) === +c[13];
+}
+const fmtCpf = c => c.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, "$1.$2.$3-$4");
+const fmtCnpj = c => c.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
+const partesDoc = t => String(t || "").split(/[;,\n]+|\s{2,}|\s+e\s+/).map(x => x.trim()).filter(x => soDig(x).length);
+function validarDocs(t){
+  const erros = [];
+  for (const p of partesDoc(t)) {
+    const d = soDig(p);
+    if (d.length === 11) { if (!cpfOk(d)) erros.push(`${p}: CPF com dígito verificador errado`); }
+    else if (d.length === 14) { if (!cnpjOk(d)) erros.push(`${p}: CNPJ com dígito verificador errado`); }
+    else erros.push(`${p}: tem ${d.length} dígitos (CPF tem 11, CNPJ tem 14)`);
+  }
+  return {ok: !erros.length, msg: erros.join(" · "), erros};
+}
+function formatarDocs(t){
+  return partesDoc(t).map(p => { const d = soDig(p); return d.length === 11 ? fmtCpf(d) : d.length === 14 ? fmtCnpj(d) : p; }).join("; ");
+}
+document.addEventListener("input", e => {
+  if (e.target.id !== "d-documento") return;
+  const v = validarDocs(e.target.value); e.target.setCustomValidity("");
+  const m = $("#d-doc-msg"); if (!m) return;
+  const n = partesDoc(e.target.value).length;
+  m.textContent = !n ? "" : v.ok ? (n > 1 ? `${n} documentos válidos` : "válido") : v.msg;
+  m.className = "doc-msg " + (!n ? "" : v.ok ? "ok" : "erro");
+});
+document.addEventListener("focusout", e => { if (e.target.id === "d-documento" && validarDocs(e.target.value).ok) e.target.value = formatarDocs(e.target.value); });
+
+/* ---------- Pendências de cadastro ---------- */
+function pendenciasDe(d){
+  if (!d || d.exemplo) return [];
+  const p = [];
+  if (!(d.servicos || []).length) p.push({k: "servico", t: "Serviço"});
+  if (!String(d.municipio || "").trim()) p.push({k: "municipio", t: "Município"});
+  if (!telefone(d.contato)) p.push({k: "contato", t: "Telefone"});
+  if (!String(d.documento || "").trim()) p.push({k: "documento", t: "CPF/CNPJ"});
+  else if (!validarDocs(d.documento).ok) p.push({k: "documento", t: "CPF/CNPJ inválido", grave: true});
+  if (ATIVAS.includes(d.etapa) && d.etapa !== "Orçamento" && !d.prazo) p.push({k: "prazo", t: "Prazo"});
+  if (!String(d.imovel || "").trim() && (d.servicos || []).some(s => /georref|desmembr|retific|usucap|unific|car\b/i.test(s))) p.push({k: "imovel", t: "Imóvel/matrícula"});
+  return p;
+}
+const chipPend = x => `<span class="pend-chip ${x.grave ? "grave" : ""}">${esc(x.t)}</span>`;
+function pendenciasBanner(d){
+  const p = pendenciasDe(d); if (!p.length) return "";
+  const inval = p.find(x => x.grave) ? `<div class="sub" style="margin-top:4px">${esc(validarDocs(d.documento).msg)}</div>` : "";
+  return `<div class="pend-banner"><div><b>Cadastro incompleto</b> · falta ${p.map(chipPend).join(" ")}${inval}</div>${S.somenteLeitura ? "" : `<button type="button" class="btn sm primary" data-open="${d.id}">Completar</button>`}</div>`;
+}
+function pendenciasViewHtml(lista){
+  const todos = S.demandas.filter(d => !d.exemplo);
+  const cont = {};
+  todos.forEach(d => pendenciasDe(d).forEach(x => { cont[x.t] = (cont[x.t] || 0) + 1; }));
+  const ok = todos.length - lista.length;
+  return `<div class="card">
+    <div class="card-h"><div><span class="label">Qualidade do cadastro</span><h3>Pendências de cadastro</h3></div><span class="sub">${ok} de ${todos.length} completos</span></div>
+    <div class="prog" style="margin:8px 0 12px"><i style="width:${todos.length ? Math.round(ok / todos.length * 100) : 100}%"></i></div>
+    <div class="pend-resumo">${Object.entries(cont).sort((a, b) => b[1] - a[1]).map(([t, n]) => `<span class="pend-chip">${esc(t)} · ${n}</span>`).join("") || `<span class="sub">Tudo preenchido. 👏</span>`}</div>
+    <div class="pend-lista">${lista.map(d => `<div class="pend-row">
+      <div class="grow"><b>${esc(d.cliente)}</b><div class="sub">${esc(d.codigo)} · ${esc(d.etapa)}</div><div class="pend-chips">${pendenciasDe(d).map(chipPend).join("")}</div></div>
+      <div class="pend-acts"><button type="button" class="btn sm" data-cli="${d.id}" data-clif-sair>Ver processo</button>${S.somenteLeitura ? "" : `<button type="button" class="btn sm primary" data-open="${d.id}">Completar</button>`}</div>
+    </div>`).join("") || `<p class="muted" style="margin:0">Nenhum cadastro pendente.</p>`}</div>
+    <p class="sub" style="margin:12px 0 0">Conta como pendência: serviço, município, telefone, CPF/CNPJ (ausente ou com dígitos errados), prazo para processos já contratados e imóvel/matrícula para serviços de georreferenciamento e registro.</p>
+  </div>`;
+}
+document.addEventListener("click", e => { const b = e.target.closest("[data-clif-sair]"); if (b) S.cliFiltro = "todas"; }, true);
+
+/* ---------- Documentos para o cliente baixar no portal ---------- */
+const ROTULOS_DOC = ["Planta final", "Memorial descritivo", "Recibo", "Contrato", "Certidão / matrícula", "ART / TRT", "Relatório", "Outro"];
+function docsClienteHtml(d){
+  const a = acessoDe(d.id); if (!a || d.exemplo) return "";
+  const lista = d.docsCliente || [];
+  const p = S.portais.find(x => x.usuario === a.usuario);
+  const av = (p?.avaliacoes || []).find(x => x.demanda === d.id);
+  return `<div class="card" style="margin-top:16px"><div class="card-h"><div><span class="label">Portal do cliente</span><h3>Documentos para o cliente baixar</h3></div>${S.somenteLeitura ? "" : `<button type="button" class="btn sm primary" data-pubdoc="${d.id}">Publicar documento</button>`}</div>
+    ${lista.length ? `<div class="docs-cli">${lista.map(x => `<div class="doc-cli"><a class="file" data-blob="${esc(x.id)}" target="_blank" rel="noopener">${ICON.file}<span><b>${esc(x.rotulo || "Documento")}</b> · ${esc(x.nome)}</span></a><span class="sub">${fmtQuando(x.em)} · ${esc(primeiro(x.por))}</span>${S.somenteLeitura ? "" : `<button type="button" class="btn sm ghost" data-despub="${d.id}|${esc(x.id)}" title="Tirar do portal">Remover</button>`}</div>`).join("")}</div>`
+      : `<p class="sub" style="margin:0">Nada publicado. Publique a planta final, o memorial ou recibos (salve o recibo em PDF e envie aqui) e ${esc(a.nome.split(" ")[0])} baixa direto no portal.</p>`}
+    ${av ? `<div class="aval-box"><span class="label">Avaliação do cliente</span><div class="estrelas" aria-label="${av.nota} de 5">${"★".repeat(av.nota)}<span>${"★".repeat(5 - av.nota)}</span></div>${av.comentario ? `<p>“${esc(av.comentario)}”</p>` : ""}<span class="sub">${fmtQuando(av.em)}${av.autoriza ? " · autorizou usar como depoimento" : " · não autorizou divulgação"}</span></div>` : ["Entregue", "Concluída"].includes(d.etapa) ? `<p class="sub" style="margin:10px 0 0">O portal já está pedindo a avaliação do serviço para o cliente.</p>` : ""}
+  </div>`;
+}
+function abrirPublicarDoc(id){
+  const d = S.demandas.find(x => x.id === id); const a = acessoDe(id); if (!d || !a) return;
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "pubdoc", id, unsubs: []};
+  const arqs = msgsDemanda(id).flatMap(m => (m.anexos || []).map(x => ({...x, em: m.em}))).reverse();
+  const dlg = $("#dlg"); dlg.className = "";
+  dlg.innerHTML = `<form id="fPubDoc"><div class="dlg-h"><div><span class="label">${esc(d.codigo)} · portal de ${esc(a.nome)}</span><h2 style="font-size:19px">Publicar documento</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+    <div class="dlg-b">
+      <label class="f">Tipo de documento<select id="pd-rot">${ROTULOS_DOC.map(r => `<option>${r}</option>`).join("")}</select></label>
+      <label class="f" style="margin-top:10px">Enviar arquivo do computador ou celular<input type="file" id="pd-file" multiple accept=".pdf,.dwg,.dxf,.kml,.kmz,.zip,.doc,.docx,.xls,.xlsx,image/*"></label>
+      ${arqs.length ? `<div class="label" style="margin:14px 0 6px">Ou escolha arquivos já enviados na conversa do processo</div><div class="pd-lista">${arqs.slice(0, 40).map((x, i) => `<label class="pd-it"><input type="checkbox" value="${i}"><span>${esc(x.nome)}</span><span class="sub">${fmtQuando(x.em)}</span></label>`).join("")}</div>` : ""}
+      <p class="sub" style="margin:12px 0 0">O cliente vê só os documentos publicados aqui. Os arquivos internos continuam privados.</p>
+      <p class="sub" id="pd-pend"></p>
+    </div>
+    <div class="dlg-f"><span></span><div style="display:flex;gap:8px"><button type="button" class="btn" data-close>Cancelar</button><button class="btn primary">Publicar no portal</button></div></div></form>`;
+  if (!dlg.open) dlg.showModal();
+  $("#fPubDoc").addEventListener("submit", async ev => {
+    ev.preventDefault();
+    const btn = ev.target.querySelector(".btn.primary"); btn.disabled = true;
+    const rotulo = $("#pd-rot").value, pasta = `portal/${a.usuario}/docs`;
+    const novos = [];
+    try {
+      for (const f of [...($("#pd-file").files || [])]) {
+        $("#pd-pend").textContent = `Enviando ${f.name}…`;
+        const r = await S.assets.upload(f, {pasta}); novos.push({id: r.id, nome: f.name, tipo: r.contentType, tam: f.size});
+      }
+      for (const cb of [...ev.target.querySelectorAll(".pd-it input:checked")]) {
+        const x = arqs[+cb.value]; $("#pd-pend").textContent = `Copiando ${x.nome}…`;
+        const para = `${pasta}/${uid()}${uid()}-${String(x.nome || "arquivo").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^\w.\-]+/g, "_").slice(-80)}`;
+        await S.user.copiarArquivo(x.id, para); novos.push({id: para, nome: x.nome, tipo: x.tipo});
+      }
+      if (!novos.length) { toast("Escolha ao menos um arquivo."); btn.disabled = false; $("#pd-pend").textContent = ""; return; }
+      const atual = S.demandas.find(x => x.id === id) || d;
+      const itens = novos.map(n => ({...n, rotulo, em: agoraISO(), por: S.me}));
+      await S.db.doc("demandas/" + id).update({docsCliente: [...(atual.docsCliente || []), ...itens], historico: histAdd(atual, `publicou ${itens.length === 1 ? `"${itens[0].nome}"` : itens.length + " documentos"} no portal do cliente`), atualizadoEm: agoraISO()});
+      await S.user.responderCliente(a.usuario, `📄 ${itens.length === 1 ? `Disponibilizamos o documento "${rotulo}" para você baixar` : `Disponibilizamos ${itens.length} documentos para você baixar`} na aba Documentos do portal.`).catch(() => {});
+      fecharDlg(); toast("Publicado no portal do cliente");
+    } catch (err) { falhaEscrita(err); btn.disabled = false; $("#pd-pend").textContent = ""; }
+  });
+}
+document.addEventListener("click", async e => {
+  const p = e.target.closest("[data-pubdoc]"); if (p) { e.stopPropagation(); abrirPublicarDoc(p.dataset.pubdoc); return; }
+  const r = e.target.closest("[data-despub]"); if (!r) return; e.stopPropagation(); e.preventDefault();
+  const [id, arq] = r.dataset.despub.split("|"); const d = S.demandas.find(x => x.id === id); if (!d) return;
+  if (r.dataset.ok !== "1") { r.dataset.ok = "1"; r.textContent = "Confirmar"; return; }
+  const x = (d.docsCliente || []).find(y => y.id === arq);
+  try { await S.db.doc("demandas/" + id).update({docsCliente: (d.docsCliente || []).filter(y => y.id !== arq), historico: histAdd(d, `tirou "${x?.nome || "documento"}" do portal do cliente`)}); toast("Documento removido do portal"); }
+  catch (err) { falhaEscrita(err); }
+}, true);
+
+/* ---------- Ficha de campo (funciona sem internet) ---------- */
+function fichaTlHtml(x){
+  const f = x.ficha || {};
+  const g = f.gps;
+  return `<div class="tl-it k-ficha"><time>${fmtQuando(x.em)} · ficha de campo</time><div><b>${esc(primeiro(x.pessoa))}</b> registrou a ficha de campo${f.pendente ? ` <span class="chip">aguardando internet</span>` : ""}</div>
+    <div class="ficha-tl">
+      ${f.marcosEncontrados || f.marcosImplantados ? `<div><span class="label">Marcos</span>${f.marcosEncontrados ? `${f.marcosEncontrados} encontrado(s)` : ""}${f.marcosEncontrados && f.marcosImplantados ? " · " : ""}${f.marcosImplantados ? `${f.marcosImplantados} implantado(s)` : ""}${f.marcosObs ? `<div class="sub">${esc(f.marcosObs)}</div>` : ""}</div>` : ""}
+      ${(f.confrontantes || []).length ? `<div><span class="label">Confrontantes presentes</span>${esc(f.confrontantes.join(", "))}</div>` : ""}
+      ${f.obs ? `<div><span class="label">Observações</span>${esc(f.obs)}</div>` : ""}
+      ${(f.checklist || []).length ? `<div><span class="label">Concluído no campo</span>${esc(f.checklist.join(" · "))}</div>` : ""}
+      ${g ? `<div><span class="label">Local</span><a href="https://www.google.com/maps?q=${g.lat},${g.lng}" target="_blank" rel="noopener">${g.lat.toFixed(6)}, ${g.lng.toFixed(6)}</a>${g.acc ? ` <span class="sub">± ${Math.round(g.acc)} m</span>` : ""}</div>` : ""}
+    </div>${attsHtml(x.anexos)}</div>`;
+}
+const gpsAgora = (ms = 15000) => new Promise(ok => {
+  if (!navigator.geolocation) return ok(null);
+  navigator.geolocation.getCurrentPosition(p => ok({lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy, em: new Date(p.timestamp).toISOString()}), () => ok(null), {enableHighAccuracy: true, timeout: ms, maximumAge: 60000});
+});
+function abrirFicha(id){
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "ficha", id, unsubs: [], fotos: [], gps: null};
+  const ativos = S.demandas.filter(d => !d.exemplo && (ATIVAS.includes(d.etapa) || d.id === id)).sort((a, b) => (a.cliente || "").localeCompare(b.cliente || "", "pt-BR"));
+  const dlg = $("#dlg"); dlg.className = "ficha-dlg";
+  const montar = () => {
+    const d = S.demandas.find(x => x.id === S.dlg.id);
+    const conf = (d?.vinculos || []).filter(v => v.rel === "Confrontante").map(v => S.demandas.find(x => x.id === v.id)?.cliente?.split(" — ")[0]).filter(Boolean);
+    const tec = (d?.checklist || []).filter(i => !i.doc && !i.ok);
+    return `<div class="dlg-h"><div><span class="label">Registro rápido no campo · ${navigator.onLine ? "online" : "sem internet: salva no aparelho"}</span><h2 style="font-size:19px">Ficha de campo</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+    <form id="fFicha"><div class="dlg-b">
+      <label class="f">Processo<select id="fc-dem">${ativos.map(x => `<option value="${x.id}" ${x.id === S.dlg.id ? "selected" : ""}>${esc(x.codigo)} · ${esc(x.cliente)}</option>`).join("")}</select></label>
+      <div class="gps-box" id="fc-gps">${S.dlg.gps ? gpsTxt(S.dlg.gps) : "📍 Pegando a localização…"}</div>
+      <div class="fgrid" style="margin-top:10px">
+        <label class="f span3">Marcos encontrados<input id="fc-me" type="number" min="0" inputmode="numeric" placeholder="0"></label>
+        <label class="f span3">Marcos implantados<input id="fc-mi" type="number" min="0" inputmode="numeric" placeholder="0"></label>
+        <label class="f span6">Detalhes dos marcos<input id="fc-mobs" placeholder="Ex.: M-03 deslocado, M-07 não localizado"></label>
+      </div>
+      <div class="label" style="margin:12px 0 6px">Confrontantes presentes</div>
+      <div class="checks">${conf.map(n => `<label><input type="checkbox" class="fc-conf" value="${esc(n)}">${esc(n)}</label>`).join("")}</div>
+      <input id="fc-conf-outros" placeholder="${conf.length ? "Outros presentes (separe por vírgula)" : "Nomes dos confrontantes presentes (separe por vírgula)"}" style="margin-top:6px;width:100%">
+      ${tec.length ? `<div class="label" style="margin:12px 0 6px">Marcar como feito no checklist</div><div class="checks">${tec.map(i => `<label><input type="checkbox" class="fc-cl" value="${i.id}">${esc(i.t)}</label>`).join("")}</div>` : ""}
+      <label class="f" style="margin-top:12px">Observações<textarea id="fc-obs" rows="3" placeholder="Acesso, condições do terreno, pendências com o cliente…"></textarea></label>
+      <label class="btn fotos-btn" style="margin-top:12px">📷 Tirar / escolher fotos<input type="file" id="fc-fotos" accept="image/*" capture="environment" multiple hidden></label>
+      <div class="fc-fotos" id="fc-prev">${S.dlg.fotos.map((f, i) => `<figure><img src="${f.url}" alt=""><figcaption>${f.gps ? "📍" : "sem GPS"}</figcaption><button type="button" data-fcrm="${i}" aria-label="Tirar foto">✕</button></figure>`).join("")}</div>
+      <p class="sub" id="fc-pend"></p>
+    </div>
+    <div class="dlg-f"><span class="sub">Entra na linha do tempo do cliente e na conversa interna.</span><div style="display:flex;gap:8px"><button type="button" class="btn" data-close>Cancelar</button><button class="btn primary">Salvar ficha</button></div></div></form>`;
+  };
+  const gpsTxt = g => g ? `📍 <b>${g.lat.toFixed(6)}, ${g.lng.toFixed(6)}</b> <span class="sub">± ${Math.round(g.acc || 0)} m</span> <button type="button" class="btn sm ghost" id="fc-regps">Atualizar</button>` : `Sem localização (ative o GPS e permita o acesso). <button type="button" class="btn sm ghost" id="fc-regps">Tentar de novo</button>`;
+  const pegarGps = async () => { const box = $("#fc-gps"); if (box) box.innerHTML = "📍 Pegando a localização…"; const g = await gpsAgora(); if (S.dlg?.tipo !== "ficha") return; S.dlg.gps = g || S.dlg.gps; const b2 = $("#fc-gps"); if (b2) b2.innerHTML = gpsTxt(S.dlg.gps); };
+  dlg.innerHTML = montar();
+  if (!dlg.open) dlg.showModal();
+  pegarGps();
+  const prev = () => { const el = $("#fc-prev"); if (el) el.innerHTML = S.dlg.fotos.map((f, i) => `<figure><img src="${f.url}" alt=""><figcaption>${f.gps ? "📍" : "sem GPS"}</figcaption><button type="button" data-fcrm="${i}" aria-label="Tirar foto">✕</button></figure>`).join(""); };
+  S.dlg.onChange = async ev => {
+    if (ev.target.id === "fc-dem") { const vals = lerFicha(); S.dlg.id = ev.target.value; dlg.innerHTML = montar(); restaurarFicha(vals); return; }
+    if (ev.target.id === "fc-fotos") {
+      const g = await gpsAgora(8000) || S.dlg.gps;
+      for (const f of [...ev.target.files]) S.dlg.fotos.push({file: f, url: URL.createObjectURL(f), gps: g});
+      ev.target.value = ""; prev();
+    }
+  };
+  S.dlg.onClick = ev => {
+    if (ev.target.closest("#fc-regps")) { ev.preventDefault(); pegarGps(); }
+    const rm = ev.target.closest("[data-fcrm]"); if (rm) { S.dlg.fotos.splice(+rm.dataset.fcrm, 1); prev(); }
+  };
+  const lerFicha = () => ({me: $("#fc-me")?.value, mi: $("#fc-mi")?.value, mobs: $("#fc-mobs")?.value, obs: $("#fc-obs")?.value, outros: $("#fc-conf-outros")?.value});
+  const restaurarFicha = v => { $("#fc-me").value = v.me || ""; $("#fc-mi").value = v.mi || ""; $("#fc-mobs").value = v.mobs || ""; $("#fc-obs").value = v.obs || ""; $("#fc-conf-outros").value = v.outros || ""; };
+  S.dlg.onSubmit = async ev => {
+    if (ev.target.id !== "fFicha") return;
+    ev.preventDefault();
+    const btn = ev.target.querySelector(".btn.primary"); btn.disabled = true;
+    const id = S.dlg.id; const d = S.demandas.find(x => x.id === id); if (!d) { btn.disabled = false; return; }
+    const conf = [...ev.target.querySelectorAll(".fc-conf:checked")].map(x => x.value).concat(String($("#fc-conf-outros").value || "").split(",").map(x => x.trim()).filter(Boolean));
+    const clIds = [...ev.target.querySelectorAll(".fc-cl:checked")].map(x => x.value);
+    const ficha = {
+      marcosEncontrados: +$("#fc-me").value || 0, marcosImplantados: +$("#fc-mi").value || 0, marcosObs: $("#fc-mobs").value.trim(),
+      confrontantes: conf, obs: $("#fc-obs").value.trim(), gps: S.dlg.gps || null,
+      checklist: (d.checklist || []).filter(i => clIds.includes(i.id)).map(i => i.t)
+    };
+    const vazia = !ficha.marcosEncontrados && !ficha.marcosImplantados && !ficha.marcosObs && !conf.length && !ficha.obs && !clIds.length && !S.dlg.fotos.length;
+    if (vazia) { toast("Preencha algum campo ou adicione fotos."); btn.disabled = false; return; }
+    try {
+      const anexos = [];
+      for (const [i, f] of S.dlg.fotos.entries()) {
+        $("#fc-pend").textContent = `Salvando foto ${i + 1} de ${S.dlg.fotos.length}…`;
+        const arq = await (window.SaotechAg?.prepararImagem || (x => x))(f.file);
+        const r = await S.assets.upload(arq, {pasta: "campo/" + id});
+        anexos.push({id: r.id, nome: f.file.name || `foto-${i + 1}.jpg`, tipo: r.contentType, ...(f.gps ? {lat: f.gps.lat, lng: f.gps.lng} : {})});
+      }
+      const resumo = ["📋 Ficha de campo",
+        ficha.marcosEncontrados || ficha.marcosImplantados ? `marcos: ${ficha.marcosEncontrados} encontrado(s), ${ficha.marcosImplantados} implantado(s)` : "",
+        conf.length ? `presentes: ${conf.join(", ")}` : "", ficha.obs].filter(Boolean).join(" · ");
+      const msg = {id: uid(), em: agoraISO(), texto: resumo, tipo: "ficha", ficha, ...(anexos.length ? {anexos} : {})};
+      await S.db.doc(`demandas/${id}/conversa/ficha-${msg.id}`).set({pessoa: S.me, ficha: true, msgs: [msg]});
+      const cl = (d.checklist || []).map(i => clIds.includes(i.id) ? {...i, ok: true, por: S.me, em: agoraISO()} : i);
+      await S.db.doc("demandas/" + id).update({checklist: cl, ultimaMsg: {em: msg.em, pessoa: S.me}, historico: histAdd(d, `registrou a ficha de campo${anexos.length ? ` com ${anexos.length} foto${anexos.length > 1 ? "s" : ""}` : ""}${ficha.gps ? " (com GPS)" : ""}`), atualizadoEm: agoraISO()});
+      S.dlg.fotos.forEach(f => URL.revokeObjectURL(f.url));
+      fecharDlg(); toast(S.user?.sincronia?.().pendentes ? "Ficha salva no aparelho. Envia sozinha quando o sinal voltar." : "Ficha de campo registrada");
+    } catch (err) { falhaEscrita(err); btn.disabled = false; $("#fc-pend").textContent = ""; }
+  };
+}
+["change", "click", "submit"].forEach(ev => $("#dlg").addEventListener(ev, e => { const f = S.dlg?.tipo === "ficha" && S.dlg["on" + ev[0].toUpperCase() + ev.slice(1)]; if (f) f(e); }));
+document.addEventListener("click", e => { const b = e.target.closest("[data-ficha]"); if (!b) return; e.stopPropagation(); abrirFicha(b.dataset.ficha || S.demandas.find(d => ATIVAS.includes(d.etapa) && !d.exemplo)?.id); }, true);
+
+/* ---------- Indicador de internet / envios pendentes ---------- */
+window.addEventListener("saotech-sync", e => {
+  const {offline, pendentes, enviando} = e.detail || {};
+  let el = $("#sync-bar");
+  if (!offline && !pendentes) { if (el) el.remove(); return; }
+  if (!el) { el = document.createElement("div"); el.id = "sync-bar"; el.setAttribute("role", "status"); document.body.appendChild(el); }
+  el.className = offline ? "off" : "pend";
+  el.innerHTML = offline
+    ? `<b>Sem internet.</b> Você pode continuar registrando${pendentes ? ` · ${pendentes} alteração(ões) guardada(s) no aparelho` : ""}.`
+    : `${enviando ? "Enviando" : "Aguardando envio de"} ${pendentes} alteração(ões) feita(s) sem internet… <button type="button" class="btn sm" id="sync-agora">Enviar agora</button>`;
+});
+document.addEventListener("click", e => { if (e.target.id === "sync-agora") S.user?.enviarPendentes?.(); });
+
+/* ---------- Histórico: lixeira e cópias de segurança ---------- */
+const _viewHistoricoAlt = viewHistorico;
+viewHistorico = function(){
+  const aba = S.histAba || "alt";
+  const seg = (k, t) => `<button type="button" data-histaba="${k}" aria-pressed="${aba === k}">${t}</button>`;
+  const topo = `<div class="seg hist-abas" role="group" aria-label="Seções do histórico">${seg("alt", "Alterações")}${seg("lix", "Lixeira")}${S.finAcesso ? seg("bkp", "Cópias de segurança") : ""}</div>`;
+  if (aba === "lix") return topo + lixeiraHtml();
+  if (aba === "bkp" && S.finAcesso) return topo + backupsHtml();
+  return topo + _viewHistoricoAlt();
+};
+function carregarLixeira(forcar){
+  if (!S.user?.lixeira || (S.lixCarregando && !forcar)) return;
+  S.lixCarregando = true;
+  S.user.lixeira().then(l => { S.lixeira = l; S.lixErro = ""; }).catch(err => { S.lixErro = err.message || "falha"; }).finally(() => { S.lixCarregando = false; if (S.tab === "historico") render(); });
+}
+function lixeiraHtml(){
+  if (!S.lixeira && !S.lixCarregando) carregarLixeira();
+  if (!S.lixeira) return `<div class="card"><p class="muted" style="margin:0">${S.lixErro ? "Não foi possível abrir a lixeira: " + esc(S.lixErro) : "Carregando a lixeira…"}</p></div>`;
+  const grupos = new Map();
+  for (const it of S.lixeira) {
+    let chave = it.path;
+    if (it.col === "data/fin/demandas") chave = "demandas/" + it.path.split("/").pop();
+    else if (it.col.endsWith("/conversa")) chave = it.path.split("/").slice(0, 2).join("/");
+    if (!grupos.has(chave)) grupos.set(chave, {chave, itens: []});
+    grupos.get(chave).itens.push(it);
+  }
+  const lista = [...grupos.values()].map(g => {
+    const pr = g.itens.find(i => i.path === g.chave) || g.itens[0];
+    return {...g, pr, em: g.itens.map(i => i.apagado_em).sort().pop(), existe: g.chave.startsWith("demandas/") && S.demandas.some(d => "demandas/" + d.id === g.chave)};
+  }).filter(g => !g.existe || g.pr.path === g.chave).sort((a, b) => a.em < b.em ? 1 : -1);
+  const desc = g => {
+    const d = g.pr.data || {};
+    if (g.pr.col === "demandas") return {tipo: "Demanda", tit: `${d.codigo || ""} · ${d.cliente || "sem nome"}`, sub: d.etapa || ""};
+    if (g.pr.col === "agenda") return {tipo: "Agenda", tit: `${d.tipo || "Compromisso"}${d.titulo ? " · " + d.titulo : ""}`, sub: d.data ? fmtData(d.data) : ""};
+    if (g.pr.col.endsWith("/conversa")) return {tipo: "Conversa", tit: "Mensagens de " + primeiro(d.pessoa), sub: `${(d.msgs || []).length} mensagem(ns)`};
+    if (g.pr.col === "data/fin/demandas") return {tipo: "Financeiro", tit: "Contrato e parcelas", sub: ""};
+    return {tipo: g.pr.col, tit: g.pr.path, sub: ""};
+  };
+  const restam = em => Math.max(0, 30 - Math.floor((Date.now() - new Date(em)) / 864e5));
+  return `<div class="card"><div class="card-h"><div><span class="label">Exclusão segura</span><h3>Lixeira</h3></div><button type="button" class="btn sm" data-lixrec>Atualizar</button></div>
+    <p class="sub" style="margin:0 0 12px">Demandas, conversas, compromissos e contratos excluídos ficam aqui por 30 dias. Depois disso o conteúdo é apagado de vez.</p>
+    ${lista.length ? lista.map(g => { const x = desc(g); const r = restam(g.em); return `<div class="lix-row">
+      <span class="chip">${esc(x.tipo)}</span>
+      <div class="grow"><b>${esc(x.tit)}</b><div class="sub">${x.sub ? esc(x.sub) + " · " : ""}excluído ${fmtQuando(g.em)} por ${esc(String(g.pr.apagado_por || "").split("@")[0])}${g.itens.length > 1 ? ` · ${g.itens.length} itens juntos` : ""}</div></div>
+      <span class="lix-dias ${r <= 5 ? "crit-t" : ""}">${r} dia${r === 1 ? "" : "s"}</span>
+      <div class="pend-acts">${S.somenteLeitura ? "" : `<button type="button" class="btn sm primary" data-lixrest="${esc(g.chave)}">Restaurar</button>`}${S.finAcesso ? `<button type="button" class="btn sm ghost" data-lixdel="${esc(g.chave)}">Apagar de vez</button>` : ""}</div>
+    </div>`; }).join("") : `<p class="muted" style="margin:0">A lixeira está vazia.</p>`}
+  </div>`;
+}
+function carregarBackups(){
+  if (!S.user?.backups || S.bkpCarregando) return;
+  S.bkpCarregando = true;
+  S.user.backups().then(l => { S.backups = l; S.bkpErro = ""; }).catch(err => { S.bkpErro = err.message || "falha"; }).finally(() => { S.bkpCarregando = false; if (S.tab === "historico") render(); });
+}
+const tamTxt = b => b > 1048576 ? (b / 1048576).toLocaleString("pt-BR", {maximumFractionDigits: 1}) + " MB" : Math.max(1, Math.round((b || 0) / 1024)) + " KB";
+function backupsHtml(){
+  if (!S.backups && !S.bkpCarregando) carregarBackups();
+  const l = S.backups || [];
+  const ult = l.find(b => !/expirado/.test(b.tipo));
+  return `<div class="card"><div class="card-h"><div><span class="label">Só administradores</span><h3>Cópias de segurança</h3></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" class="btn sm" data-bkpnovo>Fazer cópia agora</button><button type="button" class="btn sm primary" data-bkpzip>Baixar backup completo (.zip)</button></div></div>
+    <p class="sub" style="margin:0 0 12px">Todo domingo de madrugada o sistema guarda uma cópia de todos os dados (as 10 mais recentes ficam aqui). O backup completo em .zip junta os dados e todos os arquivos e fotos: baixe uma vez por mês e guarde num HD ou no Google Drive da empresa.</p>
+    ${ult ? `<div class="bkp-ok">Última cópia: <b>${fmtQuando(ult.criado_em)}</b> · ${ult.docs} registros · ${tamTxt(ult.bytes)}</div>` : ""}
+    ${S.bkpErro ? `<p class="banner">${esc(S.bkpErro)}</p>` : ""}
+    <div class="bkp-lista">${l.map(b => `<div class="lix-row"><span class="chip">${/manual/.test(b.tipo) ? "Manual" : "Automática"}</span><div class="grow"><b>${fmtQuando(b.criado_em)}</b><div class="sub">${b.docs ?? "—"} registros · ${tamTxt(b.bytes)}${/expirado/.test(b.tipo) ? " · conteúdo expirado" : ""}</div></div>${/expirado/.test(b.tipo) ? "" : `<button type="button" class="btn sm" data-bkpjson="${b.id}">Baixar dados (.json)</button>`}</div>`).join("") || `<p class="muted" style="margin:0">${S.bkpCarregando ? "Carregando…" : "Nenhuma cópia ainda."}</p>`}</div>
+    <p class="sub" id="bkp-prog" style="margin:10px 0 0"></p>
+  </div>`;
+}
+function baixarBlob(blob, nome){ const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = nome; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000); }
+let jszipP = null;
+const carregarJSZip = () => jszipP || (jszipP = new Promise((ok, falha) => { if (window.JSZip) return ok(window.JSZip); const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"; s.onload = () => ok(window.JSZip); s.onerror = () => { jszipP = null; falha(new Error("Não foi possível carregar o compactador. Verifique a internet.")); }; document.head.appendChild(s); }));
+async function backupCompleto(btn){
+  const prog = t => { const el = $("#bkp-prog"); if (el) el.textContent = t; };
+  btn.disabled = true;
+  try {
+    prog("Gerando cópia atualizada dos dados…");
+    const id = await S.user.fazerBackup(); const dados = await S.user.backupDados(id);
+    const JSZip = await carregarJSZip(); const zip = new JSZip();
+    const dia = hoje();
+    zip.file("dados.json", JSON.stringify(dados, null, 1));
+    zip.file("LEIA-ME.txt", `Backup completo da Gestão Saotech · ${new Date().toLocaleString("pt-BR")}\n\n- dados.json: demandas, conversas, agenda, portal, equipe e lixeira.\n- arquivos/: todos os anexos e fotos, na mesma organização de pastas do sistema.\n\nGuarde este arquivo em local seguro (HD externo ou Google Drive da empresa). Para restaurar, fale com quem administra o sistema.`);
+    const arqs = (dados.arquivos || []).filter(a => a.nome && !a.nome.endsWith("/.emptyFolderPlaceholder"));
+    let ok = 0, falhas = 0;
+    for (const [i, a] of arqs.entries()) {
+      prog(`Baixando arquivos: ${i + 1} de ${arqs.length}…`);
+      try { zip.file("arquivos/" + a.nome, await S.user.baixarArquivo(a.nome)); ok++; } catch { falhas++; }
+    }
+    prog("Compactando…");
+    const blob = await zip.generateAsync({type: "blob", compression: "DEFLATE", compressionOptions: {level: 5}});
+    baixarBlob(blob, `backup-saotech-${dia}.zip`);
+    prog(`Pronto: ${dados.docs?.length || 0} registros e ${ok} arquivo(s)${falhas ? ` · ${falhas} não puderam ser baixados` : ""} · ${tamTxt(blob.size)}.`);
+    S.backups = null; carregarBackups();
+  } catch (err) { prog("Não foi possível gerar o backup: " + (err.message || err)); }
+  btn.disabled = false;
+}
+document.addEventListener("click", async e => {
+  const t = e.target;
+  const ab = t.closest("[data-histaba]"); if (ab) { S.histAba = ab.dataset.histaba; if (S.histAba === "lix") carregarLixeira(true); if (S.histAba === "bkp") { S.backups = null; } render(); return; }
+  if (t.closest("[data-lixrec]")) { carregarLixeira(true); return; }
+  const rs = t.closest("[data-lixrest]");
+  if (rs) { rs.disabled = true; try { const n = await S.user.restaurarLixeira(rs.dataset.lixrest); toast(n ? `Restaurado (${n} item${n > 1 ? "s" : ""})` : "Nada para restaurar"); carregarLixeira(true); } catch (err) { falhaEscrita(err); rs.disabled = false; } return; }
+  const dl = t.closest("[data-lixdel]");
+  if (dl) { if (dl.dataset.ok !== "1") { dl.dataset.ok = "1"; dl.textContent = "Confirmar: apagar de vez"; return; } dl.disabled = true; try { await S.user.expurgarLixeira(dl.dataset.lixdel); toast("Apagado definitivamente"); carregarLixeira(true); } catch (err) { falhaEscrita(err); } return; }
+  const nb = t.closest("[data-bkpnovo]");
+  if (nb) { nb.disabled = true; try { await S.user.fazerBackup(); toast("Cópia de segurança criada"); S.backups = null; carregarBackups(); } catch (err) { falhaEscrita(err); nb.disabled = false; } return; }
+  const bj = t.closest("[data-bkpjson]");
+  if (bj) { bj.disabled = true; try { const d = await S.user.backupDados(+bj.dataset.bkpjson); baixarBlob(new Blob([JSON.stringify(d, null, 1)], {type: "application/json"}), `dados-saotech-${String(d.gerado_em || hoje()).slice(0, 10)}.json`); } catch (err) { falhaEscrita(err); } bj.disabled = false; return; }
+  const bz = t.closest("[data-bkpzip]"); if (bz) backupCompleto(bz);
+});
+
+/* ---------- Funil comercial e avaliações (Produtividade) ---------- */
+const ORDEM_FUNIL = ["Orçamento", "Aguardando entrada", "Campo", "Escritório", "Protocolo", "Entregue", "Concluída"];
+function passagens(d){
+  // [{etapa, de, ate}] a partir do histórico
+  const hs = [...(d.historico || [])].sort((a, b) => a.em < b.em ? -1 : 1);
+  const out = []; let atual = null;
+  const ini = hs.find(h => /^criou a demanda/.test(h.txt))?.em || d.criadoEm || hs[0]?.em;
+  if (ini) atual = {etapa: "Orçamento", de: ini};
+  for (const h of hs) {
+    const m = /^moveu de (.+) para (.+)$/.exec(h.txt); if (!m) continue;
+    if (atual) { atual.etapa = atual.etapa || m[1]; if (atual.etapa !== m[1]) atual.etapa = m[1]; out.push({...atual, ate: h.em}); }
+    atual = {etapa: m[2], de: h.em};
+  }
+  if (atual) out.push({...atual, ate: null});
+  return out;
+}
+const diasEntre = (a, b) => Math.max(0, (new Date(b || Date.now()) - new Date(a)) / 864e5);
+function funilHtml(){
+  const per = S.funilDias || 365;
+  const lim = per === 9999 ? "" : new Date(Date.now() - per * 864e5).toISOString();
+  const ds = S.demandas.filter(d => !d.exemplo && (!lim || (d.criadoEm || "") >= lim));
+  const alcancou = (d, etapa) => { const i = ORDEM_FUNIL.indexOf(etapa); return ORDEM_FUNIL.indexOf(d.etapa) >= i || passagens(d).some(p => ORDEM_FUNIL.indexOf(p.etapa) >= i); };
+  const contratos = ds.filter(d => alcancou(d, "Aguardando entrada"));
+  const emOrc = ds.filter(d => d.etapa === "Orçamento");
+  const perdidos = ds.filter(d => d.etapa === "Pausada" && !alcancou(d, "Aguardando entrada"));
+  const taxa = ds.length ? Math.round(contratos.length / ds.length * 100) : 0;
+  const barras = ORDEM_FUNIL.map(e => ({e, n: ds.filter(d => alcancou(d, e)).length}));
+  const maxB = Math.max(1, ...barras.map(b => b.n));
+  // tempo médio por etapa (só passagens concluídas)
+  const tempos = {}; ORDEM_FUNIL.forEach(e => tempos[e] = []);
+  S.demandas.filter(d => !d.exemplo).forEach(d => passagens(d).forEach(p => { if (p.ate && tempos[p.etapa]) tempos[p.etapa].push(diasEntre(p.de, p.ate)); }));
+  const media = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
+  const medias = ORDEM_FUNIL.slice(0, -1).map(e => ({e, m: media(tempos[e]), n: tempos[e].length}));
+  const maxM = Math.max(1, ...medias.map(x => x.m || 0));
+  // onde trava: processos ativos parados na etapa atual
+  const travados = S.demandas.filter(d => !d.exemplo && ATIVAS.includes(d.etapa)).map(d => {
+    const ps = passagens(d); const at = ps[ps.length - 1];
+    const dias = at ? diasEntre(at.de) : 0; const ref = media(tempos[d.etapa] || []);
+    return {d, dias, ref, alerta: dias > Math.max(30, (ref || 0) * 1.5)};
+  }).filter(x => x.alerta).sort((a, b) => b.dias - a.dias);
+  const porEtapa = {}; travados.forEach(x => porEtapa[x.d.etapa] = (porEtapa[x.d.etapa] || 0) + 1);
+  const gargalo = Object.entries(porEtapa).sort((a, b) => b[1] - a[1])[0];
+  const fmtD = v => v == null ? "—" : v < 1 ? "< 1 dia" : Math.round(v) + (Math.round(v) === 1 ? " dia" : " dias");
+  return `<div class="card funil" style="margin-top:16px">
+    <div class="card-h"><div><span class="label">Gestão e crescimento</span><h3>Funil comercial</h3></div>
+      <select id="funil-dias" aria-label="Período">${[[90, "Últimos 90 dias"], [180, "Últimos 6 meses"], [365, "Últimos 12 meses"], [9999, "Desde o início"]].map(([v, t]) => `<option value="${v}" ${per === v ? "selected" : ""}>${t}</option>`).join("")}</select></div>
+    <div class="pstats" style="margin:4px 0 14px">
+      <div class="pst"><span class="label">Orçamentos</span><b>${ds.length}</b><span class="sub">entraram no período</span></div>
+      <div class="pst ok"><span class="label">Viraram contrato</span><b>${contratos.length}</b><span class="sub">${taxa}% de conversão</span></div>
+      <div class="pst ${emOrc.length ? "warn" : ""}"><span class="label">Ainda em orçamento</span><b>${emOrc.length}</b><span class="sub">aguardando resposta</span></div>
+      <div class="pst"><span class="label">Pausados sem fechar</span><b>${perdidos.length}</b><span class="sub">orçamentos parados</span></div>
+    </div>
+    <div class="cols-3-2">
+      <div><div class="label" style="margin-bottom:8px">Quantos chegaram a cada etapa</div>
+        ${barras.map(b => `<div class="fbar"><span>${esc(b.e)}</span><div><i style="width:${Math.round(b.n / maxB * 100)}%"></i></div><b>${b.n}</b></div>`).join("")}</div>
+      <div><div class="label" style="margin-bottom:8px">Tempo médio em cada etapa</div>
+        ${medias.map(x => `<div class="fbar t"><span>${esc(x.e)}</span><div><i style="width:${x.m ? Math.max(4, Math.round(x.m / maxM * 100)) : 0}%"></i></div><b>${fmtD(x.m)}</b></div>`).join("")}
+        <p class="sub" style="margin:6px 0 0">Calculado pelas mudanças de etapa registradas. Processos importados do Trello começam a contar a partir da importação.</p></div>
+    </div>
+    <div class="label" style="margin:16px 0 8px">Onde os processos travam${gargalo ? ` · gargalo atual: <b>${esc(gargalo[0])}</b>` : ""}</div>
+    ${travados.length ? travados.slice(0, 8).map(x => `<div class="lix-row"><span class="chip">${esc(x.d.etapa)}</span><div class="grow"><a href="#" data-proc="${x.d.id}"><b>${esc(x.d.cliente)}</b></a><div class="sub">${esc(x.d.codigo)} · ${esc(pessoa(x.d.responsavel).nome)}</div></div><span class="lix-dias crit-t">${fmtD(x.dias)}</span></div>`).join("")
+      : `<p class="muted" style="margin:0">Nenhum processo parado além do normal. 👍</p>`}
+  </div>`;
+}
+function avaliacoesHtml(){
+  const avs = S.portais.flatMap(p => (p.avaliacoes || []).map(a => ({...a, usuario: p.usuario})));
+  if (!avs.length) return `<div class="card" style="margin-top:16px"><span class="label">Experiência do cliente</span><h3>Avaliações e depoimentos</h3><p class="muted" style="margin:0">Quando um serviço passa para Entregue ou Concluída, o portal pede ao cliente uma nota e um comentário. As respostas aparecem aqui.</p></div>`;
+  const media = avs.reduce((s, a) => s + a.nota, 0) / avs.length;
+  return `<div class="card" style="margin-top:16px"><div class="card-h"><div><span class="label">Experiência do cliente</span><h3>Avaliações e depoimentos</h3></div><div class="aval-media"><b>${media.toLocaleString("pt-BR", {maximumFractionDigits: 1})}</b><span class="estrelas">${"★".repeat(Math.round(media))}<span>${"★".repeat(5 - Math.round(media))}</span></span><span class="sub">${avs.length} avaliação(ões)</span></div></div>
+    ${avs.sort((a, b) => a.em < b.em ? 1 : -1).map(a => { const d = S.demandas.find(x => x.id === a.demanda); return `<div class="aval-row">
+      <div class="estrelas">${"★".repeat(a.nota)}<span>${"★".repeat(5 - a.nota)}</span></div>
+      <div class="grow">${a.comentario ? `<p>“${esc(a.comentario)}”</p>` : `<p class="sub">Sem comentário.</p>`}<span class="sub">${esc(a.nome)}${d ? " · " + esc((d.servicos || [])[0] || d.codigo) : ""} · ${fmtData(a.em.slice(0, 10))}</span></div>
+      ${a.autoriza && a.comentario ? `<button type="button" class="btn sm lima" data-copiadep="${esc(a.usuario)}|${esc(a.demanda)}" title="Copiar depoimento para o marketing">Usar no marketing</button>` : `<span class="sub">${a.autoriza ? "" : "não autorizado"}</span>`}
+    </div>`; }).join("")}
+  </div>`;
+}
+const _viewProdutividadeAlt = viewProdutividade;
+viewProdutividade = function(){ return _viewProdutividadeAlt() + funilHtml() + avaliacoesHtml(); };
+document.addEventListener("change", e => { if (e.target.id === "funil-dias") { S.funilDias = +e.target.value; render(); } });
+document.addEventListener("click", async e => {
+  const b = e.target.closest("[data-copiadep]"); if (!b) return;
+  const [u, dem] = b.dataset.copiadep.split("|"); const a = (S.portais.find(p => p.usuario === u)?.avaliacoes || []).find(x => x.demanda === dem); if (!a) return;
+  const d = S.demandas.find(x => x.id === dem);
+  const t = `“${a.comentario}”\n— ${a.nome}${d?.municipio ? ", " + d.municipio : ""} · ${"★".repeat(a.nota)}`;
+  try { await navigator.clipboard.writeText(t); toast("Depoimento copiado"); } catch { toast(t); }
+});
+
+/* ---------- Notificações no celular e no computador ---------- */
+async function abrirNotificacoes(){
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "notif", unsubs: []};
+  const dlg = $("#dlg"); dlg.className = "";
+  const P = window.SaotechPush;
+  const est = P ? await P.estado() : "sem-suporte";
+  const txt = {
+    ativo: ["Ativas neste aparelho", "Você recebe avisos mesmo com o app fechado."],
+    inativo: ["Desativadas neste aparelho", "Ative para receber os avisos abaixo, mesmo com o app fechado."],
+    bloqueado: ["Bloqueadas pelo navegador", "Libere em: cadeado ao lado do endereço → Notificações → Permitir. No celular: Ajustes do navegador → Notificações."],
+    "ios-instalar": ["Instale o app primeiro (iPhone)", "No iPhone, os avisos só funcionam com o app na tela de início: toque em Compartilhar → Adicionar à Tela de Início, abra por lá e ative aqui."],
+    "sem-suporte": ["Este navegador não recebe notificações", "Use o Chrome, Edge ou Firefox (Android/computador) ou o Safari com o app instalado (iPhone)."]
+  }[est];
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">Avisos fora da plataforma</span><h2 style="font-size:19px">Notificações</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+    <div class="dlg-b">
+      <div class="notif-est ${est}"><b>${txt[0]}</b><p class="sub" style="margin:4px 0 0">${txt[1]}</p></div>
+      <div class="label" style="margin:14px 0 6px">Você será avisado quando</div>
+      <ul class="notif-lista">
+        <li>alguém da equipe escrever no mural ou na conversa de um processo;</li>
+        <li>um cliente mandar mensagem, arquivo ou pedido de agendamento no portal;</li>
+        <li>uma demanda for atribuída a você;</li>
+        <li>houver prazos seus atrasados ou vencendo em 48h (todo dia às 8h);</li>
+        <li>um cliente avaliar o serviço.</li>
+      </ul>
+      <p class="sub">Cada aparelho é ativado separadamente (celular e computador). Os clientes recebem pelo portal quando a equipe responde, agenda ou o processo muda de etapa.</p>
+    </div>
+    <div class="dlg-f"><span></span><div style="display:flex;gap:8px;flex-wrap:wrap">
+      ${est === "ativo" ? `<button type="button" class="btn" data-notif="teste">Enviar um teste</button><button type="button" class="btn" data-notif="off">Desativar</button>` : ""}
+      ${est === "inativo" ? `<button type="button" class="btn primary" data-notif="on">Ativar notificações</button>` : ""}
+      <button type="button" class="btn" data-close>Fechar</button></div></div>`;
+  if (!dlg.open) dlg.showModal();
+}
+async function estadoSino(){
+  const b = $("#btnNotif"); if (!b || !window.SaotechPush) return;
+  const est = await window.SaotechPush.estado(); S.pushEstado = est;
+  b.classList.toggle("on", est === "ativo"); b.title = est === "ativo" ? "Notificações ativas" : "Ativar notificações";
+  if (S.tab === "inicio") { const el = $("#notif-sug"); if (el) el.hidden = est !== "inativo" || ls.get("sao.notifSug") === hoje(); }
+}
+document.addEventListener("click", async e => {
+  const t = e.target;
+  if (t.closest("#btnNotif") || t.closest("[data-notifabrir]")) { abrirNotificacoes(); return; }
+  if (t.closest("[data-notifdepois]")) { ls.set("sao.notifSug", hoje()); t.closest("#notif-sug").hidden = true; return; }
+  const b = t.closest("[data-notif]"); if (!b) return;
+  b.disabled = true;
+  try {
+    if (b.dataset.notif === "on") { await window.SaotechPush.ativar(sub => S.user.salvarPush(sub)); toast("Notificações ativadas neste aparelho"); }
+    if (b.dataset.notif === "off") { await window.SaotechPush.desativar(ep => S.user.removerPush(ep)); toast("Notificações desativadas neste aparelho"); }
+    if (b.dataset.notif === "teste") { await window.sb.rpc("push_teste"); toast("Teste enviado. Deve chegar em alguns segundos."); }
+  } catch (err) { toast(/bloqueado|denied/.test(err.message || "") ? "O navegador bloqueou as notificações. Libere nas configurações do site." : "Não foi possível: " + (err.message || err)); }
+  b.disabled = false; estadoSino(); if (b.dataset.notif !== "teste") abrirNotificacoes();
+});
+function abrirDestino(abrir){
+  if (!abrir) return;
+  const [k, v] = abrir.split(":");
+  if (k === "demanda" && S.demandas.some(d => d.id === v)) { irProcesso(v); setTimeout(() => abrirDemanda(v), 150); }
+  else if (k === "conversa") irConversa(v);
+  else if (k === "portal" && v) irConversa("portal:" + v);
+  else if (k === "mural") irConversa("equipe");
+  else if (k === "demandas") { S.tab = "demandas"; render(); }
+}
+navigator.serviceWorker?.addEventListener("message", e => { if (e.data?.tipo === "abrir") abrirDestino(e.data.abrir); });
+(function esperarDados(){
+  const abrir = new URLSearchParams(location.search).get("abrir");
+  const t0 = Date.now();
+  const iv = setInterval(() => {
+    if (!S.conectado && Date.now() - t0 < 20000) return;
+    clearInterval(iv);
+    if (!S.user) return;
+    if (abrir && !document.body.classList.contains("modo-portal")) { history.replaceState(null, "", location.pathname); abrirDestino(abrir); }
+    estadoSino(); window.SaotechPush?.renovar(sub => S.user.salvarPush(sub));
+  }, 300);
+})();
+const _viewInicioAlt = viewInicio;
+viewInicio = function(){
+  const sug = S.pushEstado === "inativo" && ls.get("sao.notifSug") !== hoje();
+  const nPend = S.demandas.filter(d => !d.exemplo && pendenciasDe(d).length).length;
+  return `<div class="notif-sug" id="notif-sug" ${sug ? "" : "hidden"}><span>🔔 <b>Receba avisos no celular</b> de novas mensagens, clientes e prazos, mesmo com o app fechado.</span><span style="display:flex;gap:6px"><button type="button" class="btn sm primary" data-notifabrir>Ativar</button><button type="button" class="btn sm ghost" data-notifdepois>Depois</button></span></div>`
+    + _viewInicioAlt()
+    + (nPend ? `<div class="pend-banner" style="margin-top:16px"><div><b>Pendências de cadastro</b> · ${nPend} cliente${nPend > 1 ? "s" : ""} com dados faltando (serviço, município, telefone, CPF/CNPJ ou prazo).</div><button type="button" class="btn sm" data-irpend>Ver pendências</button></div>` : "");
+};
+document.addEventListener("click", e => { if (e.target.closest("[data-irpend]")) { S.tab = "clientes"; S.cliFiltro = "pendencias"; ls.set("sao.tab", S.tab); render(); window.scrollTo({top: 0}); } });
 
 /* ---------- Conexão ---------- */
 render();
