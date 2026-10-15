@@ -772,6 +772,9 @@ body.modo-portal #bv{display:none}
 .av-estrelas{display:flex;gap:4px} .av-estrelas button{border:0;background:none;font-size:34px;line-height:1;color:var(--line-2);cursor:pointer;padding:2px} .av-estrelas button.on{color:#C9A227}
 .av-aut{display:flex;gap:8px;align-items:flex-start;font-size:13px;margin-bottom:10px} .av-aut input{width:auto;margin-top:3px}
 .pt-push-ok{align-self:center;white-space:nowrap}
+.conf-lista{display:flex;flex-direction:column}
+.conf-it{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);flex-wrap:wrap} .conf-it:first-child{border-top:0} .conf-it .grow{flex:1;min-width:200px}
+.cf-props{display:flex;flex-direction:column;gap:6px} .cf-prop{display:flex;gap:8px;align-items:center;flex-wrap:wrap;border:1px solid var(--line);border-radius:10px;padding:8px 10px} .cf-prop .chk{flex:1;min-width:180px} .cf-prop select{width:auto}
 .cad-sec{margin:14px 0 6px} .cad-sec:first-of-type{margin-top:0}
 .cad-qtd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:16px 0 6px;padding-top:12px;border-top:1px solid var(--line)}
 .cad-imovel{border:1px solid var(--line-2);border-radius:12px;padding:10px 12px 12px;margin:0 0 12px} .cad-imovel legend{font-family:var(--f-display);font-weight:700;padding:0 6px;color:var(--accent)}
@@ -2477,6 +2480,7 @@ function processoHtml(d){
     ${clienteCardHtml(d)}
     <div style="margin-top:16px">${acessoCardHtml(d)}</div>
     ${docsClienteHtml(d)}
+    ${confrontantesCardHtml(d)}
     <div style="margin-top:16px">${vinculosHtml(d)}</div>
     <div style="margin-top:16px">${geoCardHtml(d)}</div>
     <div class="cols-3-2" style="margin-top:16px">
@@ -2508,7 +2512,7 @@ function viewClientes(){
   const side = `<aside class="side card">
     <input id="cl-busca" type="search" placeholder="Buscar cliente, imóvel, código" value="${esc(S.cliBusca || "")}">
     ${S.somenteLeitura ? "" : `<button type="button" class="btn primary" data-novocliente style="width:100%">+ Novo cliente</button>`}
-    <button type="button" class="btn sm" data-logins style="width:100%">Logins dos clientes no portal</button>
+    <div style="display:flex;gap:6px"><button type="button" class="btn sm" data-logins style="flex:1">Logins dos clientes</button><button type="button" class="btn sm" data-conflista style="flex:1">Confrontantes</button></div>
     <div class="seg" role="group" aria-label="Filtro"><button type="button" data-clif="ativas" aria-pressed="${S.cliFiltro === "ativas"}">Em andamento</button><button type="button" data-clif="todas" aria-pressed="${S.cliFiltro === "todas"}">Todos</button><button type="button" data-clif="pendencias" aria-pressed="${S.cliFiltro === "pendencias"}" title="Cadastros incompletos">Pendências${nPend ? ` <span class="nbadge">${nPend}</span>` : ""}</button></div>
     <div class="lst">${lista.map(d => { const cl = d.checklist || []; const ok = cl.filter(i => i.ok).length; return `<button type="button" class="side-it" data-cli="${d.id}" aria-current="${d.id === S.cliSel}">
       <span class="r1"><b>${esc(d.cliente)}</b>${temNovidade(d) ? `<span class="ndot" title="Mensagem nova"></span>` : ""}</span>
@@ -3525,7 +3529,7 @@ function abrirFicha(id){
   const dlg = $("#dlg"); dlg.className = "ficha-dlg";
   const montar = () => {
     const d = S.demandas.find(x => x.id === S.dlg.id);
-    const conf = (d?.vinculos || []).filter(v => v.rel === "Confrontante").map(v => S.demandas.find(x => x.id === v.id)?.cliente?.split(" — ")[0]).filter(Boolean);
+    const conf = [...(d?.vinculos || []).filter(v => v.rel === "Confrontante").map(v => S.demandas.find(x => x.id === v.id)?.cliente?.split(" — ")[0]), ...(d ? confrontantesDe(d.id).map(c => c.nome) : [])].filter(Boolean);
     const tec = (d?.checklist || []).filter(i => !i.doc && !i.ok);
     return `<div class="dlg-h"><div><span class="label">Registro rápido no campo · ${navigator.onLine ? "online" : "sem internet: salva no aparelho"}</span><h2 style="font-size:19px">Ficha de campo</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
     <form id="fFicha"><div class="dlg-b">
@@ -4122,7 +4126,7 @@ function abrirMemorial(id){
   const md = memorialDados(d); if (!md) { toast("Importe os pontos do GNSS ou o perímetro (KML) primeiro."); return; }
   if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
   S.dlg = {tipo: "memorial", id, unsubs: [], md};
-  const conf0 = (d.vinculos || []).filter(v => v.rel === "Confrontante").map(v => S.demandas.find(x => x.id === v.id)?.cliente).filter(Boolean);
+  const conf0 = [...(d.vinculos || []).filter(v => v.rel === "Confrontante").map(v => S.demandas.find(x => x.id === v.id)?.cliente), ...confrontantesDe(d.id).map(nomeConfTxt)].filter(Boolean);
   const dlg = $("#dlg"); dlg.className = "big";
   const campo = (k, rot, span = 3) => `<label class="f span${span}">${rot}<input data-mm="${k}" value="${esc(md.mem[k] || "")}"></label>`;
   dlg.innerHTML = `<div class="dlg-h"><div><span class="label">${esc(d.codigo)} · rascunho para conferência</span><h2 style="font-size:19px">Memorial descritivo</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
@@ -4789,6 +4793,146 @@ function lerImovelForm(dlg, d){
 (function ligarV15(){
   const iv = setInterval(() => { if (!S.db) return; clearInterval(iv);
     S.db.collection("clientes").onSnapshot(s => { S.clientes = s.docs.map(d => ({id: d.id, ...d.data()})); if (["clientes", "inicio"].includes(S.tab)) render(); }, () => {});
+  }, 300);
+})();
+
+
+/* ====================================================================
+   v16 · confrontantes que não são clientes
+   Cadastro interno da equipe (sem login, sem portal), ligado a uma ou
+   mais propriedades do cliente, com o lado em que confronta e a anuência.
+   ==================================================================== */
+S.confrontantes = [];
+const LADOS = ["", "Norte", "Nordeste", "Leste", "Sudeste", "Sul", "Sudoeste", "Oeste", "Noroeste", "Frente", "Fundos"];
+const ANUENCIA = {pendente: ["Anuência pendente", "warn"], assinada: ["Anuência assinada", "ok"], recusada: ["Recusou assinar", "crit"], dispensada: ["Não precisa", ""]};
+const confrontantesDe = id => S.confrontantes.filter(c => (c.vinculos || []).some(v => v.demanda === id));
+const nomeConfTxt = c => `${c.nome}${c.imovel?.denominacao ? " — " + c.imovel.denominacao : ""}${c.imovel?.matricula ? " (Mat. " + c.imovel.matricula + ")" : ""}`;
+
+function confrontantesCardHtml(d){
+  const ext = confrontantesDe(d.id);
+  const cli = (d.vinculos || []).filter(v => v.rel === "Confrontante").map(v => S.demandas.find(x => x.id === v.id)).filter(Boolean);
+  return `<div class="card" style="margin-top:16px"><div class="card-h"><div><span class="label">Vizinhos do imóvel</span><h3>Confrontantes${ext.length + cli.length ? ` (${ext.length + cli.length})` : ""}</h3></div>${S.somenteLeitura ? "" : `<button type="button" class="btn sm primary" data-confnovo="${d.id}">+ Confrontante</button>`}</div>
+    ${ext.length || cli.length ? `<div class="conf-lista">
+      ${ext.map(c => { const v = c.vinculos.find(x => x.demanda === d.id) || {}; const [at, ac] = ANUENCIA[v.anuencia || "pendente"] || ANUENCIA.pendente; const tel = telefone(c.telefone);
+        return `<div class="conf-it"><div class="grow"><b>${esc(c.nome)}</b>${v.lado ? ` <span class="chip">${esc(v.lado)}</span>` : ""}<div class="sub">${[c.imovel?.denominacao, c.imovel?.matricula ? "Mat. " + c.imovel.matricula : "", c.cpf ? "CPF " + c.cpf : "", c.telefone].filter(Boolean).map(esc).join(" · ") || "sem dados do imóvel"}</div>${(c.vinculos || []).length > 1 ? `<div class="sub">Confronta também: ${c.vinculos.filter(x => x.demanda !== d.id).map(x => esc(S.demandas.find(y => y.id === x.demanda)?.imovelDados?.denominacao || S.demandas.find(y => y.id === x.demanda)?.codigo || "")).filter(Boolean).join(", ")}</div>` : ""}</div>
+          <span class="chip ${ac}">${at}</span>
+          <div class="pend-acts">${tel ? `<a class="btn sm" href="https://wa.me/${tel}" target="_blank" rel="noopener">WhatsApp</a>` : ""}${S.somenteLeitura ? "" : `<button type="button" class="btn sm" data-confedit="${c.id}|${d.id}">Editar</button>`}</div></div>`; }).join("")}
+      ${cli.map(x => `<div class="conf-it"><div class="grow"><b>${esc(x.cliente)}</b> <span class="chip ok">cliente Saotech</span><div class="sub">${esc(x.codigo)} · ${esc(x.etapa)}</div></div><div class="pend-acts"><button type="button" class="btn sm" data-proc="${x.id}">Ver processo</button></div></div>`).join("")}
+    </div>` : `<p class="sub" style="margin:0">Nenhum confrontante cadastrado. Adicione os vizinhos com os dados que a equipe precisa para a anuência e o memorial; eles não ganham acesso à plataforma.</p>`}
+  </div>`;
+}
+
+function abrirConfrontante(demId, confId){
+  const d = S.demandas.find(x => x.id === demId); if (!d) return;
+  const c = confId ? S.confrontantes.find(x => x.id === confId) : null;
+  const props = d.clienteId ? propriedadesDe(d.clienteId) : [d];
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "confrontante", unsubs: []};
+  const dlg = $("#dlg"); dlg.className = "big";
+  const vin = id => (c?.vinculos || []).find(v => v.demanda === id);
+  const outros = S.confrontantes.filter(x => !x.vinculos?.some(v => v.demanda === demId));
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">${esc(d.cliente)}</span><h2 style="font-size:19px">${c ? "Editar confrontante" : "Adicionar confrontante"}</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+  <form id="fConf" class="dlg-b" autocomplete="off" novalidate>
+    ${!c && outros.length ? `<label class="f">Já cadastrado em outro processo?<select id="cf-existente"><option value="">Não, cadastrar novo confrontante</option>${outros.sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR")).map(x => `<option value="${x.id}">${esc(nomeConfTxt(x))}</option>`).join("")}</select></label>` : ""}
+    <div id="cf-dados">
+    <div class="label cad-sec">Confrontante <span class="sub" style="text-transform:none;letter-spacing:0">(não é cliente e não tem acesso à plataforma)</span></div>
+    <div class="fgrid">
+      <label class="f span4">Nome completo<input name="nome" required value="${esc(c?.nome || "")}"></label>
+      <label class="f span2">CPF / CNPJ<input name="cpf" inputmode="numeric" value="${esc(c?.cpf || "")}"><small class="doc-msg" data-docmsg="cpf"></small></label>
+      <label class="f span2">Telefone<input name="telefone" inputmode="tel" value="${esc(c?.telefone || "")}" placeholder="(27) 99999-0000"></label>
+      <label class="f span4">Endereço<input name="endereco" value="${esc(c?.endereco || "")}"></label>
+      <label class="f span4">Cônjuge<input name="conjugeNome" value="${esc(c?.conjuge?.nome || "")}"></label>
+      <label class="f span2">CPF do cônjuge<input name="conjugeCpf" inputmode="numeric" value="${esc(c?.conjuge?.cpf || "")}"><small class="doc-msg" data-docmsg="conjugeCpf"></small></label>
+    </div>
+    <div class="label cad-sec">Imóvel do confrontante</div>
+    <div class="fgrid">
+      <label class="f span3">Denominação<input name="denominacao" value="${esc(c?.imovel?.denominacao || "")}"></label>
+      <label class="f span3">Matrícula<input name="matricula" value="${esc(c?.imovel?.matricula || "")}"></label>
+      <label class="f span2">Código do imóvel rural<input name="codigoIR" value="${esc(c?.imovel?.codigoIR || "")}"></label>
+      <label class="f span2">CCIR<input name="ccir" value="${esc(c?.imovel?.ccir || "")}"></label>
+      <label class="f span2">CAR<input name="car" value="${esc(c?.imovel?.car || "")}"></label>
+      <label class="f span2">Certificação SIGEF<input name="sigef" value="${esc(c?.imovel?.sigef || "")}" placeholder="se já certificado"></label>
+    </div>
+    </div>
+    <div class="label cad-sec">Confronta com quais propriedades do cliente</div>
+    <div class="cf-props">${props.map(p => { const v = vin(p.id) || (p.id === demId && !c ? {} : null); return `<div class="cf-prop">
+      <label class="chk"><input type="checkbox" data-cfp="${p.id}" ${v ? "checked" : ""}> <b>${p.propriedadeN ? "Propriedade " + p.propriedadeN + " · " : ""}${esc(p.imovelDados?.denominacao || p.imovel || p.codigo)}</b></label>
+      <select data-cfl="${p.id}" aria-label="Lado">${LADOS.map(l => `<option value="${l}" ${v?.lado === l ? "selected" : ""}>${l || "Lado (opcional)"}</option>`).join("")}</select>
+      <select data-cfa="${p.id}" aria-label="Anuência">${Object.entries(ANUENCIA).map(([k, [t]]) => `<option value="${k}" ${(v?.anuencia || "pendente") === k ? "selected" : ""}>${t}</option>`).join("")}</select>
+    </div>`; }).join("")}</div>
+    <label class="f" style="margin-top:10px">Observações<textarea name="obs" rows="2" placeholder="Ex.: prefere ser contatado à tarde; divisa por cerca de arame">${esc(c?.obs || "")}</textarea></label>
+    <p class="ag-erro" id="cf-erro" hidden></p>
+  </form>
+  <div class="dlg-f"><div>${c && !S.somenteLeitura ? `<button type="button" class="btn danger" id="cf-del">Remover</button>` : ""}</div><div style="display:flex;gap:8px"><button type="button" class="btn" data-close>Cancelar</button><button type="submit" form="fConf" class="btn primary">Salvar</button></div></div>`;
+  if (!dlg.open) dlg.showModal();
+  const f = $("#fConf");
+  const valDoc = n => { const i = f.elements[n]; const m = f.querySelector(`[data-docmsg="${n}"]`); const v = i.value.trim(); if (!v) { m.textContent = ""; return true; } const r = validarDocs(v); m.textContent = r.ok ? "válido" : r.msg; m.className = "doc-msg " + (r.ok ? "ok" : "erro"); return r.ok; };
+  f.addEventListener("input", e => { if (["cpf", "conjugeCpf"].includes(e.target.name)) valDoc(e.target.name); });
+  f.addEventListener("focusout", e => { const i = e.target; if (["cpf", "conjugeCpf"].includes(i.name) && i.value.trim() && validarDocs(i.value).ok) i.value = formatarDocs(i.value); if (i.name === "telefone") i.value = fmtTel(i.value); if (i.name === "codigoIR") i.value = fmtCodIR(i.value); });
+  $("#cf-existente")?.addEventListener("change", e => { $("#cf-dados").hidden = !!e.target.value; });
+  f.addEventListener("submit", async ev => {
+    ev.preventDefault();
+    const erro = t => { const e = $("#cf-erro"); e.textContent = t; e.hidden = !t; };
+    const exist = $("#cf-existente")?.value;
+    const sel = [...f.querySelectorAll("[data-cfp]:checked")].map(i => ({demanda: i.dataset.cfp, lado: f.querySelector(`[data-cfl="${i.dataset.cfp}"]`).value, anuencia: f.querySelector(`[data-cfa="${i.dataset.cfp}"]`).value}));
+    if (!sel.length) return erro("Marque pelo menos uma propriedade com a qual ele confronta.");
+    const v = k => (f.elements[k]?.value || "").trim();
+    let doc, ref;
+    if (exist) {
+      const x = S.confrontantes.find(y => y.id === exist); ref = S.db.doc("confrontantes/" + exist);
+      const outrosVin = (x.vinculos || []).filter(y => !sel.some(s => s.demanda === y.demanda));
+      doc = {...x, vinculos: [...outrosVin, ...sel], obs: v("obs") || x.obs || ""}; delete doc.id;
+    } else {
+      if (!v("nome")) return erro("Informe o nome do confrontante.");
+      if (!valDoc("cpf") || !valDoc("conjugeCpf")) return erro("Confira o CPF/CNPJ informado.");
+      ref = c ? S.db.doc("confrontantes/" + c.id) : S.db.collection("confrontantes").doc();
+      const propsIds = props.map(p => p.id);
+      const fora = (c?.vinculos || []).filter(y => !propsIds.includes(y.demanda)); // vínculos com propriedades de outros clientes
+      doc = {nome: v("nome"), cpf: formatarDocs(v("cpf")), telefone: fmtTel(v("telefone")), endereco: v("endereco"),
+        conjuge: v("conjugeNome") || v("conjugeCpf") ? {nome: v("conjugeNome"), cpf: formatarDocs(v("conjugeCpf"))} : null,
+        imovel: {denominacao: v("denominacao"), matricula: v("matricula"), codigoIR: fmtCodIR(v("codigoIR")), ccir: v("ccir"), car: v("car").toUpperCase(), sigef: v("sigef")},
+        obs: v("obs"), vinculos: [...fora, ...sel], criadoEm: c?.criadoEm || agoraISO(), criadoPor: c?.criadoPor || S.me, atualizadoEm: agoraISO(), atualizadoPor: S.me};
+    }
+    try {
+      await ref.set(doc);
+      for (const s of sel) { const p = S.demandas.find(y => y.id === s.demanda); if (p && !(c?.vinculos || []).some(y => y.demanda === s.demanda)) await S.db.doc("demandas/" + p.id).update({historico: histAdd(p, `adicionou ${doc.nome} como confrontante${s.lado ? " (" + s.lado + ")" : ""}`)}); }
+      fecharDlg(); toast("Confrontante salvo");
+    } catch (err) { falhaEscrita(err); }
+  });
+  $("#cf-del")?.addEventListener("click", async e => {
+    if (e.target.dataset.ok !== "1") { e.target.dataset.ok = "1"; e.target.textContent = "Remover deste processo?"; return; }
+    const resto = (c.vinculos || []).filter(v => v.demanda !== demId);
+    try {
+      if (resto.length) await S.db.doc("confrontantes/" + c.id).update({vinculos: resto});
+      else await S.db.doc("confrontantes/" + c.id).delete();
+      fecharDlg(); toast(resto.length ? "Removido deste processo" : "Confrontante removido");
+    } catch (err) { falhaEscrita(err); }
+  });
+}
+async function abrirListaConfrontantes(){
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "listaconf", unsubs: []};
+  const dlg = $("#dlg"); dlg.className = "";
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">Cadastro interno</span><h2 style="font-size:19px">Confrontantes</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+    <div class="dlg-b"><input id="cfl-busca" type="search" placeholder="Buscar nome, CPF, matrícula ou imóvel" style="width:100%;margin-bottom:10px"><div id="cfl-lista"></div></div>
+    <div class="dlg-f"><span class="sub">Para adicionar, abra o processo do cliente e use "+ Confrontante".</span><button type="button" class="btn" data-close>Fechar</button></div>`;
+  if (!dlg.open) dlg.showModal();
+  const desenhar = () => {
+    const q = ($("#cfl-busca").value || "").toLowerCase();
+    const l = S.confrontantes.filter(c => !q || [c.nome, c.cpf, c.imovel?.matricula, c.imovel?.denominacao, c.telefone].join(" ").toLowerCase().includes(q)).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+    $("#cfl-lista").innerHTML = l.map(c => `<div class="lg-it"><div class="grow"><b>${esc(c.nome)}</b><div class="sub">${[c.cpf, c.telefone, c.imovel?.denominacao, c.imovel?.matricula ? "Mat. " + c.imovel.matricula : ""].filter(Boolean).map(esc).join(" · ")}</div>
+      <div class="sub">Confronta: ${(c.vinculos || []).map(v => { const p = S.demandas.find(x => x.id === v.demanda); return p ? `<a href="#" data-proc="${p.id}">${esc((p.cliente || "").split(/\s+[—–]\s+/)[0])} · ${esc(p.imovelDados?.denominacao || p.codigo)}</a>` : ""; }).filter(Boolean).join(", ") || "—"}</div></div></div>`).join("") || `<p class="muted" style="margin:0">Nenhum confrontante cadastrado ainda.</p>`;
+  };
+  desenhar(); $("#cfl-busca").addEventListener("input", desenhar);
+}
+document.addEventListener("click", e => {
+  const n = e.target.closest("[data-confnovo]"); if (n) { e.stopPropagation(); abrirConfrontante(n.dataset.confnovo); return; }
+  const ed = e.target.closest("[data-confedit]"); if (ed) { e.stopPropagation(); const [cid, did] = ed.dataset.confedit.split("|"); abrirConfrontante(did, cid); return; }
+  if (e.target.closest("[data-conflista]")) { e.stopPropagation(); abrirListaConfrontantes(); }
+}, true);
+(function ligarV16(){
+  const iv = setInterval(() => { if (!S.db) return; clearInterval(iv);
+    S.db.collection("confrontantes").onSnapshot(s => { S.confrontantes = s.docs.map(d => ({id: d.id, ...d.data()})); if (S.tab === "clientes") render(); }, () => {});
   }, 300);
 })();
 
