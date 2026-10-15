@@ -130,3 +130,10 @@ grant update (perfil, admin, nome) on public.equipe to authenticated;
 --    e push_prazos() diário 11:00 UTC; envio pela função de borda enviar-push (supabase/functions/enviar-push).
 --    A chave VAPID privada fica no Vault (nome: saotech_vapid_privada), nunca no código.
 --  Fonte do gatilho de notificações: supabase/sql/tg_push.sql
+
+-- 12) v13 (aplicado via migrações; fonte em supabase/sql/v13.sql)
+--  * agenda_links + link_agenda() + agenda_ics(token): feed .ics por pessoa, servido pela função de borda agenda-ics
+--  * portal_fin()/portal_dados(): proposta enviada/aceita, parcelas e Pix (data/fin/config/pix) para o cliente
+--  * portal_proposta(demanda, aceitar|recusar, nome, motivo): aceite registra nome, data/hora, IP e navegador; move Orçamento → Aguardando entrada
+--  * tg_automacoes (BEFORE em docs): regras de config/automacoes por etapa (checklist, mensagem ao cliente, responsável, prazo, aviso push)
+--  * função de borda geo-consulta: busca imóveis do CAR (SICAR) e SIGEF/SNCI (INCRA) na área do imóvel para checar sobreposição

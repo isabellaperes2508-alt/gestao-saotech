@@ -87,6 +87,89 @@
   }
   window.SaotechAg = {formHtml, lerForm, cardHtml, ultimasPorAg, localTxt, prepararImagem, STATUS};
 
+  /* ================= Pix (BR Code estático) — usado pela equipe e pelo portal ================= */
+  window.SaotechPix = (() => {
+    const semAcento = t => String(t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^A-Za-z0-9 .,@+\-\/]/g, "").trim();
+    const campo = (id, v) => id + String(v.length).padStart(2, "0") + v;
+    function crc16(t){ let c = 0xFFFF; for (let i = 0; i < t.length; i++) { c ^= t.charCodeAt(i) << 8; for (let j = 0; j < 8; j++) c = c & 0x8000 ? ((c << 1) ^ 0x1021) & 0xFFFF : (c << 1) & 0xFFFF; } return c.toString(16).toUpperCase().padStart(4, "0"); }
+    function normChave(k, tipo){
+      k = String(k || "").trim();
+      if (tipo === "telefone") { const d = k.replace(/\D/g, ""); return "+" + (d.startsWith("55") && d.length >= 12 ? d : "55" + d); }
+      if (tipo === "documento") return k.replace(/\D/g, "");
+      if (tipo === "email") return k.toLowerCase();
+      if (tipo === "aleatoria") return k.toLowerCase();
+      if (/@/.test(k)) return k.toLowerCase();
+      const d = k.replace(/\D/g, "");
+      if (/^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(k)) return k.toLowerCase();       // chave aleatória
+      if (/^\+/.test(k)) return "+" + d;                                       // telefone já com +55
+      if (d.length === 11 && /^\(?\d{2}\)?\s?9/.test(k) && !/[.\-]\d{2}$/.test(k.replace(/\s/g, ""))) return "+55" + d; // celular (27) 9xxxx-xxxx
+      if (d.length === 11 || d.length === 14) return d;                          // CPF / CNPJ
+      if (d.length === 13 && d.startsWith("55")) return "+" + d;
+      return k;
+    }
+    function payload({chave, tipo, nome, cidade, valor, txid, descricao}){
+      const gui = campo("00", "br.gov.bcb.pix") + campo("01", normChave(chave, tipo)) + (descricao ? campo("02", semAcento(descricao).slice(0, 40)) : "");
+      let p = campo("00", "01") + campo("26", gui) + campo("52", "0000") + campo("53", "986")
+        + (valor > 0 ? campo("54", Number(valor).toFixed(2)) : "") + campo("58", "BR")
+        + campo("59", semAcento(nome).toUpperCase().slice(0, 25) || "SAOTECH") + campo("60", semAcento(cidade).toUpperCase().slice(0, 15) || "VITORIA")
+        + campo("62", campo("05", (String(txid || "").replace(/[^A-Za-z0-9]/g, "").slice(0, 25)) || "***"));
+      p += "6304"; return p + crc16(p);
+    }
+    let lib = null;
+    const carregar = () => lib || (lib = new Promise((ok, falha) => { if (window.qrcode) return ok(window.qrcode); const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"; s.onload = () => ok(window.qrcode); s.onerror = () => { lib = null; falha(new Error("QR indisponível")); }; document.head.appendChild(s); }));
+    async function qrSvg(texto, px = 220){ const q = (await carregar())(0, "M"); q.addData(texto); q.make(); const n = q.getModuleCount(); const cel = Math.max(2, Math.floor(px / (n + 8))); return q.createSvgTag({cellSize: cel, margin: cel * 4, scalable: true}); }
+    async function preencherQR(el){ for (const x of el.querySelectorAll("[data-pixqr]")) { try { x.innerHTML = await qrSvg(x.dataset.pixqr); } catch { x.innerHTML = '<p class="sub">Use o código copia e cola abaixo.</p>'; } } }
+    return {payload, qrSvg, preencherQR, normChave, crc16};
+  })();
+
+  /* ================= Documento para imprimir/salvar em PDF (proposta) ================= */
+  window.SaotechDoc = (() => {
+    const brl = v => (Number(v) || 0).toLocaleString("pt-BR", {style: "currency", currency: "BRL"});
+    const dt = iso => iso ? new Date(String(iso).length <= 10 ? iso + "T12:00:00" : iso).toLocaleDateString("pt-BR") : "";
+    const e = t => String(t ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+    function propostaHtml(pr, d, logo){
+      const itens = pr.itens || [];
+      const pg = pr.pagamento || {};
+      const cond = pg.texto || (pg.modo === "À vista" ? "Pagamento à vista." : pg.modo === "Entrada + parcelas" ? `Entrada de ${brl(pg.entrada)} e saldo em ${pg.n || 1} parcela(s) mensal(is).` : pg.modo === "Parcelado" ? `${pg.n || 1} parcela(s) mensal(is).` : "");
+      return `<div class="doc-prop">
+        <div class="rc-top">${logo ? `<img src="${logo}" alt="Saotech Geotecnologia">` : "<b>SAOTECH GEOTECNOLOGIA</b>"}<div><div class="rc-t">PROPOSTA</div><div class="rc-n">Nº ${e(pr.numero || "")} · ${dt(pr.emitidaEm || pr.criadaEm)}</div></div></div>
+        <table class="rc-tab"><tr><td>Cliente</td><td><b>${e((d.cliente || "").split(/\s+[—–]\s+/)[0])}</b></td></tr>
+          ${d.imovel || (d.cliente || "").includes("—") ? `<tr><td>Imóvel</td><td>${e(d.imovel || d.cliente.split(/\s+[—–]\s+/)[1])}</td></tr>` : ""}
+          ${d.municipio ? `<tr><td>Município</td><td>${e(d.municipio)}</td></tr>` : ""}${d.areaHa ? `<tr><td>Área aproximada</td><td>${String(d.areaHa).replace(".", ",")} ha</td></tr>` : ""}</table>
+        ${pr.apresentacao ? `<p>${e(pr.apresentacao).replace(/\n/g, "<br>")}</p>` : ""}
+        <h4>Serviços</h4>
+        <table class="doc-itens"><thead><tr><th>Descrição</th><th>Valor</th></tr></thead><tbody>${itens.map(i => `<tr><td>${e(i.desc).replace(/\n/g, "<br>")}</td><td>${brl(i.valor)}</td></tr>`).join("")}</tbody>
+          <tfoot><tr><td>Total</td><td>${brl(pr.total)}</td></tr></tfoot></table>
+        ${pr.inclui ? `<h4>O que está incluído</h4><p>${e(pr.inclui).replace(/\n/g, "<br>")}</p>` : ""}
+        <h4>Condições</h4>
+        <table class="rc-tab">${cond ? `<tr><td>Pagamento</td><td>${e(cond)}</td></tr>` : ""}${pr.prazoDias ? `<tr><td>Prazo de execução</td><td>${e(pr.prazoDias)} dias${pr.prazoObs ? " · " + e(pr.prazoObs) : ""}</td></tr>` : ""}${pr.validade ? `<tr><td>Validade da proposta</td><td>até ${dt(pr.validade)}</td></tr>` : ""}</table>
+        ${pr.obs ? `<p class="doc-obs">${e(pr.obs).replace(/\n/g, "<br>")}</p>` : ""}
+        ${pr.status === "aceita" && pr.aceite ? `<div class="doc-aceite"><b>Proposta aceita eletronicamente</b><br>por ${e(pr.aceite.nome)} em ${new Date(pr.aceite.em).toLocaleString("pt-BR")}${pr.aceite.ip ? ` · IP ${e(pr.aceite.ip)}` : ""} · pelo Portal do Cliente Saotech</div>`
+          : `<div class="rc-ass"><div class="rc-linha"></div><b>Moisés Bruno</b><span>Saotech Geotecnologia</span></div>`}
+      </div>`;
+    }
+    const CSS = `body{font-family:Poppins,Arial,sans-serif;color:#2E3319;margin:0;padding:28px;font-size:13.5px;line-height:1.55}.doc-prop,.doc-memo{max-width:760px;margin:0 auto}
+      .rc-top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #2E3319;padding-bottom:12px;margin-bottom:16px}.rc-top img{height:44px}
+      .rc-t{font-family:"Bricolage Grotesque",Poppins,sans-serif;font-weight:700;font-size:22px;letter-spacing:.12em;text-align:right}.rc-n{font-size:12px;color:#656B51;text-align:right}
+      h4{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#5C6B3D;margin:18px 0 6px}table{width:100%;border-collapse:collapse}
+      .rc-tab td{padding:5px 8px;border-bottom:1px solid #EAEBDA;vertical-align:top}.rc-tab td:first-child{color:#656B51;width:34%}
+      .doc-itens th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#656B51;border-bottom:2px solid #2E3319;padding:6px 8px}
+      .doc-itens td{padding:7px 8px;border-bottom:1px solid #EAEBDA;vertical-align:top}.doc-itens td:last-child,.doc-itens th:last-child{text-align:right;white-space:nowrap}
+      .doc-itens tfoot td{font-weight:700;font-size:15px;border-bottom:0;border-top:2px solid #2E3319}
+      .doc-aceite{margin-top:22px;border:1.5px solid #5C6B3D;border-radius:10px;padding:10px 14px;background:#EFF2E0}
+      .rc-ass{margin:46px auto 0;text-align:center;width:280px}.rc-linha{border-top:1px solid #2E3319;margin-bottom:4px}.rc-ass b,.rc-ass span{display:block}.rc-ass span{font-size:12px;color:#656B51}
+      .doc-obs{color:#3A3F28;background:#F7F7EC;border-radius:8px;padding:8px 12px}
+      .memo-txt{text-align:justify;text-indent:2.5em}.memo-cab td{padding:3px 8px}.vert td,.vert th{border:1px solid #D9DBC4;padding:3px 6px;font-size:11.5px;text-align:center}.vert th{background:#F2F3E6}
+      @page{margin:16mm}@media print{body{padding:0}}`;
+    function imprimir(titulo, corpo){
+      const w = window.open("", "_blank");
+      if (!w) { alert("Libere as janelas pop-up deste site para gerar o PDF."); return; }
+      w.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>${e(titulo)}</title><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Poppins:wght@400;600&display=swap"><style>${CSS}</style></head><body>${corpo}<script>window.onload=()=>setTimeout(()=>window.print(),400)<\/script></body></html>`);
+      w.document.close();
+    }
+    return {propostaHtml, imprimir, CSS, brl, dt};
+  })();
+
   /* ================= Notificações (Web Push), usadas pela equipe e pelo portal ================= */
   window.SaotechPush = (() => {
     const VAPID = "BKdUPtWQQ9vbr6sclHK_-sJddstUogtQPWvnHpqVnFBHIInREdG0Imw-sBbHWzbgL3bXoCVz6IJULu3r2LGY1PM";
@@ -129,6 +212,40 @@
   const saud = () => { const h = new Date().getHours(); return h < 5 ? "Boa noite" : h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite"; };
   let sb = null, dados = null, timer = null, enviando = false, form = null, erroForm = "", avEditar = null, avNota = 0, pushEst = "";
   const fTam = b => !b ? "" : b > 1048576 ? (b / 1048576).toLocaleString("pt-BR", {maximumFractionDigits: 1}) + " MB" : Math.max(1, Math.round(b / 1024)) + " KB";
+  const brlP = v => (Number(v) || 0).toLocaleString("pt-BR", {style: "currency", currency: "BRL"});
+  let propForm = null, pixAberto = null;
+  function propostaHtml(p){
+    const pr = p.fin?.proposta; if (!pr) return "";
+    const pg = pr.pagamento || {};
+    const cond = pg.texto || (pg.modo === "À vista" ? "À vista" : pg.modo === "Entrada + parcelas" ? `Entrada de ${brlP(pg.entrada)} + ${pg.n || 1} parcela(s)` : pg.modo === "Parcelado" ? `${pg.n || 1} parcela(s)` : "");
+    const resumo = `<div class="pt-prop-itens">${(pr.itens || []).map(i => `<div><span>${esc(i.desc)}</span><b>${brlP(i.valor)}</b></div>`).join("")}<div class="tot"><span>Total</span><b>${brlP(pr.total)}</b></div></div>
+      <div class="pt-prop-cond">${cond ? `<span>💳 ${esc(cond)}</span>` : ""}${pr.prazoDias ? `<span>⏱ Execução em ${esc(pr.prazoDias)} dias</span>` : ""}${pr.validade ? `<span>📅 Válida até ${fData(pr.validade)}</span>` : ""}</div>`;
+    if (pr.status === "aceita") return `<div class="card pt-prop ok" style="margin-top:12px"><div class="conv-h"><h3>Proposta ${esc(pr.numero)} · aceita ✅</h3><button type="button" class="btn sm ghost" data-proppdf="${esc(p.id)}">PDF</button></div><p class="sub" style="margin:0">Aceita por ${esc(pr.aceite?.nome || "")} em ${pr.aceite ? new Date(pr.aceite.em).toLocaleString("pt-BR") : ""}.</p></div>`;
+    if (pr.status === "recusada") return `<div class="card pt-prop" style="margin-top:12px"><h3>Proposta ${esc(pr.numero)}</h3><p class="sub" style="margin:0">Você pediu ajustes. A equipe vai enviar uma nova versão por aqui.</p></div>`;
+    return `<div class="card pt-prop destaque" style="margin-top:12px"><div class="conv-h"><div><span class="label">Aguardando sua resposta</span><h3>Proposta ${esc(pr.numero)}</h3></div><button type="button" class="btn sm" data-proppdf="${esc(p.id)}">Ver completa (PDF)</button></div>
+      ${pr.apresentacao ? `<p class="sub" style="margin:0 0 8px">${esc(pr.apresentacao)}</p>` : ""}${resumo}
+      ${propForm === p.id + ":aceitar" ? `<form class="pt-aceite" data-propaceite="${esc(p.id)}"><label class="f">Digite seu nome completo para aceitar<input name="nome" required minlength="5" autocomplete="name" value="${esc(dados.nome || "")}"></label>
+          <label class="av-aut"><input type="checkbox" name="ok" required> Li a proposta e concordo com os serviços, valores e condições.</label>
+          <div style="display:flex;gap:8px;justify-content:flex-end"><button type="button" class="btn sm ghost" data-propcancel>Cancelar</button><button class="btn primary">Aceitar proposta</button></div></form>`
+        : propForm === p.id + ":ajuste" ? `<form class="pt-aceite" data-propajuste="${esc(p.id)}"><label class="f">O que você gostaria de ajustar?<textarea name="motivo" rows="3" required></textarea></label>
+          <div style="display:flex;gap:8px;justify-content:flex-end"><button type="button" class="btn sm ghost" data-propcancel>Cancelar</button><button class="btn primary">Enviar para a equipe</button></div></form>`
+        : `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button type="button" class="btn primary" data-propacao="${esc(p.id)}:aceitar">Aceitar proposta</button><button type="button" class="btn" data-propacao="${esc(p.id)}:ajuste">Pedir ajuste</button></div>`}
+    </div>`;
+  }
+  function pagamentosHtml(p){
+    const ps = p.fin?.parcelas || []; if (!ps.length) return "";
+    const pix = dados.pix;
+    const hj = hoje();
+    return `<div class="card" style="margin-top:12px"><h3>Pagamentos</h3>${ps.map(x => {
+      const st = x.pago ? ["Pago", "ok"] : x.vencimento && x.vencimento < hj ? ["Em atraso", "crit"] : ["A vencer", ""];
+      const aberto = pixAberto === p.id + ":" + x.id;
+      let cod = "";
+      if (!x.pago && pix && aberto) cod = window.SaotechPix.payload({chave: pix.chave, tipo: pix.tipo, nome: pix.nome, cidade: pix.cidade, valor: x.valor, txid: ((p.codigo || "").replace(/\W/g, "") + "P" + String(x.id).slice(0, 4)).slice(0, 25)});
+      return `<div class="pt-parc"><div class="grow"><b>${esc(x.rotulo)}</b><span class="sub">${brlP(x.valor)}${x.vencimento ? " · vence " + fData(x.vencimento) : ""}${x.pago && x.pagoEm ? " · pago em " + fData(x.pagoEm) : ""}</span></div><span class="due ${st[1]}">${st[0]}</span>
+        ${!x.pago && pix ? `<button type="button" class="btn sm ${aberto ? "" : "lima"}" data-ptpix="${esc(p.id)}:${esc(x.id)}">${aberto ? "Fechar" : "Pagar com Pix"}</button>` : ""}</div>
+        ${cod ? `<div class="pt-pix"><div class="pix-qr" data-pixqr="${esc(cod)}"></div><div class="grow"><label class="f">Pix copia e cola<textarea readonly rows="3">${esc(cod)}</textarea></label><button type="button" class="btn sm primary" data-copiapix="${esc(cod)}">Copiar código</button><p class="sub">Recebedor: ${esc(pix.nome || "")}. Depois de pagar, envie o comprovante pelo chat (📎).</p></div></div>` : ""}`;
+    }).join("")}</div>`;
+  }
   function docsHtml(p){
     const ds = p.docs || [];
     if (!ds.length) return "";
@@ -173,6 +290,7 @@
         <div class="meta">${p.imovel ? `<span>${esc(p.imovel)}</span>` : ""}${p.municipio ? `<span>${esc(p.municipio)}</span>` : ""}${p.areaHa ? `<span>${String(p.areaHa).replace(".", ",")} ha</span>` : ""}</div>
       </div>
       <div class="card" style="margin-top:12px"><div class="stepper">${passos}</div><p class="pt-explica"><b>${esc(p.etapa)}:</b> ${explica}</p></div>
+      ${p.fin?.proposta?.status === "enviada" ? propostaHtml(p) : ""}
       <div class="pstats">
         <div class="pst"><span class="label">Andamento</span><b>${pct}%</b><div class="prog"><i style="width:${pct}%"></i></div><span class="sub">${ok} de ${cl.length} etapas internas</span></div>
         <div class="pst ${docs.length ? "warn" : ""}"><span class="label">Documentos que precisamos</span><b>${docs.length}</b><span class="sub">${docs.length ? "envie pelo chat ao lado" : "nada pendente com você"}</span></div>
@@ -180,7 +298,9 @@
       </div>
       ${docs.length ? `<div class="card" style="margin-top:12px"><h3>Precisamos destes documentos</h3>${docs.map(d => `<div class="pt-doc">📄 ${esc(d.t)}</div>`).join("")}<p class="sub" style="margin:8px 0 0">Envie foto ou PDF pelo chat (botão 📎).</p></div>` : ""}
       ${ag.length ? `<div class="card" style="margin-top:12px"><h3>Agenda</h3>${ag.map(a => `<div class="pt-doc">📅 <b>${fData(a.data)}${a.prazo && a.prazo > a.data ? " a " + fData(a.prazo) : ""}</b>${a.inicio ? " · " + esc(a.inicio) : ""} · ${esc(a.tipo || "")}</div>`).join("")}</div>` : ""}
+      ${p.fin?.proposta?.status !== "enviada" ? propostaHtml(p) : ""}
       ${avaliacaoHtml(p)}
+      ${pagamentosHtml(p)}
       ${docsHtml(p)}
       ${hist ? `<div class="card" style="margin-top:12px"><h3>Histórico do processo</h3><div class="tl">${hist}</div></div>` : ""}
     </section>`;
@@ -235,11 +355,12 @@
       <p class="sub pt-rodape">Saotech Geotecnologia · Este acesso mostra apenas os seus processos.</p>`;
     if (formVals) { const f = el.querySelector(".ag-form"); if (f) for (const [k, v] of Object.entries(formVals)) { const inp = f.elements[k]; if (!inp) continue; if (inp instanceof RadioNodeList) { [...inp].forEach(r => r.checked = r.value === v); } else inp.value = v; } }
     const c = el.querySelector("#pt-chat"); if (c && noFim) c.scrollTop = c.scrollHeight;
+    if (el.querySelector("[data-pixqr]")) window.SaotechPix.preencherQR(el);
     if (avTxt !== undefined && el.querySelector("#av-com")) { el.querySelector("#av-com").value = avTxt; el.querySelector("#av-aut").checked = !!avAut; }
   }
   async function atualizar(){
     if (form) return; // não interrompe quem está preenchendo o agendamento
-    if (document.activeElement?.id === "av-com") return;
+    if (document.activeElement?.id === "av-com" || propForm || pixAberto) return;
     try { const {data, error} = await sb.rpc("portal_dados"); if (!error && data) { const antes = JSON.stringify(dados); dados = data; if (JSON.stringify(dados) !== antes) render(); } } catch {}
   }
   async function enviarArquivos(files){
@@ -276,6 +397,11 @@
         catch (err) { alert(/bloqueado/.test(err.message || "") ? "As notificações estão bloqueadas neste navegador. Libere nas configurações do site e tente de novo." : "Não foi possível ativar: " + (err.message || err)); }
         return;
       }
+      const pa = e.target.closest("[data-propacao]"); if (pa) { propForm = pa.dataset.propacao; render(); el.querySelector(".pt-aceite input, .pt-aceite textarea")?.focus(); return; }
+      if (e.target.closest("[data-propcancel]")) { propForm = null; render(); return; }
+      const pp = e.target.closest("[data-proppdf]"); if (pp) { const pr = (dados.processos || []).find(x => x.id === pp.dataset.proppdf); if (pr?.fin?.proposta) window.SaotechDoc.imprimir("Proposta " + pr.fin.proposta.numero, window.SaotechDoc.propostaHtml(pr.fin.proposta, pr, window.__logo)); return; }
+      const px = e.target.closest("[data-ptpix]"); if (px) { pixAberto = pixAberto === px.dataset.ptpix ? null : px.dataset.ptpix; render(); return; }
+      const cp = e.target.closest("[data-copiapix]"); if (cp) { try { await navigator.clipboard.writeText(cp.dataset.copiapix); cp.textContent = "Copiado ✓"; } catch { cp.previousElementSibling?.querySelector("textarea")?.select(); } return; }
       const an = e.target.closest("[data-avnota]"); if (an) { avNota = +an.dataset.avnota; render(); return; }
       const ae = e.target.closest("[data-avedit]"); if (ae) { avEditar = ae.dataset.avedit; avNota = 0; render(); return; }
       if (e.target.closest("[data-avcancel]")) { avEditar = null; avNota = 0; render(); return; }
@@ -298,6 +424,16 @@
         const {error} = await sb.rpc("portal_agendar", {p_usuario: null, p_acao: r.acao, p_ag: r.ag});
         if (error) { erroForm = error.message; render(); return; }
         form = null; erroForm = ""; await atualizar(); return;
+      }
+      const fa = e.target.closest("[data-propaceite], [data-propajuste]");
+      if (fa) {
+        e.preventDefault(); const aceitar = fa.hasAttribute("data-propaceite"); const dem = fa.dataset.propaceite || fa.dataset.propajuste;
+        fa.querySelector(".btn.primary").disabled = true;
+        const {error} = await sb.rpc("portal_proposta", {p_demanda: dem, p_acao: aceitar ? "aceitar" : "recusar", p_nome: aceitar ? fa.elements.nome.value : null, p_motivo: aceitar ? null : fa.elements.motivo.value});
+        if (error) { alert(error.message); fa.querySelector(".btn.primary").disabled = false; return; }
+        propForm = null; await atualizarJa();
+        if (aceitar) alert("Proposta aceita! A equipe Saotech já foi avisada e vai combinar os próximos passos com você.");
+        return;
       }
       if (e.target.id === "pt-aval") {
         e.preventDefault();

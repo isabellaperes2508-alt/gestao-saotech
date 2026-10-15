@@ -391,6 +391,8 @@
         async copiarArquivo(de, para){ const {error} = await sb.storage.from(BUCKET).copy(de, para); if (error) throw {code: "upstream_error", message: error.message}; return para; },
         async salvarPush(sub){ const {error} = await sb.rpc("salvar_push", {p_sub: sub, p_ua: navigator.userAgent}); if (error) throw erroDb(error); },
         async removerPush(endpoint){ await sb.rpc("remover_push", {p_endpoint: endpoint}); },
+        async linkAgenda(novo){ const {data, error} = await sb.rpc("link_agenda", {p_novo: !!novo}); if (error) throw erroDb(error); return data; },
+        async geoConsulta(fonte, uf, bbox){ const {data, error} = await sb.functions.invoke("geo-consulta", {body: {fonte, uf, bbox}}); if (error) throw {message: error.message || "falha na consulta"}; return data; },
         sincronia: () => ({offline: offline.on || !navigator.onLine, pendentes: fila().length}),
         enviarPendentes: () => enviarFila(),
         async definirPerfil(email, perfil){ const {error} = await sb.from("equipe").update({perfil, admin: perfil === "admin"}).eq("email", email); if (error) throw erroDb(error); },

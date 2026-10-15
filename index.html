@@ -766,6 +766,31 @@ body.modo-portal #bv{display:none}
 .av-estrelas{display:flex;gap:4px} .av-estrelas button{border:0;background:none;font-size:34px;line-height:1;color:var(--line-2);cursor:pointer;padding:2px} .av-estrelas button.on{color:#C9A227}
 .av-aut{display:flex;gap:8px;align-items:flex-start;font-size:13px;margin-bottom:10px} .av-aut input{width:auto;margin-top:3px}
 .pt-push-ok{align-self:center;white-space:nowrap}
+/* v13 */
+.geo-gnss{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+.memo-res{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13.5px;background:var(--accent-soft);border-radius:10px;padding:8px 12px}
+.uf-sel{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:10px} .uf-sel select{width:auto;padding:2px 6px}
+.tab-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;max-height:340px}
+.gn-tab{width:100%;border-collapse:collapse;font-size:12.5px} .gn-tab th{position:sticky;top:0;background:#F2F3E6;text-align:left;padding:6px 8px;font-weight:600;white-space:nowrap} .gn-tab td{padding:5px 8px;border-top:1px solid var(--line);white-space:nowrap} .gn-tab input[type=checkbox]{width:auto}
+.mm-lados td input{width:100%;min-width:180px} .gn-res{font-size:13.5px;margin-bottom:8px}
+.memo-prev{background:#FBFAEE;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.6;text-align:justify;max-height:220px;overflow:auto}
+.geo-consulta{margin-top:10px;display:flex;flex-direction:column;gap:6px} .geo-consulta summary{cursor:pointer;font-size:13px}
+.gc-it{display:flex;gap:8px;align-items:flex-start;font-size:13px;padding:6px 10px;border-radius:8px;background:#F7F7EC} .gc-it .grow{flex:1;min-width:0;display:flex;flex-direction:column} .gc-it.crit{background:var(--crit-soft)} .gc-it.ok{background:var(--good-soft)}
+.ga-link{display:flex;gap:6px} .ga-link input{flex:1;min-width:0;font-size:12px} .ga-passos{padding-left:18px;font-size:13.5px;line-height:1.7}
+.pix-box{display:flex;flex-direction:column;align-items:center;gap:10px} .pix-box textarea{width:100%;font-size:11.5px;word-break:break-all}
+.pix-qr{width:220px;max-width:100%;background:#fff;border-radius:10px;padding:6px;display:grid;place-items:center} .pix-qr svg{width:100%;height:auto;display:block}
+.prop-item{display:grid;grid-template-columns:minmax(0,1fr) 120px auto;gap:6px;margin-bottom:6px;align-items:start} .prop-item textarea{min-height:40px}
+.fin-extra{display:flex;flex-direction:column;gap:16px;margin-top:16px} .chip.ok{background:var(--good-soft);color:var(--good)} .chip.warn{background:var(--warn-soft);color:var(--warn)} .chip.crit{background:var(--crit-soft);color:var(--crit)}
+.auto-regra{border:1px solid var(--line-2);border-radius:12px;padding:12px;margin:0 0 10px} .auto-regra.off{opacity:.6}
+.auto-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px} .auto-top .grow{flex:1;min-width:160px} .auto-quando{display:flex;align-items:center;gap:6px;font-size:13px;white-space:nowrap} .auto-quando select{width:auto}
+.chk{display:flex;align-items:center;gap:6px;font-size:13.5px} .chk input{width:auto}
+.pt-prop.destaque{border:2px solid var(--accent)} .pt-prop.ok{background:var(--good-soft)}
+.pt-prop-itens>div{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid var(--line);font-size:13.5px} .pt-prop-itens>div:first-child{border-top:0} .pt-prop-itens .tot{border-top:2px solid var(--ink);font-size:16px}
+.pt-prop-cond{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--ink-2);margin-top:8px}
+.pt-aceite{margin-top:12px;background:var(--accent-soft);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.pt-parc{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);flex-wrap:wrap} .pt-parc .grow{flex:1;min-width:150px;display:flex;flex-direction:column}
+.pt-pix{display:flex;gap:14px;flex-wrap:wrap;background:#F7F7EC;border-radius:12px;padding:12px;margin-bottom:8px} .pt-pix .grow{flex:1;min-width:200px} .pt-pix textarea{width:100%;font-size:11px;word-break:break-all;margin-bottom:8px} .pt-pix .pix-qr{width:180px}
+.doc-prop,.doc-memo{background:#fff}
 </style>
 
 
@@ -821,6 +846,7 @@ body.sem-login .wrap{visibility:hidden}
       <button type="button" class="bell" id="btnNotif" aria-label="Avisos no celular" title="Avisos no celular (notificações)"><svg viewBox="0 0 24 24" class="ic" style="width:18px;height:18px"><rect x="7" y="2.5" width="10" height="19" rx="2.2"/><path d="M11 18.5h2"/><path d="M3.5 9v6M20.5 9v6"/></svg></button>
       <button type="button" class="bell" id="btnBusca" aria-label="Buscar (atalho: /)" title="Buscar em tudo (atalho: /)"><svg viewBox="0 0 24 24" class="ic" style="width:18px;height:18px"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
       <div class="avisos" id="avisos" hidden></div>
+      <button type="button" class="btn sm ghost" id="btnAuto" title="Automações por etapa" hidden>Automações</button>
       <button type="button" class="btn sm ghost" id="btnEquipe" title="Equipe e permissões" hidden>Equipe</button>
       <button type="button" class="btn sm ghost" id="btnSair" title="Sair da conta" hidden>Sair</button>
     </div>
@@ -924,7 +950,8 @@ const brl = v => (Number(v) || 0).toLocaleString("pt-BR", {style:"currency", cur
 const min = hm => { if (!hm) return null; const [h, m] = hm.split(":").map(Number); return h * 60 + m; };
 const dur = it => { const a = min(it.inicio), b = min(it.fim); return a != null && b != null && b > a ? b - a : 0; };
 const fmtH = m => { const h = m / 60; return h >= 10 ? Math.round(h) + "h" : h.toFixed(1).replace(".", ",") + "h"; };
-const pessoa = id => PESSOAS.find(p => p.id === id) || {nome: id || "—", ini: "?"};
+const PSEUDO = {cliente: {nome: "Cliente (portal)", ini: "CL"}, automacao: {nome: "Automação", ini: "⚙"}};
+const pessoa = id => PESSOAS.find(p => p.id === id) || PSEUDO[id] || {nome: id || "—", ini: "?"};
 const primeiro = id => pessoa(id).nome.split(" ")[0];
 const etapaCls = k => (ETAPAS.find(e => e.k === k) || {}).c || "e-orc";
 const uid = () => Math.random().toString(36).slice(2, 10);
@@ -2970,7 +2997,8 @@ function desenharImovel(L, grupo, d, destaque){
   const cor = COR_ETAPA[d.etapa] || "#5C6B3D";
   const pop = `<b>${esc(d.cliente)}</b><br><span style="color:#656B51">${esc(d.codigo)} · ${esc(d.etapa)}${d.areaHa ? " · " + String(d.areaHa).replace(".", ",") + " ha" : ""}</span><br><a href="#" data-proc="${d.id}">Ver processo</a>`;
   if (d.geo?.poligono?.length > 2) L.polygon(d.geo.poligono, {color: destaque ? "#D9E15A" : cor, weight: destaque ? 3 : 2, fillOpacity: destaque ? .25 : .15}).bindPopup(pop).addTo(grupo);
-  if (d.geo?.lat) L.circleMarker([d.geo.lat, d.geo.lng], {radius: destaque ? 9 : 7, color: "#2E3319", weight: 2, fillColor: destaque ? "#D9E15A" : cor, fillOpacity: 1}).bindPopup(pop).bindTooltip(d.cliente.split(/\s+[—–]\s+/)[0]).addTo(grupo);
+  if (destaque && d.geo?.vertices?.length) d.geo.vertices.forEach(v => L.circleMarker([v.lat, v.lng], {radius: 4, color: "#2E3319", weight: 1.5, fillColor: "#FFFFFF", fillOpacity: 1}).bindTooltip(esc(v.nome), {direction: "top"}).addTo(grupo));
+  if (d.geo?.lat && !(destaque && d.geo?.vertices?.length)) L.circleMarker([d.geo.lat, d.geo.lng], {radius: destaque ? 9 : 7, color: "#2E3319", weight: 2, fillColor: destaque ? "#D9E15A" : cor, fillOpacity: 1}).bindPopup(pop).bindTooltip(d.cliente.split(/\s+[—–]\s+/)[0]).addTo(grupo);
 }
 function linhasConfrontantes(L, grupo, ds){
   const feito = new Set();
@@ -2986,14 +3014,14 @@ async function montarMapas(){
   for (const [k, el] of [["main", main], ["proc", proc]]) {
     if (!el || el._montado) continue;
     const alvo = k === "main" ? S.demandas.filter(d => d.geo?.lat || d.geo?.poligono?.length) : (() => { const d = S.demandas.find(x => x.id === el.dataset.dem); return d ? [d, ...(d.vinculos || []).map(v => S.demandas.find(x => x.id === v.id)).filter(Boolean)] : []; })();
-    const sig = JSON.stringify([el.dataset.dem || "", S.marcando, alvo.map(d => [d.id, d.etapa, d.cliente, d.geo, d.vinculos])]);
+    const sig = JSON.stringify([el.dataset.dem || "", S.marcando, UF_CAMADAS(), S.geoViz?.[el.dataset.dem]?.em || "", alvo.map(d => [d.id, d.etapa, d.cliente, d.geo, d.vinculos])]);
     const cache = mapas["_" + k];
     if (cache && cache.sig === sig && cache.el !== el) { el.replaceWith(cache.el); setTimeout(() => cache.m.invalidateSize(), 30); continue; }
     el._montado = true;
     const antes = mapas[k]; if (antes) { try { antes.remove(); } catch {} }
     const base = camadasBase(L);
     const m = L.map(el, {layers: [base.sat], zoomControl: true, attributionControl: true});
-    L.control.layers({"Satélite": base.sat, "Ruas": base.ruas}, null, {position: "topright"}).addTo(m);
+    L.control.layers({"Satélite": base.sat, "Ruas": base.ruas}, camadasOficiais(L, m), {position: "topright", collapsed: true}).addTo(m);
     const g = L.featureGroup().addTo(m); mapas[k] = m;
     if (k === "main") {
       const ds = S.demandas.filter(d => d.geo?.lat || d.geo?.poligono?.length);
@@ -3004,6 +3032,9 @@ async function montarMapas(){
       const d = S.demandas.find(x => x.id === el.dataset.dem); if (!d) continue;
       const viz = [d, ...(d.vinculos || []).map(v => S.demandas.find(x => x.id === v.id)).filter(Boolean)];
       viz.forEach(x => desenharImovel(L, g, x, x.id === d.id)); linhasConfrontantes(L, g, viz);
+      const gv = S.geoViz?.[d.id];
+      if (gv?.fc?.features?.length) L.geoJSON(gv.fc, {style: f => ({color: f.properties._sobrep > 1 ? "#E5484D" : f.properties._fonte === "car" ? "#E08A2E" : "#4C9BE8", weight: 1.5, fillOpacity: f.properties._sobrep > 1 ? .3 : .08, dashArray: f.properties._fonte === "car" ? "4 3" : null}),
+        onEachFeature: (f, l) => { const p = f.properties; l.bindPopup(`<b>${({car: "CAR", sigef: "SIGEF", snci: "SNCI"})[p._fonte]}</b><br>${esc(p.cod_imovel || p.parcela_co || p.codigo_imo || p.nome_area || "")}${p._sobrep > 1 ? `<br><b style="color:#E5484D">Sobreposição: ${mBR(p._sobrep / 10000, 4)} ha</b>` : ""}`); }}).addTo(m);
       if (g.getLayers().length) m.fitBounds(g.getBounds().pad(.3), {maxZoom: 16}); else m.setView([-20.39, -40.49], 10);
       if (S.marcando === d.id) { el.classList.add("marcando"); m.once("click", async ev => { S.marcando = null; await salvarGeo(d.id, {...(d.geo || {}), lat: +ev.latlng.lat.toFixed(6), lng: +ev.latlng.lng.toFixed(6)}, "marcou a localização no mapa"); }); }
     }
@@ -3844,6 +3875,644 @@ viewInicio = function(){
     + (nPend ? `<div class="pend-banner" style="margin-top:16px"><div><b>Pendências de cadastro</b> · ${nPend} cliente${nPend > 1 ? "s" : ""} com dados faltando (serviço, município, telefone, CPF/CNPJ ou prazo).</div><button type="button" class="btn sm" data-irpend>Ver pendências</button></div>` : "");
 };
 document.addEventListener("click", e => { if (e.target.closest("[data-irpend]")) { S.tab = "clientes"; S.cliFiltro = "pendencias"; ls.set("sao.tab", S.tab); render(); window.scrollTo({top: 0}); } });
+
+
+/* ====================================================================
+   v13 · georreferenciamento (GNSS, memorial, camadas oficiais),
+         Google Agenda, proposta com aceite, Pix e automações
+   ==================================================================== */
+
+/* ---------- UTM SIRGAS 2000 (séries de Krüger) ---------- */
+const UTM = (() => {
+  const a = 6378137, f = 1 / 298.257222101, k0 = 0.9996, E0 = 500000, N0S = 10000000;
+  const n = f / (2 - f), n2 = n * n, n3 = n2 * n;
+  const A = a / (1 + n) * (1 + n2 / 4 + n2 * n2 / 64);
+  const al = [n / 2 - 2 / 3 * n2 + 5 / 16 * n3, 13 / 48 * n2 - 3 / 5 * n3, 61 / 240 * n3];
+  const be = [n / 2 - 2 / 3 * n2 + 37 / 96 * n3, 1 / 48 * n2 + 1 / 15 * n3, 17 / 480 * n3];
+  const de = [2 * n - 2 / 3 * n2 - 2 * n3, 7 / 3 * n2 - 8 / 5 * n3, 56 / 15 * n3];
+  const rad = Math.PI / 180, c2 = 2 * Math.sqrt(n) / (1 + n);
+  const mc = fuso => fuso * 6 - 183;
+  const fusoDe = lng => Math.floor((lng + 180) / 6) + 1;
+  function paraUTM(lat, lng, fuso){
+    fuso = fuso || fusoDe(lng);
+    const phi = lat * rad, dl = (lng - mc(fuso)) * rad;
+    const t = Math.sinh(Math.atanh(Math.sin(phi)) - c2 * Math.atanh(c2 * Math.sin(phi)));
+    const xi = Math.atan2(t, Math.cos(dl)), eta = Math.atanh(Math.sin(dl) / Math.sqrt(1 + t * t));
+    let E = eta, N = xi;
+    for (let j = 1; j <= 3; j++) { E += al[j - 1] * Math.cos(2 * j * xi) * Math.sinh(2 * j * eta); N += al[j - 1] * Math.sin(2 * j * xi) * Math.cosh(2 * j * eta); }
+    return {e: E0 + k0 * A * E, n: (lat < 0 ? N0S : 0) + k0 * A * N, fuso, hem: lat < 0 ? "S" : "N"};
+  }
+  function deUTM(e, nn, fuso, hem = "S"){
+    const xi = (nn - (hem === "S" ? N0S : 0)) / (k0 * A), eta = (e - E0) / (k0 * A);
+    let xp = xi, ep = eta;
+    for (let j = 1; j <= 3; j++) { xp -= be[j - 1] * Math.sin(2 * j * xi) * Math.cosh(2 * j * eta); ep -= be[j - 1] * Math.cos(2 * j * xi) * Math.sinh(2 * j * eta); }
+    const chi = Math.asin(Math.sin(xp) / Math.cosh(ep));
+    let phi = chi; for (let j = 1; j <= 3; j++) phi += de[j - 1] * Math.sin(2 * j * chi);
+    return {lat: phi / rad, lng: mc(fuso) + Math.atan2(Math.sinh(ep), Math.cos(xp)) / rad};
+  }
+  return {paraUTM, deUTM, fusoDe, mc};
+})();
+
+/* ---------- Leitura de arquivos do GNSS (CSV/TXT) ---------- */
+const nBR = v => { const t = String(v ?? "").trim(); if (!t) return NaN; if (/[°º'"]/.test(t)) return dmsParaGraus(t); return parseFloat(t.replace(/\s/g, "").replace(/,(?=\d+$)/, ".").replace(/,/g, "")); };
+function dmsParaGraus(t){
+  const m = String(t).replace(",", ".").match(/(-?\d+)\s*[°º:\s]\s*(\d+)?\s*['’:\s]?\s*([\d.]+)?\s*["”]?\s*([NSEWO])?/i);
+  if (!m) return NaN;
+  let g = Math.abs(+m[1]) + (+m[2] || 0) / 60 + (+m[3] || 0) / 3600;
+  if (/^-/.test(m[1]) || /[SWO]/i.test(m[4] || "")) g = -g;
+  return g;
+}
+const COLS = {nome: /^(nome|ponto|pt|id|name|v[ée]rtice|vertice|c[óo]digo do v[ée]rtice|marco)$/i, e: /^(e|este|leste|x|east|easting|coord_?e)$/i, n: /^(n|norte|y|north|northing|coord_?n)$/i,
+  h: /^(h|alt|altitude|cota|z|elev|elevation|alt_?geom)$/i, lat: /^(lat|latitude|y_?geo)$/i, lon: /^(lon|lng|long|longitude|x_?geo)$/i, cod: /^(cod|codigo|código|desc|descri[cç][aã]o|code|tipo|obs)$/i};
+function lerPontosGNSS(texto, fusoPadrao){
+  const linhas = String(texto).split(/\r?\n/).map(l => l.trim()).filter(l => l && !/^[#;\/]/.test(l));
+  if (!linhas.length) throw new Error("arquivo vazio");
+  const amostra = linhas.slice(0, 5).join("\n");
+  const sep = amostra.includes("\t") ? "\t" : amostra.includes(";") ? ";" : (linhas[0].split(",").length >= 3 && !/\d,\d{2,}\s/.test(amostra)) ? "," : /\s+/;
+  const corta = l => l.split(sep).map(x => x.trim().replace(/^"|"$/g, ""));
+  let rows = linhas.map(corta);
+  let mapa = null;
+  const cab = rows[0];
+  if (cab.filter(c => isNaN(nBR(c))).length >= 2 && cab.some(c => Object.values(COLS).some(r => r.test(c)))) {
+    mapa = {};
+    cab.forEach((c, i) => { for (const [k, r] of Object.entries(COLS)) if (r.test(c) && mapa[k] == null) { mapa[k] = i; break; } });
+    rows = rows.slice(1);
+  }
+  const pontos = [], avisos = [];
+  rows.forEach((r, li) => {
+    let nome, a, b, h, cod;
+    if (mapa) {
+      nome = r[mapa.nome ?? -1]; cod = r[mapa.cod ?? -1]; h = nBR(r[mapa.h ?? -1]);
+      if (mapa.e != null && mapa.n != null) { a = nBR(r[mapa.e]); b = nBR(r[mapa.n]); }
+      else if (mapa.lat != null && mapa.lon != null) { a = nBR(r[mapa.lon]); b = nBR(r[mapa.lat]); }
+    } else {
+      const nums = [], txts = [];
+      r.forEach((c, i) => { const v = nBR(c); if (!isNaN(v) && /\d/.test(c)) nums.push({i, v}); else txts.push({i, c}); });
+      nome = txts[0]?.c; cod = txts[1]?.c;
+      let cand = nums;
+      if (!nome && nums.length >= 3 && Number.isInteger(nums[0].v) && Math.abs(nums[0].v) < 100000 && (Math.abs(nums[1].v) > 1000 || Math.abs(nums[1].v) <= 180)) { nome = String(nums[0].v); cand = nums.slice(1); }
+      const grandes = cand.filter(x => Math.abs(x.v) > 1000);
+      if (grandes.length >= 2) {
+        const [p1, p2] = grandes; const e1 = p1.v < 1e6 ? p1 : p2, n1 = e1 === p1 ? p2 : p1;
+        a = e1.v; b = n1.v; h = cand.find(x => x !== p1 && x !== p2)?.v;
+      } else if (cand.length >= 2) {
+        const [p1, p2] = cand;
+        const lon = Math.abs(p1.v) > 34 && Math.abs(p2.v) <= 34 ? p1 : Math.abs(p2.v) > 34 && Math.abs(p1.v) <= 34 ? p2 : p2;
+        const lat = lon === p1 ? p2 : p1;
+        a = lon.v; b = lat.v; h = cand[2]?.v;
+      }
+    }
+    if (isNaN(a) || isNaN(b)) { avisos.push(`linha ${li + (mapa ? 2 : 1)} ignorada`); return; }
+    pontos.push({nome: (nome || `P${pontos.length + 1}`).slice(0, 40), a, b, h: isNaN(h) ? null : h, cod: cod || ""});
+  });
+  if (!pontos.length) throw new Error("não encontrei coordenadas no arquivo");
+  const utm = pontos.every(p => Math.abs(p.a) > 1000 && Math.abs(p.b) > 1000);
+  const fuso = utm ? (fusoPadrao || 24) : UTM.fusoDe(pontos[0].a);
+  const out = pontos.map(p => {
+    if (utm) { const g = UTM.deUTM(p.a, p.b, fuso, "S"); return {nome: p.nome, e: +p.a.toFixed(3), n: +p.b.toFixed(3), h: p.h, lat: +g.lat.toFixed(9), lng: +g.lng.toFixed(9), cod: p.cod}; }
+    const u = UTM.paraUTM(p.b, p.a, fuso); return {nome: p.nome, e: +u.e.toFixed(3), n: +u.n.toFixed(3), h: p.h, lat: p.b, lng: p.a, cod: p.cod};
+  });
+  return {pontos: out, sistema: utm ? "utm" : "geo", fuso, avisos};
+}
+
+/* ---------- Geometria no plano UTM ---------- */
+function geoMetricas(vs){
+  if (!vs || vs.length < 3) return null;
+  let area2 = 0, per = 0; const lados = [];
+  for (let i = 0; i < vs.length; i++) {
+    const p = vs[i], q = vs[(i + 1) % vs.length];
+    area2 += p.e * q.n - q.e * p.n;
+    const dE = q.e - p.e, dN = q.n - p.n, dist = Math.hypot(dE, dN);
+    per += dist; lados.push({de: p, ate: q, az: (Math.atan2(dE, dN) * 180 / Math.PI + 360) % 360, dist});
+  }
+  return {areaM2: Math.abs(area2) / 2, areaHa: Math.abs(area2) / 20000, perimetro: per, lados, horario: area2 < 0};
+}
+function azDMS(g){
+  let d = Math.floor(g), mf = (g - d) * 60, m = Math.floor(mf), s = Math.round((mf - m) * 60 * 100) / 100;
+  if (s >= 60) { s -= 60; m++; } if (m >= 60) { m -= 60; d++; } if (d >= 360) d -= 360;
+  return `${d}°${String(m).padStart(2, "0")}'${s.toFixed(2).padStart(5, "0").replace(".", ",")}"`;
+}
+const mBR = (v, c = 2) => Number(v).toLocaleString("pt-BR", {minimumFractionDigits: c, maximumFractionDigits: c});
+function verticesDe(d){
+  const g = d.geo || {};
+  if (g.vertices?.length >= 3) return {vs: g.vertices, fuso: g.fuso || 24};
+  if (g.poligono?.length >= 3) {
+    let pts = g.poligono.slice(); const [p0, pl] = [pts[0], pts[pts.length - 1]]; if (p0[0] === pl[0] && p0[1] === pl[1]) pts.pop();
+    const fuso = UTM.fusoDe(pts[0][1]);
+    return {vs: pts.map(([lat, lng], i) => { const u = UTM.paraUTM(lat, lng, fuso); return {nome: `V${String(i + 1).padStart(2, "0")}`, e: u.e, n: u.n, h: null, lat, lng}; }), fuso, doKml: true};
+  }
+  return null;
+}
+
+/* ---------- Diálogo: importar pontos do GNSS ---------- */
+function abrirImportGNSS(id){
+  const d = S.demandas.find(x => x.id === id); if (!d) return;
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "gnss", id, unsubs: [], lido: null};
+  const dlg = $("#dlg"); dlg.className = "big";
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">${esc(d.codigo)} · georreferenciamento</span><h2 style="font-size:19px">Importar pontos do GNSS</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+    <div class="dlg-b">
+      <div class="fgrid">
+        <label class="f span3">Arquivo exportado do GNSS ou do software de pós-processamento<input type="file" id="gn-arq" accept=".csv,.txt,.dat,.pos,.xyz,text/plain,text/csv"></label>
+        <label class="f span3">Fuso UTM (SIRGAS 2000, hemisfério Sul)<select id="gn-fuso">${[21, 22, 23, 24, 25].map(f => `<option value="${f}" ${(d.geo?.fuso || 24) === f ? "selected" : ""}>Fuso ${f}S · MC ${UTM.mc(f)}°${f === 24 ? " (Espírito Santo)" : f === 23 ? " (MG, RJ, SP)" : ""}</option>`).join("")}</select></label>
+      </div>
+      <label class="f" style="margin-top:10px">Ou cole os pontos (uma linha por vértice: nome, E, N, altitude)<textarea id="gn-txt" rows="5" placeholder="SAOT-M-0001;344178,412;7744641,727;612,35&#10;SAOT-M-0002;344310,905;7744598,120;618,02&#10;…"></textarea></label>
+      <p class="sub" style="margin:6px 0 0">Aceita CSV/TXT com vírgula, ponto e vírgula, tab ou espaço; coordenadas UTM (E/N) ou geográficas (graus decimais ou °′″). Se houver cabeçalho (Nome, E, N, H…), ele é reconhecido.</p>
+      <div id="gn-prev" style="margin-top:12px"></div>
+    </div>
+    <div class="dlg-f"><span class="sub" id="gn-st"></span><div style="display:flex;gap:8px"><button type="button" class="btn" data-close>Cancelar</button><button type="button" class="btn primary" id="gn-salvar" disabled>Salvar no processo</button></div></div>`;
+  if (!dlg.open) dlg.showModal();
+  const ler = () => {
+    const txt = $("#gn-txt").value.trim(); if (!txt) { $("#gn-prev").innerHTML = ""; $("#gn-salvar").disabled = true; return; }
+    try {
+      const r = lerPontosGNSS(txt, +$("#gn-fuso").value); S.dlg.lido = r;
+      const m = geoMetricas(r.pontos);
+      $("#gn-prev").innerHTML = `<div class="gn-res"><b>${r.pontos.length} pontos</b> · ${r.sistema === "utm" ? `UTM fuso ${r.fuso}S` : `geográficas → UTM fuso ${r.fuso}S`}${m ? ` · área <b>${mBR(m.areaHa, 4)} ha</b> · perímetro <b>${mBR(m.perimetro)} m</b>` : ""}${r.avisos.length ? ` · <span class="crit-t">${esc(r.avisos.slice(0, 3).join(", "))}${r.avisos.length > 3 ? "…" : ""}</span>` : ""}</div>
+        <div class="tab-wrap"><table class="gn-tab"><thead><tr><th><input type="checkbox" id="gn-todos" checked aria-label="Usar todos"></th><th>Vértice</th><th>E (m)</th><th>N (m)</th><th>h (m)</th><th>Latitude</th><th>Longitude</th></tr></thead>
+        <tbody>${r.pontos.map((p, i) => `<tr><td><input type="checkbox" class="gn-usa" data-i="${i}" checked></td><td>${esc(p.nome)}${p.cod ? ` <span class="sub">${esc(p.cod)}</span>` : ""}</td><td>${mBR(p.e, 3)}</td><td>${mBR(p.n, 3)}</td><td>${p.h != null ? mBR(p.h, 3) : "—"}</td><td>${p.lat.toFixed(7)}</td><td>${p.lng.toFixed(7)}</td></tr>`).join("")}</tbody></table></div>
+        <label class="chk" style="margin-top:8px"><input type="checkbox" id="gn-area" ${d.areaHa ? "" : "checked"}> Atualizar a área do processo com a área calculada</label>
+        <p class="sub" style="margin:6px 0 0">Os pontos marcados formam o perímetro, na ordem do arquivo. Desmarque pontos de apoio, base ou bordas que não são vértices do imóvel.</p>`;
+      $("#gn-salvar").disabled = false; $("#gn-st").textContent = "";
+    } catch (err) { S.dlg.lido = null; $("#gn-prev").innerHTML = `<p class="banner">${esc(err.message)}</p>`; $("#gn-salvar").disabled = true; }
+  };
+  $("#gn-arq").addEventListener("change", async e => { const f = e.target.files[0]; if (!f) return; $("#gn-txt").value = await f.text(); ler(); });
+  $("#gn-txt").addEventListener("input", () => { clearTimeout(S.dlg._t); S.dlg._t = setTimeout(ler, 300); });
+  $("#gn-fuso").addEventListener("change", ler);
+  dlg.querySelector(".dlg-b").addEventListener("change", e => { if (e.target.id === "gn-todos") dlg.querySelectorAll(".gn-usa").forEach(c => c.checked = e.target.checked); });
+  $("#gn-salvar").addEventListener("click", async () => {
+    const r = S.dlg.lido; if (!r) return;
+    const usa = [...dlg.querySelectorAll(".gn-usa:checked")].map(c => r.pontos[+c.dataset.i]);
+    if (usa.length < 3) { toast("Marque pelo menos 3 vértices para formar o perímetro."); return; }
+    const m = geoMetricas(usa);
+    const lat = usa.reduce((s, p) => s + p.lat, 0) / usa.length, lng = usa.reduce((s, p) => s + p.lng, 0) / usa.length;
+    const atual = S.demandas.find(x => x.id === id) || d;
+    const geo = {...(atual.geo || {}), vertices: usa, fuso: r.fuso, datum: "SIRGAS 2000", origem: "GNSS", importadoEm: agoraISO(),
+      poligono: usa.map(p => [+p.lat.toFixed(8), +p.lng.toFixed(8)]), lat: +lat.toFixed(6), lng: +lng.toFixed(6), areaHa: +m.areaHa.toFixed(4), perimetro: +m.perimetro.toFixed(2)};
+    const patch = {geo, historico: histAdd(atual, `importou ${usa.length} vértices do GNSS (área ${mBR(m.areaHa, 4)} ha)`), atualizadoEm: agoraISO()};
+    if ($("#gn-area")?.checked) patch.areaHa = +m.areaHa.toFixed(4);
+    try { await S.db.doc("demandas/" + id).update(patch); fecharDlg(); toast(`${usa.length} vértices importados`); } catch (err) { falhaEscrita(err); }
+  });
+}
+
+/* ---------- Memorial descritivo ---------- */
+function memorialDados(d){
+  const vv = verticesDe(d); if (!vv) return null;
+  const mem = d.geo?.memorial || {};
+  const [prop, imov] = (d.cliente || "").split(/\s+[—–]\s+/);
+  const mat = (String(d.imovel || "").match(/mat(?:r[íi]cula)?\.?\s*(?:n[ºo°]\.?\s*)?([\d.\-\/]+)/i) || [])[1] || "";
+  return {vv, m: geoMetricas(vv.vs), mem: {
+    imovel: mem.imovel ?? (imov || d.imovel || ""), proprietario: mem.proprietario ?? (prop || ""), documento: mem.documento ?? (d.documento || ""),
+    municipio: mem.municipio ?? (d.municipio || ""), comarca: mem.comarca ?? "", matricula: mem.matricula ?? mat, ccir: mem.ccir ?? "",
+    rt: mem.rt ?? (S.rtConfig?.nome || "Moisés Bruno"), rtRegistro: mem.rtRegistro ?? (S.rtConfig?.registro || ""), credenciamento: mem.credenciamento ?? (S.rtConfig?.credenciamento || ""),
+    conf: mem.conf || []}};
+}
+function confLados(md){ let ult = ""; return md.m.lados.map((_, i) => { const c = (md.mem.conf[i] || "").trim(); if (c) ult = c; return ult || "—"; }); }
+function memorialTexto(d, md){
+  const {vv, m, mem} = md; const conf = confLados(md); const vs = vv.vs;
+  const coord = v => `de coordenadas N ${mBR(v.n, 3)} m e E ${mBR(v.e, 3)} m`;
+  let t = `Inicia-se a descrição deste perímetro no vértice ${vs[0].nome}, ${coord(vs[0])}`;
+  m.lados.forEach((l, i) => {
+    if (i === 0 || conf[i] !== conf[i - 1]) t += `; deste, segue confrontando com ${conf[i]}, com os seguintes azimutes e distâncias: `;
+    else t += "; ";
+    const fim = i === m.lados.length - 1;
+    t += `${azDMS(l.az)} e ${mBR(l.dist)} m até o vértice ${l.ate.nome}${fim ? `, ponto inicial da descrição deste perímetro` : `, ${coord(l.ate)}`}`;
+  });
+  t += `. Todas as coordenadas aqui descritas estão georreferenciadas ao Sistema Geodésico Brasileiro e encontram-se representadas no Sistema UTM, referenciadas ao Meridiano Central ${UTM.mc(vv.fuso)}° WGr, fuso ${vv.fuso} Sul, tendo como datum o SIRGAS 2000. Todos os azimutes e distâncias, área e perímetro foram calculados no plano de projeção UTM.`;
+  return t;
+}
+function memorialHtml(d, md){
+  const {vv, m, mem} = md; const conf = confLados(md);
+  const lin = (k, v) => v ? `<tr><td>${k}</td><td>${esc(v)}</td></tr>` : "";
+  return `<div class="doc-memo">
+    <div class="rc-top">${logoSrc() ? `<img src="${logoSrc()}" alt="Saotech Geotecnologia">` : "<b>SAOTECH GEOTECNOLOGIA</b>"}<div><div class="rc-t">MEMORIAL DESCRITIVO</div><div class="rc-n">${esc(d.codigo)} · ${new Date().toLocaleDateString("pt-BR")}</div></div></div>
+    <table class="rc-tab memo-cab">${lin("Imóvel", mem.imovel)}${lin("Proprietário(s)", mem.proprietario)}${lin("CPF/CNPJ", mem.documento)}${lin("Município/UF", mem.municipio)}${lin("Comarca", mem.comarca)}${lin("Matrícula", mem.matricula)}${lin("Código do imóvel (CCIR/SNCR)", mem.ccir)}
+      <tr><td>Área</td><td><b>${mBR(m.areaHa, 4)} ha</b> (${mBR(m.areaM2)} m²)</td></tr><tr><td>Perímetro</td><td><b>${mBR(m.perimetro)} m</b></td></tr>
+      <tr><td>Sistema</td><td>UTM · SIRGAS 2000 · fuso ${vv.fuso}S · MC ${UTM.mc(vv.fuso)}°</td></tr></table>
+    <h4>Descrição do perímetro</h4>
+    <p class="memo-txt">${esc(memorialTexto(d, md))}</p>
+    <h4>Tabela de vértices, azimutes e distâncias</h4>
+    <table class="vert"><thead><tr><th>De</th><th>Para</th><th>N (m)</th><th>E (m)</th><th>Azimute</th><th>Distância (m)</th><th>Confrontante</th></tr></thead>
+      <tbody>${m.lados.map((l, i) => `<tr><td>${esc(l.de.nome)}</td><td>${esc(l.ate.nome)}</td><td>${mBR(l.de.n, 3)}</td><td>${mBR(l.de.e, 3)}</td><td>${azDMS(l.az)}</td><td>${mBR(l.dist)}</td><td>${esc(conf[i])}</td></tr>`).join("")}</tbody></table>
+    <div class="rc-ass"><div class="rc-linha"></div><b>${esc(mem.rt)}</b><span>Responsável técnico${mem.rtRegistro ? " · " + esc(mem.rtRegistro) : ""}${mem.credenciamento ? " · Credenciamento INCRA " + esc(mem.credenciamento) : ""}</span></div>
+  </div>`;
+}
+function abrirMemorial(id){
+  const d = S.demandas.find(x => x.id === id); if (!d) return;
+  const md = memorialDados(d); if (!md) { toast("Importe os pontos do GNSS ou o perímetro (KML) primeiro."); return; }
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "memorial", id, unsubs: [], md};
+  const conf0 = (d.vinculos || []).filter(v => v.rel === "Confrontante").map(v => S.demandas.find(x => x.id === v.id)?.cliente).filter(Boolean);
+  const dlg = $("#dlg"); dlg.className = "big";
+  const campo = (k, rot, span = 3) => `<label class="f span${span}">${rot}<input data-mm="${k}" value="${esc(md.mem[k] || "")}"></label>`;
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">${esc(d.codigo)} · rascunho para conferência</span><h2 style="font-size:19px">Memorial descritivo</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+    <div class="dlg-b">
+      ${md.vv.doKml ? `<p class="banner" style="margin-top:0">Vértices vindos do perímetro KML (sem nomes do GNSS). Para o memorial definitivo, importe o arquivo do GNSS com os códigos dos vértices.</p>` : ""}
+      <div class="memo-res"><span><b>${mBR(md.m.areaHa, 4)} ha</b> área</span><span><b>${mBR(md.m.perimetro)} m</b> perímetro</span><span><b>${md.vv.vs.length}</b> vértices</span><span>UTM ${md.vv.fuso}S · SIRGAS 2000</span></div>
+      <div class="fgrid" style="margin-top:12px">${campo("imovel", "Denominação do imóvel")}${campo("proprietario", "Proprietário(s)")}${campo("documento", "CPF/CNPJ", 2)}${campo("municipio", "Município/UF", 2)}${campo("comarca", "Comarca", 2)}${campo("matricula", "Matrícula", 2)}${campo("ccir", "Código do imóvel (CCIR/SNCR)", 2)}${campo("credenciamento", "Credenciamento INCRA", 2)}${campo("rt", "Responsável técnico")}${campo("rtRegistro", "Registro profissional (CFT/CREA)")}</div>
+      <div class="label" style="margin:14px 0 6px">Confrontantes por lado <span class="sub" style="text-transform:none;letter-spacing:0">(em branco = mesmo do lado anterior)</span></div>
+      <datalist id="mm-conf">${conf0.map(c => `<option value="${esc(c)}">`).join("")}<option value="Estrada municipal"><option value="Córrego"><option value="Rio"><option value="Rodovia"></datalist>
+      <div class="tab-wrap"><table class="gn-tab mm-lados"><thead><tr><th>Lado</th><th>Azimute</th><th>Distância</th><th>Confronta com</th></tr></thead><tbody>
+        ${md.m.lados.map((l, i) => `<tr><td>${esc(l.de.nome)} → ${esc(l.ate.nome)}</td><td>${azDMS(l.az)}</td><td>${mBR(l.dist)} m</td><td><input data-mmc="${i}" list="mm-conf" value="${esc(md.mem.conf[i] || "")}" placeholder="${i ? "mesmo do anterior" : "nome do confrontante / matrícula"}"></td></tr>`).join("")}
+      </tbody></table></div>
+      <div class="label" style="margin:14px 0 6px">Prévia do texto</div>
+      <p class="memo-prev" id="mm-prev">${esc(memorialTexto(d, md))}</p>
+      <p class="sub">Cálculos no plano UTM, como pedem os cartórios. O SIGEF gera o memorial oficial (com valores geodésicos) após a certificação; use este rascunho para registro, CAR, desmembramentos e conferência.</p>
+    </div>
+    <div class="dlg-f"><span class="sub" id="mm-st"></span><div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button type="button" class="btn" id="mm-copiar">Copiar texto</button><button type="button" class="btn" id="mm-word">Baixar Word</button><button type="button" class="btn" id="mm-pdf">PDF</button><button type="button" class="btn primary" id="mm-salvar" ${S.somenteLeitura ? "disabled" : ""}>Salvar</button></div></div>`;
+  if (!dlg.open) dlg.showModal();
+  const atualizar = () => {
+    dlg.querySelectorAll("[data-mm]").forEach(i => md.mem[i.dataset.mm] = i.value.trim());
+    dlg.querySelectorAll("[data-mmc]").forEach(i => md.mem.conf[+i.dataset.mmc] = i.value.trim());
+    $("#mm-prev").textContent = memorialTexto(d, md);
+  };
+  dlg.querySelector(".dlg-b").addEventListener("input", () => { clearTimeout(S.dlg._t); S.dlg._t = setTimeout(atualizar, 200); });
+  const nomeArq = `memorial-${(d.codigo || "").toLowerCase()}`;
+  $("#mm-copiar").addEventListener("click", async () => { atualizar(); try { await navigator.clipboard.writeText(memorialTexto(d, md)); toast("Texto do memorial copiado"); } catch { toast("Não foi possível copiar"); } });
+  $("#mm-word").addEventListener("click", () => { atualizar(); const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><style>${window.SaotechDoc.CSS}</style></head><body>${memorialHtml(d, md)}</body></html>`; baixarBlob(new Blob(["﻿" + html], {type: "application/msword"}), nomeArq + ".doc"); });
+  $("#mm-pdf").addEventListener("click", () => { atualizar(); window.SaotechDoc.imprimir("Memorial " + d.codigo, memorialHtml(d, md)); });
+  $("#mm-salvar").addEventListener("click", async () => {
+    atualizar(); const atual = S.demandas.find(x => x.id === id) || d;
+    try {
+      await S.db.doc("demandas/" + id).update({geo: {...(atual.geo || {}), memorial: {...md.mem}}, historico: histAdd(atual, "atualizou os dados do memorial descritivo")});
+      if (md.mem.rt && (md.mem.rt !== S.rtConfig?.nome || md.mem.rtRegistro !== S.rtConfig?.registro || md.mem.credenciamento !== S.rtConfig?.credenciamento)) S.db.doc("config/rt").set({nome: md.mem.rt, registro: md.mem.rtRegistro, credenciamento: md.mem.credenciamento}).catch(() => {});
+      $("#mm-st").textContent = "Salvo"; toast("Memorial salvo");
+    } catch (err) { falhaEscrita(err); }
+  });
+}
+function baixarVertices(id, fmt){
+  const d = S.demandas.find(x => x.id === id); const vv = d && verticesDe(d); if (!vv) return;
+  const nome = (d.codigo || "imovel").toLowerCase();
+  if (fmt === "csv") {
+    const linhas = ["Vertice;E;N;h;Latitude;Longitude", ...vv.vs.map(v => [v.nome, mBR(v.e, 3).replace(/\./g, ""), mBR(v.n, 3).replace(/\./g, ""), v.h != null ? String(v.h).replace(".", ",") : "", String(v.lat).replace(".", ","), String(v.lng).replace(".", ",")].join(";"))];
+    baixarBlob(new Blob(["﻿" + linhas.join("\r\n")], {type: "text/csv;charset=utf-8"}), `vertices-${nome}.csv`);
+  } else {
+    const coords = [...vv.vs, vv.vs[0]].map(v => `${v.lng},${v.lat},0`).join(" ");
+    const kml = `<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>${esc(d.cliente)}</name>
+<Style id="p"><LineStyle><color>ff5ae1d9</color><width>2</width></LineStyle><PolyStyle><color>335ae1d9</color></PolyStyle></Style>
+<Placemark><name>${esc(d.codigo)} · perímetro</name><styleUrl>#p</styleUrl><Polygon><outerBoundaryIs><LinearRing><coordinates>${coords}</coordinates></LinearRing></outerBoundaryIs></Polygon></Placemark>
+${vv.vs.map(v => `<Placemark><name>${esc(v.nome)}</name><Point><coordinates>${v.lng},${v.lat},0</coordinates></Point></Placemark>`).join("\n")}
+</Document></kml>`;
+    baixarBlob(new Blob([kml], {type: "application/vnd.google-earth.kml+xml"}), `perimetro-${nome}.kml`);
+  }
+}
+
+/* ---------- Camadas oficiais (WMS) e consulta de sobreposição ---------- */
+const UF_CAMADAS = () => ls.get("sao.ufCamadas", "es");
+function camadasOficiais(L, m){
+  const uf = UF_CAMADAS();
+  const wms = (url, layer, attr) => L.tileLayer.wms(url, {layers: layer, format: "image/png", transparent: true, version: "1.1.1", opacity: .75, maxZoom: 19, attribution: attr});
+  const ov = {
+    "SIGEF · imóveis certificados": wms(`https://acervofundiario.incra.gov.br/i3geo/ogc.php?tema=certificada_sigef_particular_${uf}`, `certificada_sigef_particular_${uf}`, "INCRA/SIGEF"),
+    "SNCI · certificados antigos": wms(`https://acervofundiario.incra.gov.br/i3geo/ogc.php?tema=imoveiscertificados_privado_${uf}`, `imoveiscertificados_privado_${uf}`, "INCRA/SNCI"),
+    "CAR · imóveis (SICAR)": wms("https://geoserver.car.gov.br/geoserver/sicar/wms", `sicar:sicar_imoveis_${uf}`, "SICAR")
+  };
+  const ativas = ls.get("sao.camadas", []);
+  for (const [nome, lyr] of Object.entries(ov)) {
+    if (ativas.includes(nome)) lyr.addTo(m);
+    if (/INCRA/.test(lyr.options.attribution)) { let erros = 0; lyr.on("tileerror", () => { if (++erros === 4 && !S._avisoIncra) { S._avisoIncra = true; toast("O servidor do INCRA (SIGEF/SNCI) não está respondendo agora. Tente mais tarde ou consulte em sigef.incra.gov.br."); } }); }
+  }
+  m.on("overlayadd overlayremove", e => { const set = new Set(ls.get("sao.camadas", [])); e.type === "overlayadd" ? set.add(e.name) : set.delete(e.name); ls.set("sao.camadas", [...set]); });
+  return ov;
+}
+let turfP = null;
+const carregarTurf = () => turfP || (turfP = new Promise((ok, falha) => { if (window.turf) return ok(window.turf); const s = document.createElement("script"); s.src = "https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"; s.onload = () => ok(window.turf); s.onerror = () => { turfP = null; falha(new Error("biblioteca de geometria indisponível")); }; document.head.appendChild(s); }));
+async function consultarSobreposicao(id, btn){
+  const d = S.demandas.find(x => x.id === id); const vv = d && verticesDe(d); if (!vv) return;
+  btn.disabled = true; const txt0 = btn.textContent; btn.textContent = "Consultando bases oficiais…";
+  try {
+    const turf = await carregarTurf();
+    const anel = [...vv.vs, vv.vs[0]].map(v => [v.lng, v.lat]);
+    const meu = turf.polygon([anel]); const meuM2 = turf.area(meu);
+    const [x1, y1, x2, y2] = turf.bbox(meu); const mg = 0.004;
+    const bbox = [x1 - mg, y1 - mg, x2 + mg, y2 + mg];
+    const uf = UF_CAMADAS(); const itens = [], feats = [], falhas = [];
+    for (const fonte of ["car", "sigef", "snci"]) {
+      let r; try { r = await S.user.geoConsulta(fonte, uf, bbox); } catch (e) { falhas.push(`${fonte.toUpperCase()}: ${e.message || e}`); continue; }
+      if (r?.erro && !(r.features || []).length) { falhas.push(`${fonte.toUpperCase()}: ${r.erro}`); continue; }
+      for (const f of r.features || []) {
+        if (!f.geometry) continue;
+        let inter = 0; try { const x = turf.intersect(meu, f); inter = x ? turf.area(x) : 0; } catch {}
+        const toque = (() => { try { return turf.booleanIntersects(meu, f); } catch { return false; } })();
+        const p = f.properties || {};
+        const cod = p.cod_imovel || p.codigo_imo || p.parcela_co || p.cod_imovel_ || p.nome_area || p.codigo || f.id || "";
+        const area = p.area || p.num_area || p.area_ha || (turf.area(f) / 10000);
+        itens.push({fonte, cod: String(cod), nome: p.nome_area || p.denominaca || p.nome || "", area: +Number(area).toFixed(4), sobrepM2: +inter.toFixed(1), pct: meuM2 ? +(inter / meuM2 * 100).toFixed(2) : 0, vizinho: toque, municipio: p.municipio || "", condicao: p.condicao || p.situacao_i || p.status_imovel || ""});
+        feats.push({...f, properties: {...p, _fonte: fonte, _sobrep: inter}});
+      }
+    }
+    itens.sort((a, b) => b.sobrepM2 - a.sobrepM2 || (b.vizinho - a.vizinho));
+    S.geoViz = {...(S.geoViz || {}), [id]: {em: agoraISO(), fc: {type: "FeatureCollection", features: feats}}};
+    const consulta = {em: agoraISO(), por: S.me, uf, itens: itens.slice(0, 40), falhas};
+    const atual = S.demandas.find(x => x.id === id) || d;
+    const sob = itens.filter(i => i.sobrepM2 > 1);
+    await S.db.doc("demandas/" + id).update({geo: {...(atual.geo || {}), consulta}, historico: histAdd(atual, `consultou CAR/SIGEF: ${sob.length ? sob.length + " sobreposição(ões)" : "sem sobreposição"}, ${itens.filter(i => i.vizinho && i.sobrepM2 <= 1).length} vizinho(s)`)});
+    toast(sob.length ? `Atenção: ${sob.length} sobreposição(ões) encontrada(s)` : "Nenhuma sobreposição encontrada");
+  } catch (err) { toast("Não foi possível consultar: " + (err.message || err)); }
+  btn.disabled = false; btn.textContent = txt0;
+}
+function consultaHtml(d){
+  const c = d.geo?.consulta; if (!c) return "";
+  const nomeF = {car: "CAR", sigef: "SIGEF", snci: "SNCI"};
+  const sob = c.itens.filter(i => i.sobrepM2 > 1), viz = c.itens.filter(i => i.sobrepM2 <= 1 && i.vizinho);
+  return `<div class="geo-consulta"><div class="label">Consulta às bases oficiais · ${fmtQuando(c.em)}</div>
+    ${sob.length ? sob.map(i => `<div class="gc-it crit"><span class="chip">${nomeF[i.fonte]}</span><span class="grow"><b>Sobreposição de ${mBR(i.sobrepM2 / 10000, 4)} ha (${mBR(i.pct)}%)</b><span class="sub">${esc(i.cod)}${i.nome ? " · " + esc(i.nome) : ""}${i.condicao ? " · " + esc(i.condicao) : ""}</span></span></div>`).join("") : `<div class="gc-it ok"><b>Sem sobreposição</b> com imóveis encontrados no CAR${c.falhas?.some(f => /SIGEF/.test(f)) ? "" : ", SIGEF"}${c.falhas?.some(f => /SNCI/.test(f)) ? "" : " e SNCI"}.</div>`}
+    ${viz.length ? `<details><summary>${viz.length} imóvel(is) vizinho(s) encontrado(s)</summary>${viz.map(i => `<div class="gc-it"><span class="chip">${nomeF[i.fonte]}</span><span class="grow">${esc(i.cod)}${i.nome ? " · " + esc(i.nome) : ""}<span class="sub">${i.area ? mBR(i.area, 2) + " ha" : ""}${i.condicao ? " · " + esc(i.condicao) : ""}</span></span></div>`).join("")}</details>` : ""}
+    ${c.falhas?.length ? `<p class="sub" style="margin:6px 0 0">Não consultado: ${esc(c.falhas.join(" · "))}</p>` : ""}
+  </div>`;
+}
+
+/* ---------- Integração com o cartão de localização e o mapa ---------- */
+const _geoCardHtmlAlt = geoCardHtml;
+geoCardHtml = function(d){
+  const base = _geoCardHtmlAlt(d);
+  const vv = verticesDe(d); const m = vv && geoMetricas(vv.vs); const ed = !S.somenteLeitura;
+  const extra = `<div class="geo-gnss">
+      ${m ? `<div class="memo-res"><span><b>${mBR(m.areaHa, 4)} ha</b> área calculada</span><span><b>${mBR(m.perimetro)} m</b> perímetro</span><span><b>${vv.vs.length}</b> vértices${d.geo?.origem === "GNSS" ? " do GNSS" : ""}</span>${d.areaHa && Math.abs(d.areaHa - m.areaHa) / m.areaHa > 0.02 ? `<span class="crit-t">área do cadastro: ${mBR(d.areaHa, 4)} ha</span>` : ""}</div>` : ""}
+      <div class="geo-acts">
+        ${ed ? `<button type="button" class="btn sm primary" data-gnss="${d.id}">Importar pontos do GNSS</button>` : ""}
+        ${m ? `<button type="button" class="btn sm lima" data-memorial="${d.id}">Memorial descritivo</button>
+          <button type="button" class="btn sm" data-sobrep="${d.id}">Verificar sobreposição (CAR/SIGEF)</button>
+          <button type="button" class="btn sm ghost" data-vert="${d.id}|csv">Vértices .csv</button><button type="button" class="btn sm ghost" data-vert="${d.id}|kml">Perímetro .kml</button>` : ""}
+      </div>${consultaHtml(d)}
+      <label class="uf-sel sub">Camadas oficiais do mapa (SIGEF, SNCI, CAR) do estado <select id="uf-camadas">${"ac al am ap ba ce df es go ma mg ms mt pa pb pe pi pr rj rn ro rr rs sc se sp to".split(" ").map(u => `<option value="${u}" ${UF_CAMADAS() === u ? "selected" : ""}>${u.toUpperCase()}</option>`).join("")}</select> · ative no botão de camadas do mapa</label></div>`;
+  return base.replace(/<\/div>\s*$/, extra + "</div>");
+};
+document.addEventListener("click", e => {
+  const g = e.target.closest("[data-gnss]"); if (g) { e.stopPropagation(); abrirImportGNSS(g.dataset.gnss); return; }
+  const mm = e.target.closest("[data-memorial]"); if (mm) { e.stopPropagation(); abrirMemorial(mm.dataset.memorial); return; }
+  const sp = e.target.closest("[data-sobrep]"); if (sp) { e.stopPropagation(); consultarSobreposicao(sp.dataset.sobrep, sp); return; }
+  const vt = e.target.closest("[data-vert]"); if (vt) { e.stopPropagation(); const [id, f] = vt.dataset.vert.split("|"); baixarVertices(id, f); return; }
+}, true);
+document.addEventListener("change", e => { if (e.target.id === "uf-camadas") { ls.set("sao.ufCamadas", e.target.value); Object.keys(mapas).filter(k => k.startsWith("_")).forEach(k => delete mapas[k]); render(); } });
+
+/* ---------- Google Agenda ---------- */
+const urlAgenda = tok => `${String(window.SAOTECH_CONFIG?.supabaseUrl || "").replace(/\/+$/, "")}/functions/v1/agenda-ics?t=${tok}`;
+async function abrirGoogleAgenda(){
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "gagenda", unsubs: []};
+  const dlg = $("#dlg"); dlg.className = "";
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">Sincronização</span><h2 style="font-size:19px">Agenda no Google Agenda</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+    <div class="dlg-b" id="ga-b"><p class="muted">Gerando seu link pessoal…</p></div>
+    <div class="dlg-f"><button type="button" class="btn ghost" id="ga-novo" title="Use se o link vazou: o antigo para de funcionar">Gerar novo link</button><button type="button" class="btn" data-close>Fechar</button></div>`;
+  if (!dlg.open) dlg.showModal();
+  const montar = async novo => {
+    try {
+      const tok = await S.user.linkAgenda(novo); const url = urlAgenda(tok);
+      $("#ga-b").innerHTML = `<p style="margin-top:0">Assine sua agenda da Saotech no Google Agenda: suas saídas de campo, reuniões e os prazos das suas demandas aparecem lá, com lembrete no celular.</p>
+        <label class="f">Seu link pessoal (não compartilhe)<div class="ga-link"><input id="ga-url" readonly value="${esc(url)}"><button type="button" class="btn sm primary" id="ga-copiar">Copiar</button></div></label>
+        <ol class="ga-passos"><li>Toque em <b>Copiar</b>.</li><li>Abra o <a href="https://calendar.google.com/calendar/u/0/r/settings/addbyurl" target="_blank" rel="noopener">Google Agenda → Adicionar agenda → Por URL</a> (pelo computador).</li><li>Cole o link e confirme. Pronto: a agenda "Saotech" aparece também no celular.</li></ol>
+        <p class="sub">iPhone/Outlook: <a href="${esc(url.replace(/^https:/, "webcal:"))}">toque aqui para assinar</a>. O Google atualiza agendas assinadas a cada algumas horas; para algo urgente, use o botão "Google Agenda" dentro do compromisso.</p>`;
+      $("#ga-copiar").addEventListener("click", async () => { try { await navigator.clipboard.writeText(url); toast("Link copiado"); } catch { $("#ga-url").select(); } });
+    } catch (err) { $("#ga-b").innerHTML = `<p class="banner">Não foi possível gerar o link: ${esc(err.message || "")}</p>`; }
+  };
+  montar(false);
+  $("#ga-novo").addEventListener("click", e => { if (e.target.dataset.ok !== "1") { e.target.dataset.ok = "1"; e.target.textContent = "Confirmar: o link antigo para de funcionar"; return; } e.target.dataset.ok = ""; e.target.textContent = "Gerar novo link"; montar(true); });
+}
+function gcalLink(a){
+  const d = S.demandas.find(x => x.id === a.demandaId);
+  const tit = (a.titulo || a.tipo || "Compromisso") + (d ? " · " + d.cliente.split(/\s+[—–]\s+/)[0] : "");
+  const fmt = (dia, hh) => dia.replace(/-/g, "") + (hh ? "T" + hh.replace(":", "").padEnd(4, "0") + "00" : "");
+  let datas;
+  if (a.inicio && prazoEv(a) <= a.data) { const [h, mi] = a.inicio.split(":").map(Number); const fimMin = h * 60 + mi + (/reuni/i.test(a.tipo) ? 60 : 120); datas = `${fmt(a.data, a.inicio)}/${fmt(a.data, String(Math.floor(fimMin / 60) % 24).padStart(2, "0") + ":" + String(fimMin % 60).padStart(2, "0"))}`; }
+  else datas = `${fmt(a.data)}/${fmt(addDias(prazoEv(a), 1))}`;
+  const det = [a.tipo, d ? `${d.codigo} · ${d.cliente}` : "", d?.contato ? "Contato: " + d.contato : "", a.obs || ""].filter(Boolean).join("\n");
+  const conv = (a.pessoas || []).map(p => S.config?.emails?.[p]).filter(Boolean).join(",");
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(tit)}&dates=${datas}&ctz=America/Sao_Paulo&details=${encodeURIComponent(det)}&location=${encodeURIComponent(a.local || d?.municipio || "")}${conv ? "&add=" + encodeURIComponent(conv) : ""}`;
+}
+const _abrirEventoAlt = abrirEvento;
+abrirEvento = function(id, dataPadrao){
+  _abrirEventoAlt(id, dataPadrao);
+  const a = id && S.agenda.find(x => x.id === id); const f = $("#dlg .dlg-f");
+  if (a && f && !f.querySelector(".gcal-btn")) f.insertAdjacentHTML("afterbegin", `<a class="btn sm gcal-btn" href="${esc(gcalLink(a))}" target="_blank" rel="noopener">Google Agenda</a>`);
+};
+const _viewAgendaAlt = viewAgenda;
+viewAgenda = function(){ return _viewAgendaAlt().replace(/(<button class="btn sm" data-sem="7">Próxima ›<\/button>)/, `$1<button type="button" class="btn sm lima" data-gagenda>Sincronizar com Google Agenda</button>`); };
+document.addEventListener("click", e => { if (e.target.closest("[data-gagenda]")) abrirGoogleAgenda(); });
+
+/* ---------- Pix ---------- */
+S.pix = null;
+const pixAtivo = () => S.pix?.ativo && S.pix?.chave;
+const pixCodigo = (d, p) => window.SaotechPix.payload({chave: S.pix.chave, tipo: S.pix.tipo, nome: S.pix.nome, cidade: S.pix.cidade, valor: p.valor, txid: ((d.codigo || "").replace(/\W/g, "") + (p.n != null ? "P" + p.n : "")).slice(0, 25)});
+function pixConfigHtml(){
+  const p = S.pix || {};
+  return `<div class="card pix-card"><div class="card-h"><div><span class="label">Recebimento</span><h3>Pix nos recibos e no portal</h3></div>${pixAtivo() ? `<span class="chip ok">ativo</span>` : `<span class="chip">desligado</span>`}</div>
+    <form id="fPix" class="fgrid">
+      <label class="f span2">Tipo de chave<select name="tipo">${[["documento", "CPF/CNPJ"], ["telefone", "Celular"], ["email", "E-mail"], ["aleatoria", "Chave aleatória"]].map(([v, t]) => `<option value="${v}" ${p.tipo === v ? "selected" : ""}>${t}</option>`).join("")}</select></label>
+      <label class="f span4">Chave Pix<input name="chave" value="${esc(p.chave || "")}" required placeholder="CNPJ da Saotech, celular, e-mail…"></label>
+      <label class="f span3">Nome do recebedor (como no banco)<input name="nome" value="${esc(p.nome || "Saotech Geotecnologia")}" maxlength="25"></label>
+      <label class="f span2">Cidade<input name="cidade" value="${esc(p.cidade || "Viana")}" maxlength="15"></label>
+      <label class="chk span1" style="align-self:end"><input type="checkbox" name="ativo" ${p.ativo ? "checked" : ""}> Ativo</label>
+      <div class="span6" style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><span class="sub">Com o Pix ativo, cada parcela em aberto ganha QR Code e "copia e cola" no portal do cliente e na cobrança por WhatsApp. Sem taxas: o dinheiro cai direto na conta.</span><button class="btn primary">Salvar Pix</button></div>
+    </form></div>`;
+}
+function abrirPix(id, pid){
+  const d = S.demandas.find(x => x.id === id); const p = (S.fin[id]?.parcelas || []).find(x => x.id === pid);
+  if (!d || !p || !pixAtivo()) return;
+  const cod = pixCodigo(d, p);
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "pix", unsubs: []};
+  const dlg = $("#dlg"); dlg.className = "";
+  const tel = telefone(d.contato); const nome = (d.cliente || "").split(/\s+[—–]\s+/)[0].split(" ")[0];
+  const msg = `Olá, ${nome}! Segue o Pix da ${p.rotulo.toLowerCase()} (${brl(p.valor)}${p.vencimento ? ", vencimento " + fmtData(p.vencimento) : ""}) referente ao processo ${d.codigo}.\n\nPix copia e cola:\n${cod}\n\nDepois de pagar, é só enviar o comprovante por aqui ou pelo portal. Obrigado!`;
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">${esc(d.codigo)} · ${esc(p.rotulo)}</span><h2 style="font-size:19px">Pix de ${brl(p.valor)}</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+    <div class="dlg-b pix-box"><div class="pix-qr" data-pixqr="${esc(cod)}"><p class="sub">Gerando QR Code…</p></div>
+      <label class="f">Pix copia e cola<textarea readonly rows="3" id="pix-cod">${esc(cod)}</textarea></label>
+      <p class="sub">Recebedor: ${esc(S.pix.nome)} · chave ${esc(S.pix.chave)}</p></div>
+    <div class="dlg-f"><span></span><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn" id="pix-copiar">Copiar código</button>${tel ? `<a class="btn lima" href="https://wa.me/${tel}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">Enviar pelo WhatsApp</a>` : ""}<button type="button" class="btn" data-close>Fechar</button></div></div>`;
+  if (!dlg.open) dlg.showModal();
+  window.SaotechPix.preencherQR(dlg);
+  $("#pix-copiar").addEventListener("click", async () => { try { await navigator.clipboard.writeText(cod); toast("Código Pix copiado"); } catch { $("#pix-cod").select(); } });
+}
+const _parcelaRowHtmlAlt = parcelaRowHtml;
+parcelaRowHtml = function(id, p){
+  const h = _parcelaRowHtmlAlt(id, p);
+  if (p.pago || !pixAtivo()) return h;
+  return h.replace(`<div class="acts">`, `<div class="acts"><button type="button" class="btn sm" data-pix="${id}|${p.id}">Pix</button>`);
+};
+const _cobrarWaAlt = cobrarWa;
+cobrarWa = function(d, p){
+  const u = _cobrarWaAlt(d, p); if (!pixAtivo() || !p || p.pago) return u;
+  const [base, q] = u.split("?text="); const txt = decodeURIComponent(q || "") + `\n\nPix copia e cola (${brl(p.valor)}):\n${pixCodigo(d, p)}`;
+  return `${base}?text=${encodeURIComponent(txt)}`;
+};
+document.addEventListener("click", e => { const b = e.target.closest("[data-pix]"); if (!b) return; e.stopPropagation(); const [id, pid] = b.dataset.pix.split("|"); abrirPix(id, pid); }, true);
+document.addEventListener("submit", async e => {
+  if (e.target.id !== "fPix") return; e.preventDefault();
+  const f = e.target; const v = {tipo: f.tipo.value, chave: f.chave.value.trim(), nome: f.nome.value.trim(), cidade: f.cidade.value.trim(), ativo: f.ativo.checked, atualizadoEm: agoraISO(), atualizadoPor: S.me};
+  if (v.tipo === "documento" && !validarDocs(v.chave).ok) { toast("CPF/CNPJ da chave Pix inválido"); return; }
+  try { await S.db.doc("data/fin/config/pix").set(v); toast("Pix salvo"); } catch (err) { falhaEscrita(err); }
+});
+
+/* ---------- Proposta comercial com aceite online ---------- */
+const STATUS_PROP = {rascunho: ["Rascunho", ""], enviada: ["Aguardando o cliente", "warn"], aceita: ["Aceita", "ok"], recusada: ["Pediu ajuste", "crit"]};
+const INCLUI_PADRAO = {
+  "Georreferenciamento SIGEF": "Levantamento de campo com GNSS RTK/estático; processamento e ajustamento; planta e memorial descritivo; planilha ODS e certificação no SIGEF/INCRA.",
+  "CAR": "Levantamento das áreas (APP, reserva legal, uso do solo); elaboração e envio do Cadastro Ambiental Rural; recibo de inscrição.",
+  "Levantamento topográfico": "Levantamento planialtimétrico; processamento; planta topográfica em DWG/PDF."
+};
+function propostaCardHtml(d){
+  if (!S.podeFin) return "";
+  const f = S.fin[d.id] || {}; const pr = f.proposta;
+  if (!pr) return d.etapa === "Orçamento" || !(f.parcelas || []).length ? `<div class="card prop-card"><div class="card-h"><div><span class="label">Comercial</span><h3>Proposta</h3></div><button type="button" class="btn sm primary" data-proposta="${d.id}">Criar proposta</button></div><p class="sub" style="margin:0">Monte a proposta, gere o PDF e envie para o cliente aceitar pelo portal. O aceite move o processo para "Aguardando entrada".</p></div>` : "";
+  const [st, cls] = STATUS_PROP[pr.status] || ["", ""];
+  const acesso = acessoDe(d.id);
+  return `<div class="card prop-card"><div class="card-h"><div><span class="label">Proposta ${esc(pr.numero || "")}</span><h3>${brl(pr.total)}</h3></div><span class="chip ${cls}">${st}</span></div>
+    ${pr.status === "aceita" && pr.aceite ? `<p class="sub" style="margin:0 0 8px">Aceita por <b>${esc(pr.aceite.nome)}</b> em ${fmtQuando(pr.aceite.em)}${pr.aceite.ip ? " · IP " + esc(pr.aceite.ip) : ""}.</p>` : ""}
+    ${pr.status === "recusada" && pr.recusa ? `<p class="sub" style="margin:0 0 8px">Cliente pediu ajuste em ${fmtQuando(pr.recusa.em)}: “${esc(pr.recusa.motivo || "")}”</p>` : ""}
+    ${pr.status === "enviada" ? `<p class="sub" style="margin:0 0 8px">Enviada em ${fmtQuando(pr.enviadaEm)}${pr.validade ? ` · válida até ${fmtData(pr.validade)}` : ""}.${acesso ? "" : " O cliente ainda não tem acesso ao portal."}</p>` : ""}
+    <div class="acts" style="display:flex;gap:6px;flex-wrap:wrap">
+      <button type="button" class="btn sm" data-propostapdf="${d.id}">PDF</button>
+      <button type="button" class="btn sm" data-proposta="${d.id}">${pr.status === "rascunho" ? "Editar" : "Nova versão"}</button>
+      ${pr.status === "rascunho" && acesso ? `<button type="button" class="btn sm primary" data-propenviar="${d.id}">Enviar ao portal</button>` : ""}
+      ${pr.status === "aceita" && !(f.parcelas || []).length ? `<button type="button" class="btn sm lima" data-propcontrato="${d.id}">Gerar contrato e parcelas</button>` : ""}
+    </div></div>`;
+}
+function abrirProposta(id){
+  const d = S.demandas.find(x => x.id === id); if (!d || !S.podeFin) return;
+  const f = S.fin[id] || {}; const ant = f.proposta;
+  const nova = !ant || ant.status !== "rascunho";
+  const n = (f.propostasAnteriores || []).length + (ant ? (nova ? 2 : 1) : 1);
+  const pr = nova ? {
+    numero: `${(d.codigo || "").replace("SAO-", "")}-P${n}`, status: "rascunho", criadaEm: agoraISO(),
+    itens: ant?.itens?.map(i => ({...i})) || (d.servicos?.length ? d.servicos : ["Serviço técnico"]).map(s => ({desc: s, valor: null})),
+    apresentacao: ant?.apresentacao ?? `Atendendo à sua solicitação, apresentamos a proposta para os serviços técnicos abaixo${d.imovel || (d.cliente || "").includes("—") ? ` no imóvel ${(d.imovel || d.cliente.split(/\s+[—–]\s+/)[1])}` : ""}.`,
+    inclui: ant?.inclui ?? (d.servicos || []).map(s => INCLUI_PADRAO[s]).filter(Boolean).join("\n"),
+    pagamento: {...(ant?.pagamento || {modo: "Entrada + parcelas", entrada: null, n: 2})}, prazoDias: ant?.prazoDias ?? 60, validade: addDias(hoje(), 15), obs: ant?.obs ?? "Não inclui taxas de cartório, ITR, CCIR e emolumentos de órgãos públicos."
+  } : JSON.parse(JSON.stringify(ant));
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "proposta", id, unsubs: [], pr};
+  const dlg = $("#dlg"); dlg.className = "big";
+  const itensHtml = () => pr.itens.map((i, k) => `<div class="prop-item"><textarea data-pi="${k}" data-pk="desc" rows="2" aria-label="Descrição">${esc(i.desc)}</textarea><input data-pi="${k}" data-pk="valor" inputmode="decimal" placeholder="0,00" value="${esc(fmtNum(i.valor))}" aria-label="Valor"><button type="button" class="btn sm ghost" data-pirm="${k}" aria-label="Remover item">✕</button></div>`).join("");
+  const total = () => Math.round(pr.itens.reduce((s, i) => s + (i.valor || 0), 0) * 100) / 100;
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">${esc(d.codigo)} · proposta ${esc(pr.numero)}${nova && ant ? " (nova versão)" : ""}</span><h2 style="font-size:19px">${esc(d.cliente)}</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+    <form id="fProp" class="dlg-b" autocomplete="off">
+      <label class="f">Apresentação<textarea id="pp-apres" rows="2">${esc(pr.apresentacao || "")}</textarea></label>
+      <div class="label" style="margin:12px 0 6px">Serviços e valores</div>
+      <div id="pp-itens">${itensHtml()}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px"><button type="button" class="btn sm ghost" id="pp-add">+ Item</button><b id="pp-total">Total ${brl(total())}</b></div>
+      <label class="f" style="margin-top:12px">O que está incluído<textarea id="pp-inclui" rows="3">${esc(pr.inclui || "")}</textarea></label>
+      <div class="fgrid" style="margin-top:12px">
+        <label class="f span2">Forma de pagamento<select id="pp-modo">${MODOS.map(m => `<option ${pr.pagamento.modo === m ? "selected" : ""}>${m}</option>`).join("")}</select></label>
+        <label class="f span2">Entrada (R$)<input id="pp-ent" inputmode="decimal" value="${esc(fmtNum(pr.pagamento.entrada))}"></label>
+        <label class="f span2">Nº de parcelas<input id="pp-n" type="number" min="1" max="60" value="${esc(pr.pagamento.n || 1)}"></label>
+        <label class="f span6">Condições (texto que aparece na proposta, opcional)<input id="pp-cond" value="${esc(pr.pagamento.texto || "")}" placeholder="Ex.: 40% na assinatura e saldo em 2 parcelas mensais via Pix"></label>
+        <label class="f span2">Prazo de execução (dias)<input id="pp-prazo" type="number" min="1" value="${esc(pr.prazoDias || "")}"></label>
+        <label class="f span2">Válida até<input id="pp-val" type="date" value="${esc(pr.validade || "")}"></label>
+      </div>
+      <label class="f" style="margin-top:12px">Observações<textarea id="pp-obs" rows="2">${esc(pr.obs || "")}</textarea></label>
+      <label class="f" style="margin-top:12px">Notas internas (não aparecem para o cliente)<textarea id="pp-notas" rows="2">${esc(pr.notasInternas || "")}</textarea></label>
+    </form>
+    <div class="dlg-f"><span class="sub">Só Moisés Bruno vê valores e propostas.</span><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn" id="pp-pdf">Ver PDF</button><button type="button" class="btn" id="pp-salvar">Salvar rascunho</button>${acessoDe(id) ? `<button type="button" class="btn primary" id="pp-enviar">Salvar e enviar ao portal</button>` : `<button type="button" class="btn primary" id="pp-salvar2">Salvar</button>`}</div></div>`;
+  if (!dlg.open) dlg.showModal();
+  const ler = () => {
+    pr.apresentacao = $("#pp-apres").value.trim(); pr.inclui = $("#pp-inclui").value.trim(); pr.obs = $("#pp-obs").value.trim(); pr.notasInternas = $("#pp-notas").value.trim();
+    pr.pagamento = {modo: $("#pp-modo").value, entrada: numBR($("#pp-ent").value), n: +$("#pp-n").value || 1, texto: $("#pp-cond").value.trim()};
+    pr.prazoDias = +$("#pp-prazo").value || null; pr.validade = $("#pp-val").value || null;
+    pr.itens = pr.itens.filter((i, k) => k < pr.itens.length); pr.total = total(); pr.emitidaEm = pr.emitidaEm || agoraISO();
+  };
+  dlg.querySelector("#pp-itens").addEventListener("input", e => { const k = e.target.dataset.pi; if (k == null) return; pr.itens[k][e.target.dataset.pk] = e.target.dataset.pk === "valor" ? numBR(e.target.value) : e.target.value; $("#pp-total").textContent = "Total " + brl(total()); });
+  dlg.querySelector("#pp-itens").addEventListener("click", e => { const r = e.target.closest("[data-pirm]"); if (!r) return; pr.itens.splice(+r.dataset.pirm, 1); $("#pp-itens").innerHTML = itensHtml(); $("#pp-total").textContent = "Total " + brl(total()); });
+  $("#pp-add").addEventListener("click", () => { pr.itens.push({desc: "", valor: null}); $("#pp-itens").innerHTML = itensHtml(); });
+  $("#pp-pdf").addEventListener("click", () => { ler(); window.SaotechDoc.imprimir("Proposta " + pr.numero, window.SaotechDoc.propostaHtml(pr, d, logoSrc())); });
+  const salvar = async enviar => {
+    ler();
+    if (!pr.itens.length || pr.itens.some(i => !String(i.desc).trim())) { toast("Preencha a descrição de todos os itens."); return; }
+    if (!pr.total) { toast("Informe os valores dos serviços."); return; }
+    const atual = S.fin[id] || {};
+    const corpo = {...atual};
+    if (nova && ant) corpo.propostasAnteriores = [...(atual.propostasAnteriores || []), ant].slice(-10);
+    corpo.proposta = {...pr, ...(enviar ? {status: "enviada", enviadaEm: agoraISO(), enviadaPor: S.me} : {})};
+    try {
+      await salvarFin(id, corpo, enviar ? `enviou a proposta ${pr.numero} (${brl(pr.total)}) ao portal` : `salvou a proposta ${pr.numero}`);
+      if (enviar) { const a = acessoDe(id); if (a) await S.user.responderCliente(a.usuario, `📄 Enviamos a proposta ${pr.numero} para o seu serviço (${brl(pr.total)}). Veja os detalhes e aceite aqui no portal, na seção "Proposta".`).catch(() => {}); }
+      fecharDlg(); toast(enviar ? "Proposta enviada ao portal do cliente" : "Proposta salva");
+    } catch (err) { falhaEscrita(err); }
+  };
+  $("#pp-salvar").addEventListener("click", () => salvar(false));
+  $("#pp-salvar2")?.addEventListener("click", () => salvar(false));
+  $("#pp-enviar")?.addEventListener("click", () => salvar(true));
+}
+document.addEventListener("click", async e => {
+  const t = e.target;
+  const a = t.closest("[data-proposta]"); if (a) { e.stopPropagation(); abrirProposta(a.dataset.proposta); return; }
+  const p = t.closest("[data-propostapdf]"); if (p) { e.stopPropagation(); const d = S.demandas.find(x => x.id === p.dataset.propostapdf); const pr = S.fin[d.id]?.proposta; if (pr) window.SaotechDoc.imprimir("Proposta " + pr.numero, window.SaotechDoc.propostaHtml(pr, d, logoSrc())); return; }
+  const en = t.closest("[data-propenviar]"); if (en) { e.stopPropagation(); const id = en.dataset.propenviar; const f = S.fin[id]; const pr = f?.proposta; const ac = acessoDe(id); if (!pr || !ac) return; en.disabled = true;
+    try { await salvarFin(id, {...f, proposta: {...pr, status: "enviada", enviadaEm: agoraISO(), enviadaPor: S.me}}, `enviou a proposta ${pr.numero} ao portal`); await S.user.responderCliente(ac.usuario, `📄 Enviamos a proposta ${pr.numero} (${brl(pr.total)}). Veja os detalhes e aceite aqui no portal, na seção "Proposta".`).catch(() => {}); toast("Proposta enviada"); } catch (err) { falhaEscrita(err); en.disabled = false; } return; }
+  const pc = t.closest("[data-propcontrato]"); if (pc) { e.stopPropagation(); const id = pc.dataset.propcontrato; const f = S.fin[id] || {}; const pr = f.proposta; if (!pr) return;
+    try {
+      await salvarFin(id, {...f, valorTotal: pr.total, modo: pr.pagamento?.modo || "Entrada + parcelas", entradaValor: pr.pagamento?.entrada || null, aceiteEm: (pr.aceite?.em || agoraISO()).slice(0, 10), obsContrato: f.obsContrato || `Proposta ${pr.numero} aceita pelo portal${pr.aceite ? " por " + pr.aceite.nome : ""}.`}, `criou o contrato a partir da proposta ${pr.numero}`);
+      abrirContrato(id);
+      setTimeout(() => { const n = $("#ct-n"); if (n && pr.pagamento?.n) n.value = pr.pagamento.n; $("#ct-gerar")?.click(); }, 80);
+    } catch (err) { falhaEscrita(err); } return; }
+}, true);
+const _contratoCardHtmlAlt = contratoCardHtml;
+contratoCardHtml = function(d){ const p = propostaCardHtml(d); return (p ? p + `<div style="height:16px"></div>` : "") + _contratoCardHtmlAlt(d); };
+
+/* ---------- Financeiro: Pix + propostas ---------- */
+const _viewFinanceiroAlt = viewFinanceiro;
+viewFinanceiro = function(){
+  const props = S.demandas.map(d => ({d, pr: S.fin[d.id]?.proposta})).filter(x => x.pr);
+  const env = props.filter(x => x.pr.status === "enviada"), ac = props.filter(x => x.pr.status === "aceita" && !(S.fin[x.d.id]?.parcelas || []).length);
+  const resumo = props.length ? `<div class="card"><div class="card-h"><div><span class="label">Comercial</span><h3>Propostas</h3></div><span class="sub">${props.length} no total · ${props.filter(x => x.pr.status === "aceita").length} aceitas · ${brl(env.reduce((s, x) => s + (x.pr.total || 0), 0))} aguardando resposta</span></div>
+    ${[...ac.map(x => ({...x, tag: "Aceita · gerar contrato", cls: "ok"})), ...env.map(x => ({...x, tag: "Aguardando o cliente", cls: "warn"}))].map(x => `<div class="lix-row"><span class="chip ${x.cls}">${x.tag}</span><div class="grow"><a href="#" data-proc="${x.d.id}"><b>${esc(x.d.cliente)}</b></a><div class="sub">${esc(x.pr.numero)} · ${brl(x.pr.total)}${x.pr.validade ? " · válida até " + fmtData(x.pr.validade) : ""}</div></div></div>`).join("") || `<p class="sub" style="margin:0">Nenhuma proposta pendente.</p>`}</div>` : "";
+  return _viewFinanceiroAlt() + `<div class="fin-extra">${resumo}${pixConfigHtml()}</div>`;
+};
+
+/* ---------- Automações ---------- */
+function abrirAutomacoes(){
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  const regras = JSON.parse(JSON.stringify(S.automacoes?.regras || []));
+  S.dlg = {tipo: "automacoes", unsubs: [], regras};
+  const dlg = $("#dlg"); dlg.className = "big";
+  const etapas = ETAPAS.map(e => e.k);
+  const regraHtml = (r, i) => `<fieldset class="auto-regra ${r.ativa === false ? "off" : ""}" data-ri="${i}">
+      <div class="auto-top"><label class="chk"><input type="checkbox" data-rk="ativa" ${r.ativa !== false ? "checked" : ""}> Ativa</label>
+        <input data-rk="nome" value="${esc(r.nome || "")}" placeholder="Nome da automação" class="grow">
+        <label class="auto-quando">Quando entrar em <select data-rk="etapa">${etapas.map(e => `<option ${r.etapa === e ? "selected" : ""}>${e}</option>`).join("")}</select></label>
+        <button type="button" class="btn sm ghost" data-rrm="${i}" aria-label="Excluir automação">✕</button></div>
+      <div class="fgrid">
+        <label class="f span6">Mensagem automática ao cliente no portal (vazio = não enviar)<textarea data-rk="msgCliente" rows="2" placeholder="Olá, {primeiro_nome}! …">${esc(r.acoes?.msgCliente || "")}</textarea></label>
+        <label class="f span3">Adicionar ao checklist (um por linha)<textarea data-rk="checklist" rows="2">${esc((r.acoes?.checklist || []).join("\n"))}</textarea></label>
+        <label class="f span3">Avisar no celular<div class="checks">${PESSOAS.map(p => `<label><input type="checkbox" data-rav="${p.id}" ${(r.acoes?.avisar || []).includes(p.id) ? "checked" : ""}>${esc(p.nome.split(" ")[0] + " " + (p.nome.split(" ")[1] || "")[0] + ".")}</label>`).join("")}</div><input data-rk="avisoTexto" value="${esc(r.acoes?.avisoTexto || "")}" placeholder="Texto do aviso" style="margin-top:6px"></label>
+        <label class="f span3">Passar responsável para<select data-rk="responsavel"><option value="">— manter —</option>${PESSOAS.map(p => `<option value="${p.id}" ${r.acoes?.responsavel === p.id ? "selected" : ""}>${esc(p.nome)}</option>`).join("")}</select></label>
+        <label class="f span3">Definir prazo em (dias, se estiver vazio)<input data-rk="prazoDias" type="number" min="1" value="${esc(r.acoes?.prazoDias || "")}"></label>
+      </div></fieldset>`;
+  const montar = () => { $("#auto-lista").innerHTML = S.dlg.regras.map(regraHtml).join("") || `<p class="muted">Nenhuma automação.</p>`; };
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">Administração</span><h2 style="font-size:19px">Automações por etapa</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+    <div class="dlg-b"><p class="sub" style="margin-top:0">Quando um processo muda de etapa (por qualquer pessoa ou pelo aceite da proposta no portal), o sistema executa estas ações sozinho e registra no histórico. Variáveis: <code>{primeiro_nome}</code> <code>{cliente}</code> <code>{codigo}</code> <code>{imovel}</code> <code>{etapa}</code> <code>{protocolo}</code> <code>{orgao}</code>.</p>
+      <div id="auto-lista"></div><button type="button" class="btn sm" id="auto-add" style="margin-top:8px">+ Nova automação</button></div>
+    <div class="dlg-f"><span></span><div style="display:flex;gap:8px"><button type="button" class="btn" data-close>Cancelar</button><button type="button" class="btn primary" id="auto-salvar">Salvar automações</button></div></div>`;
+  if (!dlg.open) dlg.showModal();
+  montar();
+  const ler = () => {
+    dlg.querySelectorAll(".auto-regra").forEach(fs => {
+      const r = S.dlg.regras[+fs.dataset.ri]; const v = k => fs.querySelector(`[data-rk="${k}"]`);
+      r.ativa = v("ativa").checked; r.nome = v("nome").value.trim(); r.etapa = v("etapa").value;
+      r.acoes = {msgCliente: v("msgCliente").value.trim(), checklist: v("checklist").value.split("\n").map(x => x.trim()).filter(Boolean),
+        avisar: [...fs.querySelectorAll("[data-rav]:checked")].map(x => x.dataset.rav), avisoTexto: v("avisoTexto").value.trim(),
+        responsavel: v("responsavel").value, prazoDias: v("prazoDias").value ? String(+v("prazoDias").value) : ""};
+    });
+  };
+  dlg.querySelector(".dlg-b").addEventListener("click", e => {
+    const rm = e.target.closest("[data-rrm]"); if (rm) { ler(); S.dlg.regras.splice(+rm.dataset.rrm, 1); montar(); }
+    if (e.target.id === "auto-add") { ler(); S.dlg.regras.push({id: "r" + uid(), nome: "", etapa: "Campo", ativa: true, acoes: {}}); montar(); dlg.querySelector(".auto-regra:last-child")?.scrollIntoView({behavior: "smooth"}); }
+  });
+  $("#auto-salvar").addEventListener("click", async () => { ler(); try { await S.db.doc("config/automacoes").set({regras: S.dlg.regras, atualizadoEm: agoraISO(), atualizadoPor: S.me}); fecharDlg(); toast("Automações salvas"); } catch (err) { falhaEscrita(err); } });
+}
+document.addEventListener("click", e => { if (e.target.closest("#btnAuto")) abrirAutomacoes(); });
+
+/* ---------- Ligações com o carregamento ---------- */
+(function ligarV13(){
+  const iv = setInterval(() => {
+    if (!S.db || !S.user) return;
+    clearInterval(iv);
+    S.db.doc("config/automacoes").onSnapshot(s => { S.automacoes = s.exists ? s.data() : {regras: []}; }, () => {});
+    S.db.doc("config/rt").onSnapshot(s => { S.rtConfig = s.exists ? s.data() : null; }, () => {});
+    if (S.finAcesso) S.db.doc("data/fin/config/pix").onSnapshot(s => { S.pix = s.exists ? s.data() : null; if (["financeiro", "clientes"].includes(S.tab)) render(); }, () => {});
+    if (S.finAcesso) { const b = $("#btnAuto"); if (b) b.hidden = false; }
+  }, 300);
+})();
 
 /* ---------- Conexão ---------- */
 render();
