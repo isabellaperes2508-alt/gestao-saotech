@@ -179,6 +179,22 @@ footer b{color:var(--tinta)}
   nav.topo .acoes .btn.vazio{display:none}
   .note .tela{grid-template-columns:minmax(0,1fr)} .mini-side{display:none}
 }
+
+.cad{display:grid;gap:10px;font-size:12px}
+.cad .pessoa{background:#fff;border:1px solid var(--linha);border-radius:14px;padding:12px 14px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 14px}
+.cad .pessoa b{display:block;font-weight:600;font-size:12.5px} .cad .pessoa span{color:var(--tinta-3);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+.cad .props{display:flex;gap:6px;flex-wrap:wrap}
+.cad .pp{border:1px solid var(--linha);background:#fff;border-radius:999px;padding:4px 12px;font-weight:500} .cad .pp.on{background:var(--musgo);color:var(--creme);border-color:var(--musgo)} .cad .pp.add{border-style:dashed;color:var(--oliva)}
+.cad .imv{background:#fff;border:1px solid var(--linha);border-radius:14px;padding:12px 14px}
+.cad .imv .t{font-family:var(--f-disp);font-weight:700;color:var(--oliva);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.cad .imv .g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 12px} .cad .imv .g div{min-width:0} .cad .imv small{display:block;color:var(--tinta-3);font-size:9.5px;text-transform:uppercase;letter-spacing:.06em} .cad .imv b{font-family:var(--f-mono);font-weight:500;font-size:11px;overflow-wrap:anywhere}
+.login{background:var(--musgo);color:var(--creme);border-radius:14px;padding:12px 14px;font-size:12px;display:grid;gap:6px}
+.login small{color:var(--lima);letter-spacing:.12em;text-transform:uppercase;font-size:9.5px;font-weight:600} .login .mono{font-size:11.5px}
+.login .bt{display:flex;gap:6px} .login .bt span{border-radius:999px;padding:4px 12px;font-weight:600;font-size:11px;border:1px solid #6F7A4C} .login .bt span:first-child{background:var(--lima);color:var(--musgo);border-color:var(--lima)}
+.docsp{display:grid;gap:6px;font-size:12px}
+.docsp .d{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--linha);border-radius:10px;padding:7px 10px} .docsp .d span{flex:1;min-width:0} .docsp .d em{font-style:normal;font-weight:600;color:var(--oliva);font-size:11px}
+.docsp .est{color:#C9A227;letter-spacing:2px;font-size:15px} .docsp .av{background:#EFF2E0;border-radius:10px;padding:8px 10px}
+@media (max-width:620px){.cad .imv .g{grid-template-columns:repeat(2,minmax(0,1fr))} .cad .pessoa{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head><body>
 
@@ -233,7 +249,7 @@ footer b{color:var(--tinta)}
   <div class="perfis" style="text-align:left">
     <div class="perfil"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 20h18M5 20V9l7-5 7 5v11M9 20v-6h6v6"/></svg></div><h3>Direção</h3><p>Visão de todos os processos, funil comercial, propostas com aceite online, contratos, parcelas com Pix e recibos em PDF. Os valores ficam visíveis só para quem cuida do financeiro.</p><span class="quem">Moisés Bruno</span></div>
     <div class="perfil"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="5"/></svg></div><h3>Campo e escritório</h3><p>Agenda de saídas, ficha de campo com fotos e GPS que funciona sem sinal, importação dos pontos do GNSS, memorial descritivo e conversa interna por processo.</p><span class="quem">João Marcos · Moisés Júnior · Isabella Cleto</span></div>
-    <div class="perfil"><div class="ic"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><h3>Clientes</h3><p>Entram com usuário e senha próprios e veem só o seu processo: a etapa atual, os documentos para baixar, a proposta para aceitar, o Pix das parcelas e o chat direto com a equipe.</p><span class="quem">Acesso pelo Portal do Cliente</span></div>
+    <div class="perfil"><div class="ic"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><h3>Clientes</h3><p>Entram com usuário (nome.sobrenome) e senha próprios e veem só os seus processos, inclusive de cada propriedade: a etapa atual, os documentos para baixar, a proposta para aceitar, o Pix das parcelas e o chat direto com a equipe.</p><span class="quem">Acesso pelo Portal do Cliente</span></div>
   </div>
 </section>
 
@@ -266,6 +282,21 @@ footer b{color:var(--tinta)}
       </div>
     </article>
 
+    <article class="rc largo">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <span class="eyebrow">Cadastro</span>
+        <h3 style="font-size:clamp(24px,2.6vw,32px)">Um cliente, todas as propriedades dele</h3>
+        <p>O cadastro do cliente é separado da demanda: nome, CPF, cônjuge, telefone e endereço uma única vez. Cada imóvel informado vira um processo próprio, com etapas, checklist, mapa, memorial e contrato, todos vinculados ao mesmo cliente e com um único login no portal.</p>
+        <ul><li>Código do imóvel rural, código do município, matrícula, CCIR, CAR e ITR</li><li>Área total e indicação de como chegar à propriedade</li><li>CPF conferido na hora, com aviso de cadastro incompleto</li><li>Correção de CPF ou telefone vale para todas as propriedades</li></ul>
+      </div>
+      <div class="demo cad" aria-label="Exemplo de cadastro">
+        <div class="pessoa"><div><span>Cliente</span><b>José Carlos da Silva</b></div><div><span>CPF</span><b class="mono">529.982.247-25</b></div><div><span>Cônjuge</span><b>Maria Aparecida da Silva</b></div><div><span>Telefone</span><b class="mono">(27) 99988-7766</b></div></div>
+        <div class="props"><span class="pp on">1 · Fazenda Boa Vista</span><span class="pp">2 · Sítio Recanto</span><span class="pp add">+ propriedade</span></div>
+        <div class="imv"><div class="t">Propriedade 1</div><div class="g">
+          <div><small>Área total</small><b>51,6700 ha</b></div><div><small>Código do imóvel</small><b>950.035.001.234-5</b></div><div><small>Matrícula</small><b>12.345</b></div>
+          <div><small>CCIR</small><b>27.065.441-8</b></div><div><small>CAR</small><b>ES-3205101-93E1…</b></div><div><small>ITR (NIRF)</small><b>1.234.567-8</b></div></div></div>
+      </div>
+    </article>
     <article class="rc"><h3>Processo completo de cada cliente</h3><p>Etapas com datas, checklist técnico e de documentos, linha do tempo com conversas e fichas de campo, contrato, vínculos com confrontantes e pendências de cadastro em destaque.</p>
       <div class="demo regra"><div class="q">Cadastro incompleto</div><ul><li>CPF com 12 dígitos: corrigir</li><li>Falta matrícula do imóvel</li></ul></div></article>
     <article class="rc"><h3>Proposta com aceite online</h3><p>Monte a proposta, gere o PDF com a marca e envie ao portal. O cliente aceita com o nome completo; a data, a hora e o IP ficam registrados e o processo avança sozinho.</p>
@@ -286,13 +317,19 @@ footer b{color:var(--tinta)}
       <div class="demo bolhas"><div><small>Cliente · 08:41</small>Bom dia! Já posso mandar a matrícula atualizada?</div><div class="eu"><small>Equipe Saotech · 08:43</small>Pode sim, é só anexar aqui pelo 📎</div></div></article>
     <article class="rc"><h3>Automações por etapa</h3><p>Quando o processo muda de etapa, a plataforma avisa o cliente, cria itens no checklist, define prazo e notifica quem precisa agir.</p>
       <div class="demo regra"><div class="q">Quando entrar em <span>Protocolo</span></div><ul><li>Avisa o cliente no portal</li><li>Cria “Registrar nº do protocolo”</li><li>Notifica o responsável</li></ul></div></article>
+    <article class="rc"><h3>Login do cliente pronto para enviar</h3><p>Ao cadastrar um cliente, o login do portal é criado na hora e aparece com o botão Copiar login. Depois, a equipe consulta todos em Clientes → Logins dos clientes.</p>
+      <div class="demo login"><small>Login do cliente criado</small><b>José Carlos da Silva</b><span class="mono">Usuário: jose.silva · Senha: 7766</span><div class="bt"><span>Copiar login</span><span>WhatsApp</span></div></div></article>
+    <article class="rc"><h3>Documentos e avaliação no portal</h3><p>A equipe publica planta, memorial e recibos para o cliente baixar sozinho. Ao concluir o serviço, o portal pede uma nota e um comentário, que viram depoimento quando o cliente autoriza.</p>
+      <div class="demo docsp"><div class="d">📄<span>Memorial descritivo · memorial.pdf</span><em>Baixar</em></div><div class="d">📐<span>Planta final · planta.pdf</span><em>Baixar</em></div><div class="av"><span class="est">★★★★★</span><br>“Equipe atenciosa e tudo explicado.”</div></div></article>
+    <article class="rc"><h3>Histórico, busca e segurança</h3><p>Toda alteração fica registrada com quem fez e quando. A busca encontra qualquer cliente, código, CPF ou matrícula. A lixeira guarda exclusões por 30 dias e a cópia de segurança sai toda semana.</p>
+      <div class="demo regra"><div class="q">Hoje · 14:32</div><ul><li>Isabella moveu SAO-2026-003 para Campo</li><li>João registrou a ficha de campo com GPS</li><li>Moisés gerou o recibo da entrada</li></ul></div></article>
   </div>
 </section>
 
 <section class="bloco" id="como-funciona" style="padding-top:0">
   <div class="centro"><span class="eyebrow">Como funciona</span><h2 style="font-size:clamp(28px,3.6vw,42px)">Do orçamento à entrega, sem papel solto</h2></div>
   <div class="etapas">
-    <div class="etapa"><span class="n">01</span><h3>Orçamento e proposta</h3><p>A demanda entra com cliente, serviço e município. A proposta sai em PDF e vai para o portal.</p><span class="gatilho">aceite online</span></div>
+    <div class="etapa"><span class="n">01</span><h3>Cadastro e proposta</h3><p>O cliente é cadastrado com cônjuge e todas as propriedades; cada imóvel vira um processo. A proposta sai em PDF e vai para o portal.</p><span class="gatilho">aceite online</span></div>
     <div class="etapa"><span class="n">02</span><h3>Contrato e entrada</h3><p>O aceite gera o contrato e as parcelas. O cliente paga a entrada pelo Pix do portal.</p><span class="gatilho">Pix + recibo</span></div>
     <div class="etapa"><span class="n">03</span><h3>Campo</h3><p>A visita é agendada com o cliente e os confrontantes. A equipe registra a ficha de campo com fotos e GPS.</p><span class="gatilho">funciona offline</span></div>
     <div class="etapa"><span class="n">04</span><h3>Escritório</h3><p>Os pontos do GNSS viram perímetro, área e memorial. A sobreposição com SIGEF e CAR é conferida.</p><span class="gatilho">memorial em minutos</span></div>
@@ -304,7 +341,7 @@ footer b{color:var(--tinta)}
   <div class="seg">
     <div><span class="eyebrow">Segurança e cuidado</span><h2>Dados dos clientes protegidos, como a LGPD pede</h2></div>
     <div class="itens">
-      <div><h3>Acesso individual</h3><p>Cada pessoa da equipe entra com o próprio e-mail. Clientes entram com usuário e senha próprios.</p></div>
+      <div><h3>Acesso individual</h3><p>Equipe e clientes entram com usuário no formato nome.sobrenome e senha própria. Ninguém de fora cria conta.</p></div>
       <div><h3>Cada perfil vê o seu</h3><p>A separação é feita no próprio banco de dados: valores só para o financeiro, e cada cliente só enxerga o próprio processo.</p></div>
       <div><h3>Lixeira de 30 dias</h3><p>Uma demanda excluída por engano pode ser restaurada com conversas, agenda e contrato.</p></div>
       <div><h3>Cópia de segurança semanal</h3><p>Todo domingo os dados são copiados automaticamente, e o backup completo com arquivos sai em um clique.</p></div>
@@ -318,7 +355,7 @@ footer b{color:var(--tinta)}
     <path d="M-20 90 C 160 40 260 130 420 80 S 640 20 760 70"/><path d="M-20 130 C 170 80 270 170 430 120 S 650 60 770 110"/></g></svg>
   <img class="marca" src="data:image/png;base64,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" alt="">
   <h2>Menos Trello e WhatsApp, <em>mais tempo no campo</em></h2>
-  <p>Abra no celular e toque em "Adicionar à Tela de Início" para usar como app. Clientes entram pelo mesmo endereço com o usuário enviado pela Saotech.</p>
+  <p>Abra no celular e toque em "Adicionar à Tela de Início" para usar como app. Equipe e clientes entram pelo mesmo endereço, com usuário nome.sobrenome.</p>
   <div class="ctas"><a class="btn lima" href="https://gestaosaotech.netlify.app/" target="_blank" rel="noopener">Acessar plataforma</a><a class="btn vazio" href="#recursos">Rever os recursos</a></div>
   <div class="url">gestaosaotech.netlify.app</div>
 </section>
