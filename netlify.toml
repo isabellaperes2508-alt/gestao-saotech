@@ -1,0 +1,35 @@
+# Gestão Saotech — hospedagem no Netlify (site estático, sem etapa de build)
+[build]
+  publish = "."
+  command = ""
+
+# Arquivos que não devem ficar presos em cache: o app checa atualização a cada abertura
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+    Service-Worker-Allowed = "/"
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+# Marcador lido pelo endereço antigo (GitHub Pages) para saber que o Netlify já está no ar
+[[headers]]
+  for = "/netlify-ok.txt"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Cache-Control = "no-store"
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[redirects]]
+  from = "/apresentacao"
+  to = "/apresentacao.html"
+  status = 200

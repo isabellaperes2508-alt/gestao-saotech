@@ -105,3 +105,14 @@ A partir daí, a plataforma abre como um aplicativo, com o ícone da Saotech.
 | Pausa | O projeto pausa após 7 dias sem uso | Com uso diário, não pausa. Se pausar, basta reativar no painel do Supabase |
 
 **Dica de segurança:** uma vez por mês, faça uma cópia dos dados em **Table Editor → docs → Export → CSV**.
+
+## Hospedagem no Netlify (endereço oficial)
+
+A plataforma fica em **https://gestaosaotech.netlify.app** (apresentação em `/apresentacao.html`).
+
+1. No Netlify, abra o projeto **gestaosaotech** → **Project configuration → Build & deploy → Continuous deployment → Link repository**.
+2. Escolha **GitHub** → repositório **gestao-saotech** → branch **main**. Deixe o comando de build em branco e o diretório de publicação como `.` (o `netlify.toml` já define isso).
+3. A cada atualização enviada ao GitHub, o Netlify publica sozinho em cerca de 1 minuto.
+4. No Supabase, em **Authentication → URL Configuration**, troque o **Site URL** para `https://gestaosaotech.netlify.app` e inclua o mesmo endereço em **Redirect URLs** (necessário para o "Esqueci a senha").
+
+O endereço antigo do GitHub Pages detecta automaticamente quando o Netlify está no ar e passa a redirecionar para o endereço novo. Quem tinha ativado as notificações no endereço antigo precisa ativar de novo no novo (o navegador trata cada endereço como um app diferente).
