@@ -772,6 +772,13 @@ body.modo-portal #bv{display:none}
 .av-estrelas{display:flex;gap:4px} .av-estrelas button{border:0;background:none;font-size:34px;line-height:1;color:var(--line-2);cursor:pointer;padding:2px} .av-estrelas button.on{color:#C9A227}
 .av-aut{display:flex;gap:8px;align-items:flex-start;font-size:13px;margin-bottom:10px} .av-aut input{width:auto;margin-top:3px}
 .pt-push-ok{align-self:center;white-space:nowrap}
+.cad-sec{margin:14px 0 6px} .cad-sec:first-of-type{margin-top:0}
+.cad-qtd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:16px 0 6px;padding-top:12px;border-top:1px solid var(--line)}
+.cad-imovel{border:1px solid var(--line-2);border-radius:12px;padding:10px 12px 12px;margin:0 0 12px} .cad-imovel legend{font-family:var(--f-display);font-weight:700;padding:0 6px;color:var(--accent)}
+.cad-props{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
+.cad-dados{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px 16px} .cad-dados>div{display:flex;flex-direction:column;min-width:0} .cad-dados b{font-weight:500;overflow-wrap:anywhere}
+.cad-props-chips{display:flex;flex-wrap:wrap;gap:6px} .chip-prop{border:1px solid var(--line-2);background:var(--card,#fff);border-radius:999px;padding:4px 12px;font:inherit;font-size:12.5px;cursor:pointer;color:inherit} .chip-prop.on{background:var(--accent);border-color:var(--accent);color:#fff} .chip-prop.add{border-style:dashed;color:var(--accent)}
+.cad-ind{margin:10px 0 0;font-size:13.5px;background:var(--accent-soft);border-radius:10px;padding:8px 12px} .cad-ind .label{display:block}
 .login-novo{position:fixed;z-index:160;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));width:min(560px,calc(100% - 32px));background:#2E3319;color:#F7F7DC;border-radius:14px;padding:12px 14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;box-shadow:0 14px 40px rgba(0,0,0,.35)}
 .login-novo>div:first-child{flex:1;min-width:200px;display:flex;flex-direction:column;gap:2px} .login-novo .label{color:#D9E15A} .login-novo .sub{color:#C9CCA8} .login-novo .acts{display:flex;gap:6px;align-items:center}
 .login-novo .btn:not(.lima){background:transparent;color:#F7F7DC;border-color:#6F7A4C}
@@ -1253,6 +1260,7 @@ function paneResumo(d, novo){
           <label class="f span6">Próxima ação / observações<textarea id="d-notas">${esc(d.notas)}</textarea></label>
         </div>
       </details>
+      ${imovelFormHtml(d)}
       <datalist id="orgaos"><option>SIGEF / INCRA</option><option>Cartório de Registro de Imóveis</option><option>SICAR / órgão ambiental</option><option>Receita Federal (ITR)</option><option>Prefeitura</option></datalist>
       ${S.podeFin && !novo ? (() => { const r = finResumo(f); return `
       <fieldset><legend>Contrato e pagamentos · só Moisés Bruno</legend>
@@ -1283,7 +1291,7 @@ function ligarResumo(d, novo){
       imovel: $("#d-imovel").value.trim(), municipio: $("#d-municipio").value.trim(), areaHa: numHa($("#d-area").value),
       servicos, etapa: $("#d-etapa").value, responsavel: $("#d-resp").value, prazo: $("#d-prazo").value || null,
       protocoloOrgao: $("#d-orgao").value.trim(), protocoloNumero: $("#d-protnum").value.trim(), protocoloPrevisao: $("#d-protprev").value || null,
-      notas: $("#d-notas").value.trim()
+      notas: $("#d-notas").value.trim(), imovelDados: lerImovelForm(dlg, atual)
     };
     const mud = [];
     if (!novo) {
@@ -2312,7 +2320,7 @@ function viewInicio(){
   <section class="hero">
     ${curvasSVG()}
     <div><span class="label">${esc(capital(fmtDia(hj)))}</span><h2>${saudacao()}, ${esc(primeiro(S.me))}</h2><p>${esc(fraseDoDia(nAg, nPz, nMsgs))}</p></div>
-    <div class="acts">${diaBtn}<button type="button" class="btn" id="nova" ${S.somenteLeitura || !S.conectado ? "disabled" : ""}>Nova demanda</button><button type="button" class="btn" data-conv="equipe">Conversa da equipe</button></div>
+    <div class="acts">${diaBtn}<button type="button" class="btn" data-novocliente ${S.somenteLeitura || !S.conectado ? "disabled" : ""}>Novo cliente</button><button type="button" class="btn" id="nova" ${S.somenteLeitura || !S.conectado ? "disabled" : ""}>Nova demanda</button><button type="button" class="btn" data-conv="equipe">Conversa da equipe</button></div>
   </section>
   <section class="mini-pipe" aria-label="Processos por etapa">
     ${ETAPAS.filter(e => e.k !== "Concluída").map(e => `<button type="button" data-etapa-go="${esc(e.k)}"><b>${S.demandas.filter(d => d.etapa === e.k).length}</b><span>${esc(e.k)}</span></button>`).join("")}
@@ -2466,6 +2474,7 @@ function processoHtml(d){
       ${d.protocoloOrgao || d.protocoloNumero ? `<div class="pst"><span class="label">Protocolo</span><b style="font-size:16px">${esc(d.protocoloNumero || "—")}</b><span class="sub">${esc(d.protocoloOrgao || "")}${d.protocoloPrevisao ? " · retorno " + fmtDM(d.protocoloPrevisao) : ""}</span></div>` : ""}
     </section>
     ${S.podeFin ? `<div style="margin-top:16px">${contratoCardHtml(d)}</div>` : ""}
+    ${clienteCardHtml(d)}
     <div style="margin-top:16px">${acessoCardHtml(d)}</div>
     ${docsClienteHtml(d)}
     <div style="margin-top:16px">${vinculosHtml(d)}</div>
@@ -2492,17 +2501,18 @@ function viewClientes(){
   if (S.cliFiltro === "ativas") lista = lista.filter(d => ATIVAS.includes(d.etapa) || d.etapa === "Pausada");
   if (S.cliFiltro === "pendencias") lista = lista.filter(d => !d.exemplo && pendenciasDe(d).length);
   const nPend = S.demandas.filter(d => !d.exemplo && pendenciasDe(d).length).length;
-  if (q) lista = lista.filter(d => [d.codigo, d.cliente, d.imovel, d.municipio, d.contato, d.documento, soDig(d.documento)].join(" ").toLowerCase().includes(q));
+  if (q) lista = lista.filter(d => [d.codigo, d.cliente, d.imovel, d.municipio, d.contato, d.documento, soDig(d.documento), d.imovelDados?.codigoIR, d.imovelDados?.matricula, d.imovelDados?.car].join(" ").toLowerCase().includes(q));
   lista.sort((a, b) => (a.cliente || "").localeCompare(b.cliente || "", "pt-BR"));
   if (!lista.some(d => d.id === S.cliSel)) S.cliSel = lista[0]?.id || null;
   const sel = S.demandas.find(d => d.id === S.cliSel);
   const side = `<aside class="side card">
     <input id="cl-busca" type="search" placeholder="Buscar cliente, imóvel, código" value="${esc(S.cliBusca || "")}">
+    ${S.somenteLeitura ? "" : `<button type="button" class="btn primary" data-novocliente style="width:100%">+ Novo cliente</button>`}
     <button type="button" class="btn sm" data-logins style="width:100%">Logins dos clientes no portal</button>
     <div class="seg" role="group" aria-label="Filtro"><button type="button" data-clif="ativas" aria-pressed="${S.cliFiltro === "ativas"}">Em andamento</button><button type="button" data-clif="todas" aria-pressed="${S.cliFiltro === "todas"}">Todos</button><button type="button" data-clif="pendencias" aria-pressed="${S.cliFiltro === "pendencias"}" title="Cadastros incompletos">Pendências${nPend ? ` <span class="nbadge">${nPend}</span>` : ""}</button></div>
     <div class="lst">${lista.map(d => { const cl = d.checklist || []; const ok = cl.filter(i => i.ok).length; return `<button type="button" class="side-it" data-cli="${d.id}" aria-current="${d.id === S.cliSel}">
       <span class="r1"><b>${esc(d.cliente)}</b>${temNovidade(d) ? `<span class="ndot" title="Mensagem nova"></span>` : ""}</span>
-      <span class="prev">${pendenciasDe(d).length && !d.exemplo ? `<span class="pend-n" title="Cadastro incompleto">${pendenciasDe(d).length} pendência${pendenciasDe(d).length > 1 ? "s" : ""}</span> ` : ""}${esc(d.codigo)} · ${esc(d.etapa)}${d.municipio ? " · " + esc(d.municipio) : ""}${(d.vinculos || []).some(v => v.rel === "Confrontante") ? " · " + d.vinculos.filter(v => v.rel === "Confrontante").length + " confrontante(s)" : ""}</span>
+      <span class="prev">${pendenciasDe(d).length && !d.exemplo ? `<span class="pend-n" title="Cadastro incompleto">${pendenciasDe(d).length} pendência${pendenciasDe(d).length > 1 ? "s" : ""}</span> ` : ""}${d.propriedadeN && d.clienteId && propriedadesDe(d.clienteId).length > 1 ? `Propriedade ${d.propriedadeN}/${propriedadesDe(d.clienteId).length} · ` : ""}${esc(d.codigo)} · ${esc(d.etapa)}${d.municipio ? " · " + esc(d.municipio) : ""}${(d.vinculos || []).some(v => v.rel === "Confrontante") ? " · " + d.vinculos.filter(v => v.rel === "Confrontante").length + " confrontante(s)" : ""}</span>
       ${cl.length ? `<span class="prog"><i style="width:${Math.round(ok / cl.length * 100)}%"></i></span>` : ""}
     </button>`; }).join("") || `<p class="sub" style="padding:8px 12px">${S.conectado ? "Nenhum cliente encontrado." : "Carregando…"}</p>`}</div>
   </aside>`;
@@ -4569,6 +4579,218 @@ async function abrirLogins(){
   $("#lg-lista").addEventListener("click", e => { const b = e.target.closest("[data-lgcopiar]"); if (!b) return; const a = S.acessos.find(x => x.usuario === b.dataset.lgcopiar); if (a) copiarAcesso(a, b); });
 }
 document.addEventListener("click", e => { if (e.target.closest("[data-logins]")) { e.stopPropagation(); abrirLogins(); } }, true);
+
+
+/* ====================================================================
+   v15 · cadastro de clientes com várias propriedades
+   Cliente (pessoa) → propriedades → cada propriedade é um processo (demanda),
+   todas vinculadas como "Mesmo cliente" e com um único login no portal.
+   ==================================================================== */
+S.clientes = [];
+const CAMPOS_IMOVEL = [
+  ["denominacao", "Denominação do imóvel rural", "Ex.: Fazenda Boa Vista", 4],
+  ["areaHa", "Área total (ha)", "0,0000", 2],
+  ["codigoIR", "Código do imóvel rural (SNCR)", "000.000.000.000-0", 3],
+  ["codMunicipio", "Código do município", "", 3],
+  ["municipio", "Município / UF", "Ex.: Viana/ES", 3],
+  ["matricula", "Matrícula", "Nº e cartório", 3],
+  ["ccir", "Número do CCIR", "", 2],
+  ["car", "CAR (recibo de inscrição)", "ES-0000000-…", 2],
+  ["itr", "ITR (NIRF / CIB)", "0.000.000-0", 2],
+  ["indicacao", "Indicação para localização", "Como chegar: estrada, referências, coordenadas…", 6]
+];
+const soDigCad = t => String(t || "").replace(/\D/g, "");
+const fmtCodIR = v => { const d = soDigCad(v); return d.length === 13 ? d.replace(/^(\d{3})(\d{3})(\d{3})(\d{3})(\d)$/, "$1.$2.$3.$4-$5") : v; };
+const fmtNirf = v => { const d = soDigCad(v); return d.length === 8 ? d.replace(/^(\d)(\d{3})(\d{3})(\d)$/, "$1.$2.$3-$4") : v; };
+const fmtTel = v => { const d = soDigCad(v); return d.length === 11 ? d.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3") : d.length === 10 ? d.replace(/^(\d{2})(\d{4})(\d{4})$/, "($1) $2-$3") : v; };
+const nomeCurtoImovel = (im, n) => (im?.denominacao || "").trim() || `Propriedade ${n}`;
+const clienteDe = d => d?.clienteId ? S.clientes.find(c => c.id === d.clienteId) : null;
+const propriedadesDe = cid => S.demandas.filter(x => x.clienteId === cid).sort((a, b) => (a.propriedadeN || 0) - (b.propriedadeN || 0));
+
+function imovelBlocoHtml(n, im = {}){
+  return `<fieldset class="cad-imovel" data-imn="${n}"><legend>Propriedade ${n}</legend><div class="fgrid">
+    ${CAMPOS_IMOVEL.map(([k, rot, ph, span]) => k === "indicacao"
+      ? `<label class="f span${span}">${rot}<textarea name="${k}" rows="2" placeholder="${esc(ph)}">${esc(im[k] || "")}</textarea></label>`
+      : `<label class="f span${span}">${rot}<input name="${k}" value="${esc(im[k] ?? "")}" placeholder="${esc(ph)}" ${k === "areaHa" ? 'inputmode="decimal"' : ""} ${k === "municipio" ? 'list="cad-municipios"' : ""}></label>`).join("")}
+  </div></fieldset>`;
+}
+const MUNICIPIOS_ES = "Afonso Cláudio;Água Doce do Norte;Águia Branca;Alegre;Alfredo Chaves;Alto Rio Novo;Anchieta;Apiacá;Aracruz;Atílio Vivácqua;Baixo Guandu;Barra de São Francisco;Boa Esperança;Bom Jesus do Norte;Brejetuba;Cachoeiro de Itapemirim;Cariacica;Castelo;Colatina;Conceição da Barra;Conceição do Castelo;Divino de São Lourenço;Domingos Martins;Dores do Rio Preto;Ecoporanga;Fundão;Governador Lindenberg;Guaçuí;Guarapari;Ibatiba;Ibiraçu;Ibitirama;Iconha;Irupi;Itaguaçu;Itapemirim;Itarana;Iúna;Jaguaré;Jerônimo Monteiro;João Neiva;Laranja da Terra;Linhares;Mantenópolis;Marataízes;Marechal Floriano;Marilândia;Mimoso do Sul;Montanha;Mucurici;Muniz Freire;Muqui;Nova Venécia;Pancas;Pedro Canário;Pinheiros;Piúma;Ponto Belo;Presidente Kennedy;Rio Bananal;Rio Novo do Sul;Santa Leopoldina;Santa Maria de Jetibá;Santa Teresa;São Domingos do Norte;São Gabriel da Palha;São José do Calçado;São Mateus;São Roque do Canaã;Serra;Sooretama;Vargem Alta;Venda Nova do Imigrante;Viana;Vila Pavão;Vila Valério;Vila Velha;Vitória".split(";");
+
+function abrirCadastroCliente(cid){
+  const c = cid ? S.clientes.find(x => x.id === cid) : null;
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "cadcliente", id: cid || null, unsubs: []};
+  const dlg = $("#dlg"); dlg.className = "big";
+  const props = c ? propriedadesDe(c.id) : [];
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">${c ? "Cadastro do cliente" : "Novo cliente"}</span><h2 style="font-size:19px">${c ? esc(c.nome) : "Cadastrar cliente e propriedades"}</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+  <form id="fCad" class="dlg-b" autocomplete="off" novalidate>
+    <datalist id="cad-municipios">${MUNICIPIOS_ES.map(m => `<option value="${esc(m)}/ES">`).join("")}</datalist>
+    <div class="label cad-sec">Cliente</div>
+    <div class="fgrid">
+      <label class="f span4">Nome completo<input name="nome" required value="${esc(c?.nome || "")}" autocomplete="off"></label>
+      <label class="f span2">CPF<input name="cpf" inputmode="numeric" value="${esc(c?.cpf || "")}" placeholder="000.000.000-00"><small class="doc-msg" data-docmsg="cpf"></small></label>
+      <label class="f span2">Telefone (WhatsApp)<input name="telefone" inputmode="tel" required value="${esc(c?.telefone || "")}" placeholder="(27) 99999-0000"></label>
+      <label class="f span4">Endereço de moradia<input name="endereco" value="${esc(c?.endereco || "")}" placeholder="Rua, número, bairro, cidade/UF, CEP"></label>
+    </div>
+    <div class="label cad-sec">Cônjuge <span class="sub" style="text-transform:none;letter-spacing:0">(se houver)</span></div>
+    <div class="fgrid">
+      <label class="f span4">Nome completo do cônjuge<input name="conjugeNome" value="${esc(c?.conjuge?.nome || "")}"></label>
+      <label class="f span2">CPF do cônjuge<input name="conjugeCpf" inputmode="numeric" value="${esc(c?.conjuge?.cpf || "")}" placeholder="000.000.000-00"><small class="doc-msg" data-docmsg="conjugeCpf"></small></label>
+    </div>
+    ${c ? `<div class="label cad-sec">Propriedades deste cliente</div>
+      <div class="cad-props">${props.map(p => `<button type="button" class="li" data-proc="${p.id}"><span class="t"><b>${p.propriedadeN ? "Propriedade " + p.propriedadeN + " · " : ""}${esc(p.imovelDados?.denominacao || p.imovel || p.cliente)}</b></span><span class="sub">${esc(p.codigo)} · ${esc(p.etapa)}</span></button>`).join("") || `<p class="sub">Nenhuma propriedade.</p>`}</div>
+      <button type="button" class="btn sm" data-addprop="${c.id}">+ Adicionar propriedade</button>`
+    : `<div class="cad-qtd"><div class="label cad-sec" style="margin:0">Imóveis</div><label class="f" style="flex-direction:row;align-items:center;gap:8px">Quantidade de imóveis<input type="number" id="cad-qtd" min="1" max="30" value="1" style="width:80px"></label></div>
+      <p class="sub" style="margin:0 0 8px">Cada imóvel vira um processo separado, vinculado a este cliente, com um único login no portal.</p>
+      <div id="cad-imoveis">${imovelBlocoHtml(1)}</div>`}
+    <p class="ag-erro" id="cad-erro" hidden></p>
+  </form>
+  <div class="dlg-f"><span class="sub">${c ? "Alterações de CPF e telefone são aplicadas a todas as propriedades." : "O login do portal é criado automaticamente."}</span><div style="display:flex;gap:8px"><button type="button" class="btn" data-close>Cancelar</button><button type="submit" form="fCad" class="btn primary" id="cad-salvar">${c ? "Salvar cadastro" : "Cadastrar cliente"}</button></div></div>`;
+  if (!dlg.open) dlg.showModal();
+  const f = $("#fCad");
+  const valDoc = nome => { const i = f.elements[nome]; const m = f.querySelector(`[data-docmsg="${nome}"]`); const v = i.value.trim(); if (!v) { m.textContent = ""; m.className = "doc-msg"; return true; } const r = validarDocs(v); m.textContent = r.ok ? "válido" : r.msg; m.className = "doc-msg " + (r.ok ? "ok" : "erro"); return r.ok; };
+  f.addEventListener("input", e => { if (["cpf", "conjugeCpf"].includes(e.target.name)) valDoc(e.target.name); });
+  f.addEventListener("focusout", e => {
+    const i = e.target;
+    if (["cpf", "conjugeCpf"].includes(i.name) && validarDocs(i.value).ok && i.value.trim()) i.value = formatarDocs(i.value);
+    if (i.name === "telefone") i.value = fmtTel(i.value);
+    if (i.name === "codigoIR") i.value = fmtCodIR(i.value);
+    if (i.name === "itr") i.value = fmtNirf(i.value);
+  });
+  const qtd = $("#cad-qtd");
+  qtd?.addEventListener("input", () => {
+    const n = Math.max(1, Math.min(30, +qtd.value || 1));
+    const box = $("#cad-imoveis"); const atuais = box.querySelectorAll(".cad-imovel").length;
+    for (let i = atuais + 1; i <= n; i++) box.insertAdjacentHTML("beforeend", imovelBlocoHtml(i));
+    for (let i = atuais; i > n; i--) box.querySelector(`.cad-imovel[data-imn="${i}"]`)?.remove();
+  });
+  f.addEventListener("submit", async ev => {
+    ev.preventDefault();
+    const erro = t => { const e = $("#cad-erro"); e.textContent = t; e.hidden = !t; if (t) e.scrollIntoView({block: "center", behavior: "smooth"}); };
+    const v = k => (f.elements[k]?.value || "").trim();
+    if (!v("nome") || v("nome").split(/\s+/).length < 2) return erro("Informe o nome completo do cliente.");
+    if (!telefone(v("telefone"))) return erro("Informe o telefone do cliente com DDD.");
+    if (!valDoc("cpf")) return erro("O CPF do cliente está inválido.");
+    if (!valDoc("conjugeCpf")) return erro("O CPF do cônjuge está inválido.");
+    erro("");
+    const dados = {nome: v("nome"), cpf: formatarDocs(v("cpf")), telefone: fmtTel(v("telefone")), endereco: v("endereco"),
+      conjuge: v("conjugeNome") || v("conjugeCpf") ? {nome: v("conjugeNome"), cpf: formatarDocs(v("conjugeCpf"))} : null};
+    const docs = [dados.cpf, dados.conjuge?.cpf].filter(Boolean).join("; ");
+    const btn = $("#cad-salvar"); btn.disabled = true; btn.textContent = "Salvando…";
+    try {
+      if (c) {
+        await S.db.doc("clientes/" + c.id).set({...c, ...dados, id: undefined, atualizadoEm: agoraISO(), atualizadoPor: S.me});
+        for (const p of propriedadesDe(c.id)) {
+          const nomeAnt = (p.cliente || "").split(/\s+[—–]\s+/);
+          await S.db.doc("demandas/" + p.id).update({cliente: `${dados.nome} — ${nomeAnt[1] || nomeCurtoImovel(p.imovelDados, p.propriedadeN || 1)}`, contato: dados.telefone, documento: docs, atualizadoEm: agoraISO(), atualizadoPor: S.me});
+        }
+        fecharDlg(); toast("Cadastro do cliente atualizado");
+      } else {
+        const imoveis = [...f.querySelectorAll(".cad-imovel")].map(fs => {
+          const g = k => (fs.querySelector(`[name="${k}"]`)?.value || "").trim();
+          return {denominacao: g("denominacao"), areaHa: numBR(g("areaHa")), codigoIR: fmtCodIR(g("codigoIR")), codMunicipio: g("codMunicipio"), municipio: g("municipio"),
+            matricula: g("matricula"), ccir: g("ccir"), car: g("car").toUpperCase(), itr: fmtNirf(g("itr")), indicacao: g("indicacao")};
+        });
+        await criarClienteComPropriedades(dados, imoveis, docs);
+        fecharDlg();
+      }
+    } catch (err) { falhaEscrita(err); btn.disabled = false; btn.textContent = c ? "Salvar cadastro" : "Cadastrar cliente"; }
+  });
+}
+async function criarClienteComPropriedades(dados, imoveis, docs, clienteExistente){
+  const cref = clienteExistente ? S.db.doc("clientes/" + clienteExistente.id) : S.db.collection("clientes").doc();
+  if (!clienteExistente) await cref.set({...dados, criadoEm: agoraISO(), criadoPor: S.me});
+  const ano = new Date().getFullYear();
+  let seq = Math.max(0, ...S.demandas.map(d => +((d.codigo || "").match(new RegExp("SAO-" + ano + "-(\\d+)")) || [])[1] || 0));
+  const jaTem = clienteExistente ? propriedadesDe(clienteExistente.id) : [];
+  const total = jaTem.length + imoveis.length;
+  const ids = [];
+  for (const [i, im] of imoveis.entries()) {
+    const n = jaTem.length + i + 1;
+    const ref = S.db.collection("demandas").doc(); ids.push(ref.id);
+    const quando = agoraISO();
+    await ref.set({
+      codigo: `SAO-${ano}-${String(++seq).padStart(3, "0")}`, cliente: `${dados.nome} — ${nomeCurtoImovel(im, n)}`,
+      clienteId: cref.id, propriedadeN: n,
+      servicos: [], etapa: "Orçamento", responsavel: S.me, prazo: null,
+      contato: dados.telefone, documento: docs, imovel: im.denominacao || "", municipio: im.municipio || "", areaHa: im.areaHa ?? null,
+      imovelDados: im, protocoloOrgao: "", protocoloNumero: "", protocoloPrevisao: null, notas: "", checklist: [],
+      vinculos: [], historico: [{em: quando, pessoa: S.me, txt: `criou a demanda pelo cadastro do cliente (propriedade ${n} de ${total})`}],
+      criadoEm: quando, atualizadoEm: quando, atualizadoPor: S.me
+    });
+  }
+  // vincula todas as propriedades do cliente entre si
+  const todas = [...jaTem.map(p => p.id), ...ids];
+  if (todas.length > 1) for (const id of todas) {
+    const atual = S.demandas.find(x => x.id === id) || (await S.db.doc("demandas/" + id).get()).data() || {};
+    const outras = todas.filter(x => x !== id && !(atual.vinculos || []).some(v => v.id === x)).map(x => ({id: x, rel: "Mesmo cliente", obs: "", em: agoraISO(), por: S.me}));
+    if (outras.length) await S.db.doc("demandas/" + id).update({vinculos: [...(atual.vinculos || []), ...outras]});
+  }
+  toast(imoveis.length > 1 ? `Cliente cadastrado com ${imoveis.length} propriedades` : "Cliente cadastrado");
+  for (let i = 0; i < 40 && !(S.demandas.some(d => d.id === ids[0]) && S.clientes.some(x => x.id === cref.id)); i++) await new Promise(r => setTimeout(r, 100));
+  irProcesso(ids[0]);
+  avisarLoginNovoCliente(ids[0]);
+  return ids;
+}
+function abrirNovaPropriedade(cid){
+  const c = S.clientes.find(x => x.id === cid); if (!c) return;
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "novaprop", unsubs: []};
+  const n = propriedadesDe(cid).length + 1;
+  const dlg = $("#dlg"); dlg.className = "big";
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">${esc(c.nome)}</span><h2 style="font-size:19px">Adicionar propriedade ${n}</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+    <form id="fProp2" class="dlg-b"><datalist id="cad-municipios">${MUNICIPIOS_ES.map(m => `<option value="${esc(m)}/ES">`).join("")}</datalist>${imovelBlocoHtml(n)}</form>
+    <div class="dlg-f"><span class="sub">Vira um novo processo vinculado a ${esc(c.nome.split(" ")[0])}, no mesmo login do portal.</span><div style="display:flex;gap:8px"><button type="button" class="btn" data-close>Cancelar</button><button type="submit" form="fProp2" class="btn primary">Adicionar</button></div></div>`;
+  if (!dlg.open) dlg.showModal();
+  $("#fProp2").addEventListener("submit", async ev => {
+    ev.preventDefault(); const fs = ev.target.querySelector(".cad-imovel"); const g = k => (fs.querySelector(`[name="${k}"]`)?.value || "").trim();
+    const im = {denominacao: g("denominacao"), areaHa: numBR(g("areaHa")), codigoIR: fmtCodIR(g("codigoIR")), codMunicipio: g("codMunicipio"), municipio: g("municipio"), matricula: g("matricula"), ccir: g("ccir"), car: g("car").toUpperCase(), itr: fmtNirf(g("itr")), indicacao: g("indicacao")};
+    ev.target.querySelector("input")?.blur();
+    try { await criarClienteComPropriedades({nome: c.nome, telefone: c.telefone}, [im], [c.cpf, c.conjuge?.cpf].filter(Boolean).join("; "), c); fecharDlg(); } catch (err) { falhaEscrita(err); }
+  });
+}
+document.addEventListener("click", e => {
+  if (e.target.closest("[data-novocliente]")) { e.stopPropagation(); abrirCadastroCliente(); return; }
+  const ec = e.target.closest("[data-editcliente]"); if (ec) { e.stopPropagation(); abrirCadastroCliente(ec.dataset.editcliente); return; }
+  const ap = e.target.closest("[data-addprop]"); if (ap) { e.stopPropagation(); abrirNovaPropriedade(ap.dataset.addprop); return; }
+}, true);
+
+/* ---------- Cartão do cliente e dados do imóvel no processo ---------- */
+function clienteCardHtml(d){
+  const c = clienteDe(d);
+  const im = d.imovelDados;
+  const props = c ? propriedadesDe(c.id) : [];
+  if (!c && !im) return "";
+  const linha = (k, v) => v ? `<div><span class="label">${k}</span><b>${esc(v)}</b></div>` : "";
+  return `<div class="card cad-card" style="margin-top:16px">
+    ${c ? `<div class="card-h"><div><span class="label">Cliente</span><h3>${esc(c.nome)}</h3></div>${S.somenteLeitura ? "" : `<button type="button" class="btn sm" data-editcliente="${c.id}">Editar cadastro</button>`}</div>
+    <div class="cad-dados">${linha("CPF", c.cpf)}${linha("Telefone", c.telefone)}${linha("Endereço", c.endereco)}${c.conjuge?.nome ? linha("Cônjuge", c.conjuge.nome + (c.conjuge.cpf ? " · CPF " + c.conjuge.cpf : "")) : ""}</div>
+    ${props.length > 1 || !S.somenteLeitura ? `<div class="label" style="margin:12px 0 6px">Propriedades (${props.length})</div><div class="cad-props-chips">${props.map(p => `<button type="button" class="chip-prop ${p.id === d.id ? "on" : ""}" data-proc="${p.id}">${p.propriedadeN || "•"} · ${esc(p.imovelDados?.denominacao || p.imovel || p.codigo)}</button>`).join("")}${S.somenteLeitura ? "" : `<button type="button" class="chip-prop add" data-addprop="${c.id}">+ propriedade</button>`}</div>` : ""}` : ""}
+    ${im ? `<div class="label" style="margin:14px 0 6px">Dados do imóvel${d.propriedadeN ? " · propriedade " + d.propriedadeN : ""}</div>
+    <div class="cad-dados">${linha("Denominação", im.denominacao)}${linha("Área total", im.areaHa != null ? String(im.areaHa).replace(".", ",") + " ha" : "")}${linha("Código do imóvel rural", im.codigoIR)}${linha("Código do município", im.codMunicipio)}${linha("Município", im.municipio)}${linha("Matrícula", im.matricula)}${linha("CCIR", im.ccir)}${linha("CAR", im.car)}${linha("ITR (NIRF)", im.itr)}</div>
+    ${im.indicacao ? `<p class="cad-ind"><span class="label">Como chegar</span>${esc(im.indicacao)}</p>` : ""}` : ""}
+  </div>`;
+}
+// formulário do cartão da demanda: campos do imóvel
+function imovelFormHtml(d){
+  const im = d.imovelDados || {};
+  return `<details class="mais" ${Object.values(im).some(v => v) ? "open" : ""}><summary>Dados do imóvel rural <span class="sub">(código do imóvel, CCIR, CAR, ITR…)</span></summary>
+    <div class="fgrid" style="margin-top:12px" id="d-imdados">${CAMPOS_IMOVEL.filter(([k]) => !["municipio"].includes(k)).map(([k, rot, ph, span]) => k === "indicacao"
+      ? `<label class="f span${span}">${rot}<textarea data-im="${k}" rows="2" placeholder="${esc(ph)}">${esc(im[k] || "")}</textarea></label>`
+      : `<label class="f span${span}">${rot}<input data-im="${k}" value="${esc(k === "areaHa" ? (im[k] ?? d.areaHa ?? "") : k === "denominacao" ? (im[k] || d.imovel || "") : (im[k] ?? ""))}" placeholder="${esc(ph)}"></label>`).join("")}</div></details>`;
+}
+
+function lerImovelForm(dlg, d){
+  const box = dlg.querySelector("#d-imdados"); if (!box) return d.imovelDados || null;
+  const im = {...(d.imovelDados || {})};
+  box.querySelectorAll("[data-im]").forEach(i => { const k = i.dataset.im; let val = i.value.trim(); if (k === "areaHa") val = numBR(val); if (k === "codigoIR") val = fmtCodIR(val); if (k === "itr") val = fmtNirf(val); if (k === "car") val = val.toUpperCase(); im[k] = val; });
+  return Object.values(im).some(x => x !== "" && x != null) ? im : null;
+}
+(function ligarV15(){
+  const iv = setInterval(() => { if (!S.db) return; clearInterval(iv);
+    S.db.collection("clientes").onSnapshot(s => { S.clientes = s.docs.map(d => ({id: d.id, ...d.data()})); if (["clientes", "inicio"].includes(S.tab)) render(); }, () => {});
+  }, 300);
+})();
 
 /* ---------- Conexão ---------- */
 render();
