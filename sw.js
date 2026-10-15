@@ -1,7 +1,7 @@
 /* Gestão Saotech — service worker
    - Instala como app e abre mesmo sem internet (arquivos da página e bibliotecas ficam guardados).
    - Recebe notificações (Web Push) mesmo com o app fechado. */
-const CACHE = "saotech-v13";
+const CACHE = "saotech-v14";
 const ARQUIVOS = ["./", "./index.html", "./config.js", "./backend.js", "./portal.js", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png",
   "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js"];
 const EXTERNOS = /^https:\/\/(cdn\.jsdelivr\.net|cdnjs\.cloudflare\.com|fonts\.googleapis\.com|fonts\.gstatic\.com)\//;

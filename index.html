@@ -325,7 +325,7 @@ a.btn.primary{color:var(--accent-ink)}
 /* v3: avisos, expediente */
 header.top{overflow:visible}
 header.top::before{border-radius:16px}
-.hdr-acts{display:flex;align-items:center;gap:8px;margin-left:auto;position:relative}
+.hdr-acts{display:flex;align-items:center;gap:8px;margin-left:auto;position:relative;flex-wrap:wrap;min-width:0}
 .bell{position:relative;width:40px;height:40px;border-radius:10px;border:1px solid #D9DBC4;background:#FFFFFF;color:#3A3F28;cursor:pointer;display:grid;place-items:center}
 .bell-n{position:absolute;top:-6px;right:-6px;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:var(--crit);color:#fff;font-size:11px;font-weight:600;display:grid;place-items:center}
 .bell-n:empty{display:none}
@@ -772,6 +772,10 @@ body.modo-portal #bv{display:none}
 .av-estrelas{display:flex;gap:4px} .av-estrelas button{border:0;background:none;font-size:34px;line-height:1;color:var(--line-2);cursor:pointer;padding:2px} .av-estrelas button.on{color:#C9A227}
 .av-aut{display:flex;gap:8px;align-items:flex-start;font-size:13px;margin-bottom:10px} .av-aut input{width:auto;margin-top:3px}
 .pt-push-ok{align-self:center;white-space:nowrap}
+.login-novo{position:fixed;z-index:160;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));width:min(560px,calc(100% - 32px));background:#2E3319;color:#F7F7DC;border-radius:14px;padding:12px 14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;box-shadow:0 14px 40px rgba(0,0,0,.35)}
+.login-novo>div:first-child{flex:1;min-width:200px;display:flex;flex-direction:column;gap:2px} .login-novo .label{color:#D9E15A} .login-novo .sub{color:#C9CCA8} .login-novo .acts{display:flex;gap:6px;align-items:center}
+.login-novo .btn:not(.lima){background:transparent;color:#F7F7DC;border-color:#6F7A4C}
+.lg-it{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line);flex-wrap:wrap} .lg-it:first-child{border-top:0} .lg-it .grow{flex:1;min-width:180px;display:flex;flex-direction:column}
 /* v13 */
 .geo-gnss{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
 .memo-res{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13.5px;background:var(--accent-soft);border-radius:10px;padding:8px 12px}
@@ -823,10 +827,10 @@ body.sem-login .wrap{visibility:hidden}
 <div id="login" hidden>
   <div class="box">
     <img class="logo" id="login-logo" alt="Saotech Geotecnologia">
-    <div><h1>Gestão Saotech</h1><p>Equipe: entre com seu e-mail. Clientes: use o usuário que a Saotech enviou (nome.sobrenome).</p></div>
+    <div><h1>Gestão Saotech</h1><p>Entre com seu usuário (nome.sobrenome) e senha. Clientes usam o usuário que a Saotech enviou.</p></div>
     <div id="login-msg" role="status" hidden></div>
     <form id="f-login" data-modo="entrar">
-      <label class="f">E-mail ou usuário<input id="l-email" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="nome.sobrenome ou e-mail" required></label>
+      <label class="f">Usuário<input id="l-email" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="nome.sobrenome" required></label>
       <label class="f">Senha<input id="l-senha" type="password" autocomplete="current-password" required></label>
       <button class="btn primary" type="submit">Entrar</button>
       <button class="link" type="button" id="l-esqueci">Esqueci a senha</button>
@@ -1301,7 +1305,7 @@ function ligarResumo(d, novo){
     try {
       await ref.set(body);
       toast(novo ? "Demanda criada com checklist" : "Demanda salva");
-      if (novo) { fecharDlg(); abrirDemanda(ref.id, "checklist"); } else { btn.disabled = false; btn.textContent = "Salvar"; }
+      if (novo) { fecharDlg(); abrirDemanda(ref.id, "checklist"); avisarLoginNovoCliente(ref.id); } else { btn.disabled = false; btn.textContent = "Salvar"; }
     } catch (err) { falhaEscrita(err); btn.disabled = false; btn.textContent = "Salvar"; }
   });
   dlg.querySelector("#d-del")?.addEventListener("click", async e => {
@@ -2494,6 +2498,7 @@ function viewClientes(){
   const sel = S.demandas.find(d => d.id === S.cliSel);
   const side = `<aside class="side card">
     <input id="cl-busca" type="search" placeholder="Buscar cliente, imóvel, código" value="${esc(S.cliBusca || "")}">
+    <button type="button" class="btn sm" data-logins style="width:100%">Logins dos clientes no portal</button>
     <div class="seg" role="group" aria-label="Filtro"><button type="button" data-clif="ativas" aria-pressed="${S.cliFiltro === "ativas"}">Em andamento</button><button type="button" data-clif="todas" aria-pressed="${S.cliFiltro === "todas"}">Todos</button><button type="button" data-clif="pendencias" aria-pressed="${S.cliFiltro === "pendencias"}" title="Cadastros incompletos">Pendências${nPend ? ` <span class="nbadge">${nPend}</span>` : ""}</button></div>
     <div class="lst">${lista.map(d => { const cl = d.checklist || []; const ok = cl.filter(i => i.ok).length; return `<button type="button" class="side-it" data-cli="${d.id}" aria-current="${d.id === S.cliSel}">
       <span class="r1"><b>${esc(d.cliente)}</b>${temNovidade(d) ? `<span class="ndot" title="Mensagem nova"></span>` : ""}</span>
@@ -4519,6 +4524,51 @@ document.addEventListener("click", e => { if (e.target.closest("#btnAuto")) abri
     if (S.finAcesso) { const b = $("#btnAuto"); if (b) b.hidden = false; }
   }, 300);
 })();
+
+
+/* ---------- Logins dos clientes: aviso ao criar e lista para a equipe ---------- */
+const dadosAcessoTxt = a => `Portal do Cliente Saotech\n${LINK_PORTAL()}\nUsuário: ${a.usuario}\nSenha: ${a.senha || SENHA_CLIENTE}`;
+async function copiarAcesso(a, btn){
+  try { await navigator.clipboard.writeText(dadosAcessoTxt(a)); if (btn) { const t = btn.textContent; btn.textContent = "Copiado ✓"; setTimeout(() => btn.textContent = t, 1800); } toast("Login copiado para a área de transferência"); }
+  catch { toast(dadosAcessoTxt(a)); }
+}
+async function avisarLoginNovoCliente(id){
+  if (!S.user?.portalAcessos) return;
+  let a = null;
+  for (let i = 0; i < 12 && !a; i++) { await new Promise(r => setTimeout(r, 700)); try { S.acessos = await S.user.portalAcessos(); a = acessoDe(id); } catch {} }
+  if (!a) return;
+  const d = S.demandas.find(x => x.id === id) || {};
+  const box = document.createElement("div"); box.className = "login-novo"; box.setAttribute("role", "status");
+  box.innerHTML = `<div><span class="label">Login do cliente criado</span><b>${esc(a.nome)}</b><div class="mono">Usuário: ${esc(a.usuario)} · Senha: ${esc(a.senha || SENHA_CLIENTE)}</div><span class="sub">Fica sempre disponível em Clientes → Logins dos clientes.</span></div>
+    <div class="acts"><button type="button" class="btn sm lima" data-lncopiar>Copiar login</button>${telefone(d.contato) ? `<a class="btn sm" target="_blank" rel="noopener" href="${msgWaAcesso(d, a)}">WhatsApp</a>` : ""}<button type="button" class="btn sm ghost" data-lnfechar aria-label="Fechar">✕</button></div>`;
+  document.body.appendChild(box);
+  box.querySelector("[data-lncopiar]").addEventListener("click", e => copiarAcesso(a, e.currentTarget));
+  box.querySelector("[data-lnfechar]").addEventListener("click", () => box.remove());
+  setTimeout(() => box.remove(), 60000);
+  if (["clientes", "conversas"].includes(S.tab)) render();
+}
+async function abrirLogins(){
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "logins", unsubs: []};
+  const dlg = $("#dlg"); dlg.className = "";
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">Portal do cliente</span><h2 style="font-size:19px">Logins dos clientes</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+    <div class="dlg-b"><input id="lg-busca" type="search" placeholder="Buscar cliente ou usuário" style="width:100%;margin-bottom:10px"><div id="lg-lista"><p class="muted">Carregando…</p></div>
+    <p class="sub" style="margin:10px 0 0">Endereço do portal: <span class="mono">${esc(LINK_PORTAL())}</span>. A senha é formada pelos 4 últimos dígitos do telefone do cliente (sem telefone: ${SENHA_CLIENTE}).</p></div>
+    <div class="dlg-f"><span></span><button type="button" class="btn" data-close>Fechar</button></div>`;
+  if (!dlg.open) dlg.showModal();
+  try { S.acessos = await S.user.portalAcessos(); } catch {}
+  const desenhar = () => {
+    const q = ($("#lg-busca")?.value || "").toLowerCase();
+    const l = (S.acessos || []).filter(a => !q || (a.nome + " " + a.usuario).toLowerCase().includes(q)).sort((a, b) => (a.nome || "").localeCompare(b.nome || "", "pt-BR"));
+    $("#lg-lista").innerHTML = l.map(a => { const ds = (a.demandas || []).map(x => S.demandas.find(y => y.id === x)?.codigo).filter(Boolean);
+      return `<div class="lg-it"><div class="grow"><b>${esc(a.nome)}</b><div class="mono">${esc(a.usuario)} · senha ${esc(a.senha || SENHA_CLIENTE)}</div>${ds.length ? `<span class="sub">${esc(ds.join(", "))}</span>` : ""}</div><button type="button" class="btn sm lima" data-lgcopiar="${esc(a.usuario)}">Copiar login</button></div>`; }).join("")
+      || `<p class="muted" style="margin:0">${(S.acessos || []).length ? "Nenhum login encontrado." : "Nenhum cliente cadastrado ainda. O login é criado automaticamente ao cadastrar um cliente."}</p>`;
+  };
+  desenhar();
+  $("#lg-busca").addEventListener("input", desenhar);
+  $("#lg-lista").addEventListener("click", e => { const b = e.target.closest("[data-lgcopiar]"); if (!b) return; const a = S.acessos.find(x => x.usuario === b.dataset.lgcopiar); if (a) copiarAcesso(a, b); });
+}
+document.addEventListener("click", e => { if (e.target.closest("[data-logins]")) { e.stopPropagation(); abrirLogins(); } }, true);
 
 /* ---------- Conexão ---------- */
 render();

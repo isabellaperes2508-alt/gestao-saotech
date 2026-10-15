@@ -89,15 +89,21 @@
       e.preventDefault();
       const btn = e.target.querySelector("button"); btn.disabled = true; btn.textContent = "Entrando…";
       let login = $("#l-email").value.trim().toLowerCase();
-      if (login && !login.includes("@")) login = login.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, ".") + "@clientes.saotech.com.br";
+      if (login && !login.includes("@")) {
+        const u = login.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, ".");
+        const {data: em} = await sb.rpc("login_email", {p_usuario: u});
+        login = em || u + "@clientes.saotech.com.br";
+      }
       const {data, error} = await sb.auth.signInWithPassword({email: login, password: $("#l-senha").value});
       btn.disabled = false; btn.textContent = "Entrar";
       if (error) { mostrarLogin(/invalid/i.test(error.message) ? "Usuário ou senha incorretos." : "Não foi possível entrar: " + error.message); return; }
       entrar(data.session);
     });
     $("#l-esqueci")?.addEventListener("click", async () => {
-      const email = $("#l-email").value.trim();
-      if (!email) { mostrarLogin("Digite seu e-mail acima e clique de novo em Esqueci a senha."); return; }
+      let email = $("#l-email").value.trim().toLowerCase();
+      if (!email) { mostrarLogin("Digite seu usuário acima e toque de novo em Esqueci a senha."); return; }
+      if (!email.includes("@")) { const {data: em} = await sb.rpc("login_email", {p_usuario: email.normalize("NFD").replace(/[\u0300-\u036f]/g, "")}); email = em || ""; }
+      if (!email || /@clientes\.saotech\.com\.br$/.test(email)) { mostrarLogin("Clientes: peça uma nova senha à equipe Saotech pelo WhatsApp."); return; }
       const {error} = await sb.auth.resetPasswordForEmail(email, {redirectTo: location.origin + location.pathname});
       mostrarLogin(error ? "Não foi possível enviar: " + error.message : "Enviamos um link para criar uma nova senha. Confira seu e-mail (e a caixa de spam).");
     });
