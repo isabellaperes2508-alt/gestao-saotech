@@ -196,8 +196,70 @@
     return {estado, ativar, desativar, renovar, ios, instalado};
   })();
 
+  /* ================= Leitor de PDF (miniaturas e páginas) com pdf.js ================= */
+  window.SaotechPdf = (() => {
+    const BASE = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
+    let p = null;
+    function carregar(){
+      if (p) return p;
+      p = new Promise((ok, falha) => {
+        if (window.pdfjsLib) return ok(window.pdfjsLib);
+        const s = document.createElement("script"); s.src = BASE + "pdf.min.js";
+        s.onload = async () => { const lib = window.pdfjsLib; if (!lib) { p = null; return falha(new Error("pdf.js")); }
+          try { const t = await (await fetch(BASE + "pdf.worker.min.js")).text(); lib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(new Blob([t], {type: "text/javascript"})); } catch { lib.GlobalWorkerOptions.workerSrc = BASE + "pdf.worker.min.js"; }
+          ok(lib); };
+        s.onerror = () => { p = null; falha(new Error("Leitor de PDF indisponível")); };
+        document.head.appendChild(s);
+      });
+      return p;
+    }
+    const docs = new Map();
+    function abrir(chave, obterBlob){
+      if (!docs.has(chave)) docs.set(chave, (async () => { const lib = await carregar(); const b = await obterBlob(); const data = new Uint8Array(await b.arrayBuffer()); return lib.getDocument({data, isEvalSupported: false}).promise; })().catch(e => { docs.delete(chave); throw e; }));
+      return docs.get(chave);
+    }
+    const mini = new Map(); let fila = Promise.resolve();
+    function miniatura(chave, obterBlob, largura = 300){
+      if (mini.has(chave)) return mini.get(chave);
+      const pr = fila = fila.then(async () => {
+        const doc = await abrir(chave, obterBlob); const pg = await doc.getPage(1);
+        const v0 = pg.getViewport({scale: 1}); const vp = pg.getViewport({scale: largura / v0.width});
+        const cv = document.createElement("canvas"); cv.width = Math.round(vp.width); cv.height = Math.round(vp.height);
+        await pg.render({canvasContext: cv.getContext("2d"), viewport: vp}).promise;
+        return cv.toDataURL("image/jpeg", .82);
+      }).catch(() => null);
+      mini.set(chave, pr); return pr;
+    }
+    async function renderizar(chave, obterBlob, el){
+      el.innerHTML = `<p class="pdf-carr">Abrindo PDF…</p>`;
+      try {
+        const doc = await abrir(chave, obterBlob); if (!el.isConnected) return;
+        el.innerHTML = "";
+        const larg = Math.max(260, Math.min((el.clientWidth || 800) - 8, 1000)); const n = Math.min(doc.numPages, 60);
+        for (let i = 1; i <= n; i++) {
+          if (!el.isConnected) return;
+          const pg = await doc.getPage(i); const v0 = pg.getViewport({scale: 1});
+          const dpr = Math.min(2, window.devicePixelRatio || 1); const vp = pg.getViewport({scale: larg / v0.width * dpr});
+          const cv = document.createElement("canvas"); cv.width = Math.round(vp.width); cv.height = Math.round(vp.height); cv.className = "pdf-pg"; cv.style.width = larg + "px";
+          el.appendChild(cv); await pg.render({canvasContext: cv.getContext("2d"), viewport: vp}).promise;
+        }
+        if (doc.numPages > n) el.insertAdjacentHTML("beforeend", `<p class="pdf-carr">Mostrando ${n} de ${doc.numPages} páginas. Baixe o arquivo para ver tudo.</p>`);
+      } catch { if (el.isConnected) el.innerHTML = `<p class="pdf-carr">Não foi possível mostrar a prévia deste PDF. Use o botão Baixar.</p>`; }
+    }
+    return {carregar, miniatura, renderizar};
+  })();
+
   /* ================= Portal do cliente ================= */
   const ETAPAS = ["Orçamento", "Aguardando entrada", "Campo", "Escritório", "Protocolo", "Entregue", "Concluída"];
+  const ETAPA_DESC = {
+    "Orçamento": "Entendemos o que você precisa, conferimos os documentos do imóvel e enviamos a proposta com valores e prazos.",
+    "Aguardando entrada": "Com a proposta aceita, aguardamos o pagamento da entrada para reservar a data do trabalho de campo.",
+    "Campo": "A equipe vai ao imóvel medir os limites com receptores GNSS de precisão, implantar marcos e registrar fotos. Os confrontantes podem acompanhar.",
+    "Escritório": "Processamos as medições, calculamos área e perímetro, desenhamos a planta e escrevemos o memorial descritivo com os confrontantes.",
+    "Protocolo": "Os documentos são protocolados no órgão responsável (INCRA/SIGEF, cartório, prefeitura ou órgão ambiental) e acompanhamos a análise.",
+    "Entregue": "Planta, memorial e demais documentos ficam disponíveis aqui no portal para você ver e baixar.",
+    "Concluída": "Serviço encerrado. Os documentos continuam guardados aqui no portal."
+  };
   const EXPLICA = {
     "Orçamento": "Estamos preparando a proposta do seu serviço.",
     "Aguardando entrada": "Proposta aprovada. Assim que a entrada for confirmada, agendamos o trabalho de campo.",
@@ -213,7 +275,14 @@
   let sb = null, dados = null, timer = null, enviando = false, form = null, erroForm = "", avEditar = null, avNota = 0, pushEst = "";
   const fTam = b => !b ? "" : b > 1048576 ? (b / 1048576).toLocaleString("pt-BR", {maximumFractionDigits: 1}) + " MB" : Math.max(1, Math.round(b / 1024)) + " KB";
   const brlP = v => (Number(v) || 0).toLocaleString("pt-BR", {style: "currency", currency: "BRL"});
-  let propForm = null, pixAberto = null;
+  let propForm = null, pixAberto = null, ptDoc = null, ptSel = new Set(), ptBaixando = "";
+  const baixarBlob = (b, nome) => { const u = URL.createObjectURL(b); const a = document.createElement("a"); a.href = u; a.download = nome; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 5000); };
+  const ehImg = d => /^image\//.test(d.tipo || "") || /\.(jpe?g|png|webp|gif)$/i.test(d.nome || "");
+  const ehPdf = d => /pdf/i.test(d.tipo || "") || /\.pdf$/i.test(d.nome || "");
+  const obterArq = id => async () => { const {data, error} = await sb.storage.from("anexos").download(id); if (error) throw error; return data; };
+  let zipP = null;
+  const carregarZip = () => zipP || (zipP = new Promise((ok, falha) => { if (window.JSZip) return ok(window.JSZip); const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"; s.onload = () => ok(window.JSZip); s.onerror = () => { zipP = null; falha(new Error("Sem internet para compactar.")); }; document.head.appendChild(s); }));
+  const miniHtml = d => ehImg(d) ? `<img data-blob="${esc(d.id)}" data-noprev alt="">` : ehPdf(d) ? `<img data-ptth="${esc(d.id)}" alt=""><span class="anx-ext">PDF</span>` : `<span class="anx-ext grande">${esc((String(d.nome || "").split(".").pop() || "ARQ").toUpperCase().slice(0, 5))}</span>`;
   function propostaHtml(p){
     const pr = p.fin?.proposta; if (!pr) return "";
     const pg = pr.pagamento || {};
@@ -247,6 +316,76 @@
     }).join("")}</div>`;
   }
   function docsHtml(p){
+    const ds = (p.docs || []).slice().reverse();
+    if (!ds.length) return `<div class="card" style="margin-top:12px" id="pt-docs"><h3>Documentos do imóvel</h3><p class="sub" style="margin:0">Quando a equipe liberar CCIR, ITR, matrícula, mapa, memorial e os demais documentos, eles aparecem aqui para você ver, baixar ou salvar tudo de uma vez.</p></div>`;
+    const n = ds.filter(d => ptSel.has(d.id)).length;
+    return `<div class="card" style="margin-top:12px" id="pt-docs"><div class="conv-h"><div><span class="label">${ds.length} arquivo${ds.length > 1 ? "s" : ""}</span><h3>Documentos do imóvel</h3></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">${n ? `<button type="button" class="btn sm" data-ptzip="sel">Baixar ${n} selecionado${n > 1 ? "s" : ""}${n > 1 ? " (ZIP)" : ""}</button>` : ""}<button type="button" class="btn sm primary" data-ptzip="tudo" ${ptBaixando ? "disabled" : ""}>${ptBaixando || "⬇ Baixar tudo (ZIP)"}</button></div></div>
+      <div class="pt-docs">${ds.map(d => `<div class="pt-docit ${ptSel.has(d.id) ? "sel" : ""}">
+        <label class="pt-docchk" title="Selecionar"><input type="checkbox" data-ptsel2="${esc(d.id)}" ${ptSel.has(d.id) ? "checked" : ""} aria-label="Selecionar ${esc(d.nome)}"></label>
+        <button type="button" class="pt-docth" data-ptver="${esc(d.id)}" aria-label="Ver ${esc(d.nome)}">${miniHtml(d)}</button>
+        <div class="grow"><b>${esc(d.rotulo || "Documento")}</b><span class="sub">${esc(d.nome)}${d.tam ? " · " + fTam(d.tam) : ""}${d.em ? " · " + fData(d.em) : ""}</span>
+          <div class="pt-docacts"><button type="button" class="btn sm" data-ptver="${esc(d.id)}">Ver</button><button type="button" class="btn sm" data-ptbaixa="${esc(d.id)}">Baixar</button></div></div>
+      </div>`).join("")}</div></div>`;
+  }
+  function visorHtml(p){
+    const ds = (p.docs || []).slice().reverse(); const d = ds.find(x => x.id === ptDoc); if (!d) return "";
+    return `<div class="pt-visor" role="dialog" aria-modal="true" aria-label="${esc(d.nome)}">
+      <div class="pt-vh"><button type="button" class="btn primary" data-ptvoltar>← Voltar</button><div class="grow"><b>${esc(d.rotulo || "Documento")}</b><span class="sub">${esc(d.nome)}</span></div><button type="button" class="btn sm lima" data-ptbaixa="${esc(d.id)}">⬇ Baixar</button></div>
+      <div class="pt-vgrid"><div class="pt-vb" data-id="${esc(d.id)}"></div>
+        <aside class="pt-vside"><span class="label">Outros documentos</span><div class="pt-vlist">${ds.filter(x => x.id !== d.id).map(x => `<button type="button" class="anx-si" data-ptver="${esc(x.id)}"><span class="th">${miniHtml(x)}</span><span class="t"><span class="nm">${esc(x.rotulo || x.nome)}</span><span class="sub">${esc(x.nome)}</span></span></button>`).join("") || `<p class="sub">Nenhum outro documento.</p>`}</div></aside></div></div>`;
+  }
+  function visorConteudo(el, d){
+    if (ehImg(d)) el.innerHTML = `<img class="anx-img" data-blob="${esc(d.id)}" data-noprev alt="${esc(d.nome)}">`;
+    else if (ehPdf(d)) { el.innerHTML = `<div class="pdf-pags"></div>`; window.SaotechPdf.renderizar(d.id, obterArq(d.id), el.firstChild); }
+    else el.innerHTML = `<div class="anx-semprev"><p>Este arquivo não tem prévia.</p><button type="button" class="btn primary" data-ptbaixa="${esc(d.id)}">Baixar arquivo</button></div>`;
+  }
+  async function baixarDocs(lista, nomeZip){
+    const arqs = [];
+    for (const [i, d] of lista.entries()) { ptBaixando = `Preparando ${i + 1} de ${lista.length}…`; const b = document.querySelector('[data-ptzip="tudo"]'); if (b) b.textContent = ptBaixando; try { arqs.push([d.nome, await obterArq(d.id)()]); } catch {} }
+    ptBaixando = "";
+    if (!arqs.length) { alert("Não foi possível baixar agora. Verifique a internet e tente de novo."); render(); return; }
+    if (arqs.length === 1) { baixarBlob(arqs[0][1], arqs[0][0]); render(); return; }
+    const JSZip = await carregarZip(); const z = new JSZip(); const usados = new Set();
+    arqs.forEach(([n0, b]) => { let n = n0, i = 2; while (usados.has(n)) n = n0.replace(/(\.[^.]+)?$/, ` (${i++})$1`); usados.add(n); z.file(n, b); });
+    baixarBlob(await z.generateAsync({type: "blob"}), nomeZip + ".zip"); render();
+  }
+  function imovelHtml(p){
+    const im = p.imovelDados || {}; const g = p.geo || {};
+    const u = im.tipo === "urbano";
+    const nf = v => v == null || v === "" ? "" : String(v).replace(".", ",");
+    const l = (u ? [["Inscrição imobiliária", im.inscricao], ["Endereço", [[im.logradouro, im.numero].filter(Boolean).join(", "), im.complemento, im.bairro, im.municipio, im.cep ? "CEP " + im.cep : ""].filter(Boolean).join(" · ")], ["Loteamento", im.loteamento], ["Quadra / lote", [im.quadra && "Qd. " + im.quadra, im.lote && "Lt. " + im.lote].filter(Boolean).join(" · ")], ["Área do terreno", im.areaTerrenoM2 != null ? nf(im.areaTerrenoM2) + " m²" : ""], ["Área construída", im.areaConstruidaM2 != null ? nf(im.areaConstruidaM2) + " m²" : ""]]
+      : [["Área", (g.areaHa || im.areaHa || p.areaHa) ? nf(g.areaHa || im.areaHa || p.areaHa) + " ha" : ""], ["Perímetro", g.perimetro ? nf(g.perimetro) + " m" : ""], ["Código do imóvel (SNCR)", im.codigoIR], ["CCIR", im.ccir], ["ITR (NIRF)", im.itr], ["CAR", im.car], ["Município", im.municipio || p.municipio]])
+      .concat([["Matrícula", im.matricula], ["CIB", im.cib], ["Geocódigo", im.geocodigo], ["Nº do processo", im.numProcesso]]).filter(([, v]) => v);
+    const temMapa = g.lat || (g.poligono || []).length;
+    if (!l.length && !temMapa) return "";
+    return `<div class="card" style="margin-top:12px"><div class="conv-h"><div><span class="label">${u ? "Imóvel urbano" : "Imóvel rural"}${p.propriedadeN ? " · propriedade " + p.propriedadeN : ""}</span><h3>${esc(im.denominacao || p.imovel || "Seu imóvel")}</h3></div></div>
+      ${temMapa ? `<div class="pt-mapa" data-ptmapa="${esc(p.id)}"></div><p class="sub" style="margin:6px 0 0">${(g.poligono || []).length ? "Limites medidos pela Saotech sobre imagem de satélite." : "Localização aproximada do imóvel."}</p>` : ""}
+      ${l.length ? `<div class="pt-imdados">${l.map(([k, v]) => `<div><span class="label">${esc(k)}</span><b>${esc(v)}</b></div>`).join("")}</div>` : ""}</div>`;
+  }
+  async function desenharMapas(el){
+    const box = el.querySelector("[data-ptmapa]:not([data-ok])"); if (!box || typeof carregarLeaflet !== "function") return;
+    const p = (dados.processos || []).find(x => x.id === box.dataset.ptmapa); const g = p?.geo; if (!g) return;
+    box.setAttribute("data-ok", "");
+    try {
+      const L = await carregarLeaflet(); if (!box.isConnected) return;
+      const m = L.map(box, {scrollWheelZoom: false, attributionControl: true}); const base = camadasBase(L); base.sat.addTo(m); L.control.layers({"Satélite": base.sat, "Ruas": base.ruas}, {}, {position: "topright"}).addTo(m);
+      if ((g.poligono || []).length > 2) { const pol = L.polygon(g.poligono, {color: "#D9E15A", weight: 3, fillOpacity: .15}).addTo(m); m.fitBounds(pol.getBounds().pad(.25)); }
+      else { L.circleMarker([g.lat, g.lng], {radius: 9, color: "#D9E15A", weight: 3, fillOpacity: .5}).addTo(m); m.setView([g.lat, g.lng], 15); }
+      box.__mapa = m; setTimeout(() => m.invalidateSize(), 80);
+    } catch { box.innerHTML = `<p class="sub" style="padding:20px">Mapa indisponível sem internet.</p>`; }
+  }
+  function etapasDescHtml(p, ia, fim){
+    return `<details class="card pt-etapas" style="margin-top:12px"><summary><h3 style="display:inline">Como funciona cada etapa</h3><span class="sub"> · toque para ver</span></summary>
+      <ol>${ETAPAS.map((e, i) => { const st = i < ia || fim ? "done" : i === ia ? "cur" : ""; return `<li class="${st}"><span class="n">${st === "done" ? "✓" : i + 1}</span><div><b>${esc(e)}</b>${st === "cur" ? ` <span class="chip">etapa atual</span>` : ""}<p>${esc(ETAPA_DESC[e] || "")}</p></div></li>`; }).join("")}</ol></details>`;
+  }
+  function equipeHtml(){
+    const eq = dados.equipe || []; if (!eq.length) return "";
+    return `<div class="card pt-equipe" style="margin-top:12px"><span class="label">Fale com a gente</span><h3>Equipe Saotech</h3><div class="pt-eqlist">${eq.map(x => { const t = String(x.telefone || "").replace(/\D/g, ""); const w = t ? (t.length <= 11 ? "55" + t : t) : "";
+      return `<div class="pt-eq"><span class="av">${esc(String(x.nome || "").split(/\s+/).map(s => s[0]).slice(0, 2).join("").toUpperCase())}</span><div class="grow"><b>${esc(x.nome)}</b><span class="sub">${esc(x.ocupacao || "")}</span>
+        <div class="pt-eqacts">${w ? `<a class="btn sm" href="https://wa.me/${w}" target="_blank" rel="noopener">WhatsApp</a>` : ""}${x.email ? `<a class="btn sm ghost" href="mailto:${esc(x.email)}">E-mail</a>` : ""}</div></div></div>`; }).join("")}</div></div>`;
+  }
+  function docsHtmlAntigo(p){
     const ds = p.docs || [];
     if (!ds.length) return "";
     return `<div class="card" style="margin-top:12px" id="pt-docs"><h3>Documentos para baixar</h3>${ds.slice().reverse().map(d => `<a class="pt-baixar" data-blob="${esc(d.id)}" data-noprev target="_blank" rel="noopener" download="${esc(d.nome)}"><span class="ic-doc">📄</span><span class="grow"><b>${esc(d.rotulo || "Documento")}</b><span class="sub">${esc(d.nome)}${d.tam ? " · " + fTam(d.tam) : ""}${d.em ? " · " + fData(d.em) : ""}</span></span><span class="btn sm">Baixar</span></a>`).join("")}</div>`;
@@ -290,6 +429,7 @@
         <div class="meta">${p.imovel ? `<span>${esc(p.imovel)}</span>` : ""}${p.municipio ? `<span>${esc(p.municipio)}</span>` : ""}${p.areaHa ? `<span>${String(p.areaHa).replace(".", ",")} ha</span>` : ""}</div>
       </div>
       <div class="card" style="margin-top:12px"><div class="stepper">${passos}</div><p class="pt-explica"><b>${esc(p.etapa)}:</b> ${explica}</p></div>
+      ${etapasDescHtml(p, ia, fim)}
       ${p.fin?.proposta?.status === "enviada" ? propostaHtml(p) : ""}
       <div class="pstats">
         <div class="pst"><span class="label">Andamento</span><b>${pct}%</b><div class="prog"><i style="width:${pct}%"></i></div><span class="sub">${ok} de ${cl.length} etapas internas</span></div>
@@ -300,8 +440,9 @@
       ${ag.length ? `<div class="card" style="margin-top:12px"><h3>Agenda</h3>${ag.map(a => `<div class="pt-doc">📅 <b>${fData(a.data)}${a.prazo && a.prazo > a.data ? " a " + fData(a.prazo) : ""}</b>${a.inicio ? " · " + esc(a.inicio) : ""} · ${esc(a.tipo || "")}</div>`).join("")}</div>` : ""}
       ${p.fin?.proposta?.status !== "enviada" ? propostaHtml(p) : ""}
       ${avaliacaoHtml(p)}
-      ${pagamentosHtml(p)}
       ${docsHtml(p)}
+      ${imovelHtml(p)}
+      ${pagamentosHtml(p)}
       ${hist ? `<div class="card" style="margin-top:12px"><h3>Histórico do processo</h3><div class="tl">${hist}</div></div>` : ""}
     </section>`;
   }
@@ -335,6 +476,7 @@
     const formVals = form ? Object.fromEntries(new FormData(el.querySelector(".ag-form") || document.createElement("form"))) : null;
     const chat = el.querySelector("#pt-chat"); const noFim = !chat || chat.scrollHeight - chat.scrollTop - chat.clientHeight < 60;
     const primeiro = (dados.nome || "").split(/\s+/)[0];
+    const visorAnt = el.querySelector(".pt-vb"); const mapaAnt = el.querySelector("[data-ptmapa][data-ok]");
     const procs = dados.processos || [];
     const agAtual = form && form.id ? (dados.agendamentos || []).find(a => a.id === form.id) : null;
     el.innerHTML = `
@@ -352,7 +494,15 @@
             <div class="row2"><label class="filebtn">📎 Foto ou documento<input type="file" id="pt-file" multiple accept="image/*,application/pdf"></label><span class="pend sub" id="pt-pend"></span><button class="btn primary" style="margin-left:auto" ${enviando ? "disabled" : ""}>Enviar</button></div></form>
         </aside>
       </main>
-      <p class="sub pt-rodape">Saotech Geotecnologia · Este acesso mostra apenas os seus processos.</p>`;
+      ${equipeHtml()}
+      <p class="sub pt-rodape">Saotech Geotecnologia · Este acesso mostra apenas os seus processos.</p>
+      ${ptDoc && procs.length ? visorHtml(procs[Math.min(window.__ptSel || 0, procs.length - 1)]) : ""}`;
+    document.body.classList.toggle("pt-visor-on", !!el.querySelector(".pt-visor"));
+    const vb = el.querySelector(".pt-vb");
+    if (vb) { if (visorAnt && visorAnt.dataset.id === vb.dataset.id) vb.replaceWith(visorAnt); else { const p = procs[Math.min(window.__ptSel || 0, procs.length - 1)]; visorConteudo(vb, (p.docs || []).find(x => x.id === vb.dataset.id)); } }
+    const mp = el.querySelector("[data-ptmapa]");
+    if (mp && mapaAnt && mapaAnt.dataset.ptmapa === mp.dataset.ptmapa) { mp.replaceWith(mapaAnt); setTimeout(() => mapaAnt.__mapa?.invalidateSize(), 50); } else desenharMapas(el);
+    el.querySelectorAll("img[data-ptth]").forEach(img => window.SaotechPdf.miniatura(img.dataset.ptth, obterArq(img.dataset.ptth)).then(u => { if (u) img.src = u; }));
     if (formVals) { const f = el.querySelector(".ag-form"); if (f) for (const [k, v] of Object.entries(formVals)) { const inp = f.elements[k]; if (!inp) continue; if (inp instanceof RadioNodeList) { [...inp].forEach(r => r.checked = r.value === v); } else inp.value = v; } }
     const c = el.querySelector("#pt-chat"); if (c && noFim) c.scrollTop = c.scrollHeight;
     if (el.querySelector("[data-pixqr]")) window.SaotechPix.preencherQR(el);
@@ -360,7 +510,7 @@
   }
   async function atualizar(){
     if (form) return; // não interrompe quem está preenchendo o agendamento
-    if (document.activeElement?.id === "av-com" || propForm || pixAberto) return;
+    if (document.activeElement?.id === "av-com" || propForm || pixAberto || ptDoc || ptBaixando) return;
     try { const {data, error} = await sb.rpc("portal_dados"); if (!error && data) { const antes = JSON.stringify(dados); dados = data; if (JSON.stringify(dados) !== antes) render(); } } catch {}
   }
   async function enviarArquivos(files){
@@ -405,7 +555,11 @@
       const an = e.target.closest("[data-avnota]"); if (an) { avNota = +an.dataset.avnota; render(); return; }
       const ae = e.target.closest("[data-avedit]"); if (ae) { avEditar = ae.dataset.avedit; avNota = 0; render(); return; }
       if (e.target.closest("[data-avcancel]")) { avEditar = null; avNota = 0; render(); return; }
-      const t = e.target.closest("[data-ptsel]"); if (t) { window.__ptSel = +t.dataset.ptsel; render(); return; }
+      const t = e.target.closest("[data-ptsel]"); if (t) { window.__ptSel = +t.dataset.ptsel; ptDoc = null; ptSel.clear(); render(); return; }
+      const pv = e.target.closest("[data-ptver]"); if (pv) { ptDoc = pv.dataset.ptver; render(); el.querySelector(".pt-visor")?.scrollTo(0, 0); return; }
+      if (e.target.closest("[data-ptvoltar]")) { ptDoc = null; render(); document.getElementById("pt-docs")?.scrollIntoView({block: "start"}); return; }
+      const pb = e.target.closest("[data-ptbaixa]"); if (pb) { const p = (dados.processos || [])[Math.min(window.__ptSel || 0, (dados.processos || []).length - 1)]; const d = (p?.docs || []).find(x => x.id === pb.dataset.ptbaixa); if (d) { pb.disabled = true; try { baixarBlob(await obterArq(d.id)(), d.nome); } catch { alert("Não foi possível baixar agora. Tente de novo."); } pb.disabled = false; } return; }
+      const pz = e.target.closest("[data-ptzip]"); if (pz) { const p = (dados.processos || [])[Math.min(window.__ptSel || 0, (dados.processos || []).length - 1)]; const ds = (p?.docs || []).filter(d => pz.dataset.ptzip === "tudo" || ptSel.has(d.id)); if (ds.length) { pz.disabled = true; await baixarDocs(ds, `documentos-${String(p.codigo || "saotech").toLowerCase()}`); } return; }
       if (e.target.closest("#pt-agendar")) { form = {modo: "novo"}; erroForm = ""; render(); el.querySelector(".ag-form")?.scrollIntoView({behavior: "smooth", block: "center"}); return; }
       if (e.target.closest("[data-agfechar]")) { form = null; erroForm = ""; render(); return; }
       const ac = e.target.closest("[data-agacao]");
@@ -415,7 +569,8 @@
         form = {modo: acao, id}; erroForm = ""; render(); el.querySelector(".ag-form")?.scrollIntoView({behavior: "smooth", block: "center"});
       }
     });
-    el.addEventListener("change", e => { if (e.target.id === "pt-file") { const p = document.getElementById("pt-pend"); if (p) p.textContent = e.target.files.length ? `${e.target.files.length} arquivo(s) selecionado(s)` : ""; } });
+    document.addEventListener("keydown", e => { if (e.key === "Escape" && ptDoc) { ptDoc = null; render(); } });
+    el.addEventListener("change", e => { const sc = e.target.closest("[data-ptsel2]"); if (sc) { sc.checked ? ptSel.add(sc.dataset.ptsel2) : ptSel.delete(sc.dataset.ptsel2); render(); return; } if (e.target.id === "pt-file") { const p = document.getElementById("pt-pend"); if (p) p.textContent = e.target.files.length ? `${e.target.files.length} arquivo(s) selecionado(s)` : ""; } });
     el.addEventListener("submit", async e => {
       const f = e.target.closest(".ag-form");
       if (f) {

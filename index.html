@@ -642,6 +642,64 @@ a.comp .ic{width:13px;height:13px}
   body.imprimindo #dlg .dlg-b{padding:0;overflow:visible}
   body.imprimindo .recibo{border:0;padding:0;max-width:none}
 }
+
+/* v18 · anexos */
+dialog.big.anx-wide{width:min(1280px,calc(100vw - 16px))}
+.anx-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+.anx-filtros{display:flex;gap:4px;flex-wrap:wrap} .anx-filtros button{border:1px solid var(--line-2);background:var(--surface);border-radius:999px;padding:5px 12px;font:inherit;font-size:13px;cursor:pointer;color:var(--ink)} .anx-filtros button span{color:var(--muted);font-size:12px;margin-left:2px} .anx-filtros button[aria-selected=true]{background:var(--musgo);color:var(--creme);border-color:var(--musgo)} .anx-filtros button[aria-selected=true] span{color:inherit;opacity:.8}
+.anx-acoes{display:flex;gap:6px;align-items:center;flex-wrap:wrap;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:8px 10px;position:sticky;top:-16px;z-index:2} .anx-acoes select{width:auto;max-width:190px} .anx-sep{width:1px;height:22px;background:var(--line-2)}
+.anx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.anx-it,.anx-si{display:flex;flex-direction:column;gap:3px;text-align:left;background:none;border:0;padding:0;font:inherit;color:var(--ink);cursor:pointer;position:relative;min-width:0}
+.anx-it .th,.anx-si .th{aspect-ratio:3/4;border-radius:10px;overflow:hidden;background:var(--surface-2);border:1px solid var(--line);display:grid;place-items:center;position:relative}
+.anx-it .th img,.anx-si .th img{width:100%;height:100%;object-fit:cover;object-position:top} img[data-pdfth]:not([src]){display:none}
+.anx-it:hover .th{border-color:var(--accent)} .anx-it.sel .th{outline:3px solid var(--accent);outline-offset:1px}
+.anx-it .nm,.anx-si .nm{font-size:12.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .anx-it .sub{font-size:11px}
+.anx-ext{position:absolute;left:6px;bottom:6px;background:#2E3319;color:#F5F5E8;font-size:10px;font-weight:700;letter-spacing:.06em;border-radius:5px;padding:2px 6px} .anx-ext.grande{position:static;font-size:15px;padding:6px 10px}
+.anx-chk{position:absolute;top:6px;left:6px;z-index:1;width:24px;height:24px;border-radius:7px;border:2px solid #fff;background:rgba(46,51,25,.55);color:#fff;display:grid;place-items:center;font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.3)} .anx-it.sel .anx-chk{background:var(--accent);color:#2E3319;border-color:var(--accent)}
+.anx-bs{display:flex;gap:4px;flex-wrap:wrap} .anx-b{font-size:10.5px;font-weight:600;border-radius:999px;padding:1px 7px;white-space:nowrap} .anx-b.ok{background:#E3EED2;color:#3F6212} .anx-b.velho{background:#EEE7DA;color:#7A5C2E} .anx-b.cli{background:#E1ECF7;color:#1F5A8A} .anx-b.bloq{background:#F6E0DA;color:#9B3B22}
+.anx-split{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:14px;min-height:min(72vh,820px)}
+.anx-view{display:flex;flex-direction:column;gap:8px;min-width:0}
+.anx-vh{display:flex;align-items:center;gap:10px;flex-wrap:wrap} .anx-vh .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px}
+.anx-voltar{font-size:14px;padding:7px 14px}
+.anx-vacts{display:flex;gap:6px;flex-wrap:wrap} .anx-vacts .btn.on{background:#E3EED2;border-color:#9DB86B}
+.anx-vb{flex:1;min-height:420px;background:#2A2E1A;border-radius:12px;overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:10px}
+.anx-img{max-width:100%;max-height:78vh;object-fit:contain;margin:auto;border-radius:4px}
+.pdf-pags{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%} .pdf-pg{max-width:100%;height:auto;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.35);border-radius:2px} .pdf-carr{color:#E8EAD6;font-size:13px;margin:30px auto;text-align:center}
+.anx-semprev{margin:auto;color:#E8EAD6;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;padding:40px 10px}
+.anx-side{border-left:1px solid var(--line);padding-left:12px;display:flex;flex-direction:column;gap:8px;min-height:0} .anx-side-l{display:flex;flex-direction:column;gap:8px;overflow:auto;max-height:76vh;padding-right:4px}
+.anx-si{flex-direction:row;gap:8px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:6px} .anx-si:hover{border-color:var(--accent);background:var(--surface-2)} .anx-si .th{width:54px;flex:none;border-radius:6px} .anx-si .t{display:flex;flex-direction:column;gap:2px;min-width:0} .anx-si .anx-ext{font-size:8.5px;left:3px;bottom:3px;padding:1px 4px} .anx-si .anx-ext.grande{font-size:10px;padding:3px 5px}
+@media (max-width:760px){.anx-sep{display:none} .anx-acoes{top:-16px;padding:6px 8px} .anx-split{grid-template-columns:minmax(0,1fr);min-height:0} .anx-vb{min-height:56vh} .anx-side{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:10px} .anx-side-l{flex-direction:row;overflow-x:auto;max-height:none;padding-bottom:6px} .anx-si{flex-direction:column;width:110px;flex:none;align-items:stretch} .anx-si .th{width:100%} .anx-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.prev-voltar{font-size:14px} .prev-b.pdf{overflow:auto;place-items:start center;padding:10px}
+.doc-cli.bloq{opacity:.62} .doc-cli.bloq a{text-decoration:line-through}
+.ficha-wrap{border:1px solid var(--line);border-radius:12px;padding:18px;background:#fff;color:#2E3319;font-size:13.5px}
+.ficha-wrap .rc-top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #2E3319;padding-bottom:10px;margin-bottom:6px;gap:10px} .ficha-wrap .rc-top img{height:38px}
+.ficha-wrap .rc-t{font-family:var(--f-display);font-weight:700;font-size:18px;letter-spacing:.1em;text-align:right} .ficha-wrap .rc-n{font-size:12px;color:#656B51;text-align:right}
+.ficha-wrap h4{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#5C6B3D;margin:16px 0 4px} .ficha-wrap table{width:100%;border-collapse:collapse}
+.ficha-wrap .rc-tab td{padding:4px 8px;border-bottom:1px solid #EAEBDA;vertical-align:top;overflow-wrap:anywhere} .ficha-wrap .rc-tab td:first-child{color:#656B51;width:36%;overflow-wrap:normal;hyphens:auto}
+.ficha-wrap .doc-itens th{text-align:left;font-size:11px;text-transform:uppercase;color:#656B51;border-bottom:2px solid #2E3319;padding:4px 6px} .ficha-wrap .doc-itens td{padding:5px 6px;border-bottom:1px solid #EAEBDA;overflow-wrap:anywhere}
+@media (max-width:560px){.ficha-wrap{padding:12px} .ficha-ct thead{display:none} .ficha-ct td{display:block;border:0!important;padding:1px 4px!important} .ficha-ct tr{display:block;border-bottom:1px solid #EAEBDA;padding:4px 0}}
+
+/* v18 · portal */
+.pt-docs{display:flex;flex-direction:column}
+.pt-docit{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)} .pt-docit:first-child{border-top:0} .pt-docit.sel{background:linear-gradient(90deg,rgba(217,225,90,.18),transparent)}
+.pt-docchk{display:grid;place-items:center;padding:4px} .pt-docchk input{width:20px;height:20px;accent-color:var(--musgo)}
+.pt-docth{width:64px;aspect-ratio:3/4;flex:none;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);overflow:hidden;display:grid;place-items:center;position:relative;cursor:pointer;padding:0} .pt-docth img{width:100%;height:100%;object-fit:cover;object-position:top} .pt-docth .anx-ext{font-size:8.5px;left:3px;bottom:3px;padding:1px 4px} .pt-docth .anx-ext.grande{font-size:11px;padding:3px 6px}
+img[data-ptth]:not([src]){display:none}
+.pt-docit .grow{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px} .pt-docit .sub{overflow-wrap:anywhere} .pt-docacts{display:flex;gap:6px;margin-top:4px}
+.pt-visor{position:fixed;inset:0;z-index:200;background:var(--bg,#F5F5EC);display:flex;flex-direction:column}
+body.pt-visor-on{overflow:hidden}
+.pt-vh{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--surface,#fff);flex-wrap:wrap} .pt-vh .grow{flex:1;min-width:0;display:flex;flex-direction:column} .pt-vh .sub{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pt-vgrid{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 260px}
+.pt-vb{overflow:auto;background:#2A2E1A;display:flex;justify-content:center;align-items:flex-start;padding:12px}
+.pt-vside{border-left:1px solid var(--line);padding:12px;overflow:auto;display:flex;flex-direction:column;gap:8px;background:var(--surface,#fff)} .pt-vlist{display:flex;flex-direction:column;gap:8px}
+@media (max-width:760px){.pt-vgrid{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto} .pt-vside{border-left:0;border-top:1px solid var(--line);max-height:none} .pt-vlist{flex-direction:row;overflow-x:auto} .pt-vlist .anx-si{flex-direction:column;width:104px;flex:none;align-items:stretch} .pt-vlist .anx-si .th{width:100%}}
+.pt-mapa{height:300px;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--surface-2)}
+.pt-imdados{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px 16px;margin-top:12px} .pt-imdados>div{display:flex;flex-direction:column;min-width:0} .pt-imdados b{font-weight:500;overflow-wrap:anywhere}
+.pt-etapas summary{cursor:pointer;list-style:none} .pt-etapas summary::-webkit-details-marker{display:none}
+.pt-etapas ol{list-style:none;padding:0;margin:12px 0 0;display:flex;flex-direction:column;gap:10px} .pt-etapas li{display:flex;gap:10px;align-items:flex-start} .pt-etapas li p{margin:2px 0 0;font-size:13.5px;color:var(--ink-2,#555)}
+.pt-etapas .n{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line-2);display:grid;place-items:center;font-size:12px;font-weight:700;flex:none} .pt-etapas li.done .n{background:var(--musgo);color:var(--creme);border-color:var(--musgo)} .pt-etapas li.cur .n{background:var(--accent);border-color:var(--accent);color:#2E3319}
+.pt-eqlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-top:8px}
+.pt-eq{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:10px} .pt-eq .av{width:38px;height:38px;border-radius:50%;background:var(--musgo);color:var(--creme);display:grid;place-items:center;font-weight:700;font-size:13px;flex:none} .pt-eq .grow{display:flex;flex-direction:column;gap:2px;min-width:0} .pt-eqacts{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
 /* pré-visualização */
 dialog.prev{width:min(1100px,calc(100vw - 16px));height:calc(100dvh - 24px);display:flex;flex-direction:column}
 dialog.prev:not([open]){display:none}
@@ -781,6 +839,10 @@ body.modo-portal #bv{display:none}
 .cf-docs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px} .cf-doc{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line-2);border-radius:999px;padding:3px 4px 3px 10px;font-size:13px;max-width:100%} .cf-doc a{display:inline-flex;align-items:center;gap:4px;color:inherit;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:260px} .cf-doc a svg{width:14px;height:14px;flex:none} .cf-doc.rm{opacity:.45;text-decoration:line-through} .cf-doc button{border:0;background:none;cursor:pointer;color:var(--muted);padding:0 6px;font-size:13px}
 .cf-arq{display:flex;flex-wrap:wrap;gap:8px;align-items:center} .cf-arq select{width:auto}
 .conf-it .cf-docs{margin:6px 0 0}
+.seg-tipo{display:inline-flex;border:1px solid var(--line-2);border-radius:10px;padding:3px;gap:3px;margin:2px 0 10px;flex-wrap:wrap} .seg-tipo label{cursor:pointer} .seg-tipo input{position:absolute;opacity:0;pointer-events:none} .seg-tipo span{display:block;padding:6px 14px;border-radius:7px;font-weight:500;font-size:14px} .seg-tipo input:checked+span{background:var(--musgo);color:var(--creme)} .seg-tipo input:focus-visible+span{outline:2px solid var(--accent)}
+.cad-pessoa{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:4px} .cad-pessoa .seg-tipo{margin:0}
+.fgrid[hidden],[data-so][hidden]{display:none!important}
+.ct-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px} .ct-card{border:1px solid var(--line);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:2px;align-items:flex-start} .ct-card .btn{margin-top:4px}
 .cad-sec{margin:14px 0 6px} .cad-sec:first-of-type{margin-top:0}
 .cad-qtd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:16px 0 6px;padding-top:12px;border-top:1px solid var(--line)}
 .cad-imovel{border:1px solid var(--line-2);border-radius:12px;padding:10px 12px 12px;margin:0 0 12px} .cad-imovel legend{font-family:var(--f-display);font-weight:700;padding:0 6px;color:var(--accent)}
@@ -2511,14 +2573,14 @@ function viewClientes(){
   if (S.cliFiltro === "ativas") lista = lista.filter(d => ATIVAS.includes(d.etapa) || d.etapa === "Pausada");
   if (S.cliFiltro === "pendencias") lista = lista.filter(d => !d.exemplo && pendenciasDe(d).length);
   const nPend = S.demandas.filter(d => !d.exemplo && pendenciasDe(d).length).length;
-  if (q) lista = lista.filter(d => [d.codigo, d.cliente, d.imovel, d.municipio, d.contato, d.documento, soDig(d.documento), d.imovelDados?.codigoIR, d.imovelDados?.matricula, d.imovelDados?.car].join(" ").toLowerCase().includes(q));
+  if (q) lista = lista.filter(d => [d.codigo, d.cliente, d.imovel, d.municipio, d.contato, d.documento, soDig(d.documento), d.imovelDados?.codigoIR, d.imovelDados?.matricula, d.imovelDados?.car, d.imovelDados?.numProcesso, d.imovelDados?.cib, d.imovelDados?.inscricao, d.imovelDados?.geocodigo].join(" ").toLowerCase().includes(q));
   lista.sort((a, b) => (a.cliente || "").localeCompare(b.cliente || "", "pt-BR"));
   if (!lista.some(d => d.id === S.cliSel)) S.cliSel = lista[0]?.id || null;
   const sel = S.demandas.find(d => d.id === S.cliSel);
   const side = `<aside class="side card">
     <input id="cl-busca" type="search" placeholder="Buscar cliente, imóvel, código" value="${esc(S.cliBusca || "")}">
     ${S.somenteLeitura ? "" : `<button type="button" class="btn primary" data-novocliente style="width:100%">+ Novo cliente</button>`}
-    <div style="display:flex;gap:6px"><button type="button" class="btn sm" data-logins style="flex:1">Logins dos clientes</button><button type="button" class="btn sm" data-conflista style="flex:1">Confrontantes</button></div>
+    <div style="display:flex;gap:6px"><button type="button" class="btn sm" data-logins style="flex:1">Logins dos clientes</button><button type="button" class="btn sm" data-conflista style="flex:1">Confrontantes</button></div><button type="button" class="btn sm" data-contatoseq style="width:100%;margin-top:6px">Contatos da equipe no portal</button>
     <div class="seg" role="group" aria-label="Filtro"><button type="button" data-clif="ativas" aria-pressed="${S.cliFiltro === "ativas"}">Em andamento</button><button type="button" data-clif="todas" aria-pressed="${S.cliFiltro === "todas"}">Todos</button><button type="button" data-clif="pendencias" aria-pressed="${S.cliFiltro === "pendencias"}" title="Cadastros incompletos">Pendências${nPend ? ` <span class="nbadge">${nPend}</span>` : ""}</button></div>
     <div class="lst">${lista.map(d => { const cl = d.checklist || []; const ok = cl.filter(i => i.ok).length; return `<button type="button" class="side-it" data-cli="${d.id}" aria-current="${d.id === S.cliSel}">
       <span class="r1"><b>${esc(d.cliente)}</b>${temNovidade(d) ? `<span class="ndot" title="Mensagem nova"></span>` : ""}</span>
@@ -3449,7 +3511,7 @@ function pendenciasViewHtml(lista){
 document.addEventListener("click", e => { const b = e.target.closest("[data-clif-sair]"); if (b) S.cliFiltro = "todas"; }, true);
 
 /* ---------- Documentos para o cliente baixar no portal ---------- */
-const ROTULOS_DOC = ["Planta final", "Memorial descritivo", "Recibo", "Contrato", "Certidão / matrícula", "ART / TRT", "Relatório", "Outro"];
+const ROTULOS_DOC = ["Documento", "Planta final", "Mapa e memorial descritivo", "Memorial descritivo", "Matrícula", "CCIR", "ITR", "CAR", "CIB", "Certidão", "Contrato", "Recibo", "ART / TRT", "Relatório", "Foto", "Outro"];
 function docsClienteHtml(d){
   const a = acessoDe(d.id); if (!a || d.exemplo) return "";
   const lista = d.docsCliente || [];
@@ -4606,42 +4668,137 @@ const CAMPOS_IMOVEL = [
   ["matricula", "Matrícula", "Nº e cartório", 3],
   ["ccir", "Número do CCIR", "", 2],
   ["car", "CAR (recibo de inscrição)", "ES-0000000-…", 2],
-  ["itr", "ITR (NIRF / CIB)", "0.000.000-0", 2],
+  ["itr", "ITR (NIRF)", "0.000.000-0", 2],
+  ["cib", "CIB (Cadastro Imobiliário Brasileiro)", "", 2],
+  ["geocodigo", "Geocódigo", "", 2],
+  ["numProcesso", "Número do processo", "INCRA, SIGEF, cartório, prefeitura…", 2],
   ["indicacao", "Indicação para localização", "Como chegar: estrada, referências, coordenadas…", 6]
 ];
+const CAMPOS_URBANO = [
+  ["denominacao", "Identificação do imóvel", "Ex.: Casa, Lote 12, Sala 204", 4],
+  ["inscricao", "Inscrição imobiliária (IPTU)", "", 2],
+  ["cep", "CEP", "00000-000", 2],
+  ["logradouro", "Logradouro", "Rua, avenida…", 3],
+  ["numero", "Número", "", 1],
+  ["complemento", "Complemento", "", 2],
+  ["bairro", "Bairro", "", 2],
+  ["municipio", "Município / UF", "Ex.: Vila Velha/ES", 2],
+  ["loteamento", "Loteamento / condomínio", "", 2],
+  ["quadra", "Quadra", "", 1],
+  ["lote", "Lote", "", 1],
+  ["zona", "Zona (plano diretor)", "Ex.: ZR-2", 2],
+  ["areaTerrenoM2", "Área do terreno (m²)", "0,00", 2],
+  ["areaConstruidaM2", "Área construída (m²)", "0,00", 2],
+  ["testada", "Testada / frente (m)", "0,00", 2],
+  ["matricula", "Matrícula", "Nº e cartório", 2],
+  ["cib", "CIB (Cadastro Imobiliário Brasileiro)", "", 2],
+  ["geocodigo", "Geocódigo", "", 2],
+  ["numProcesso", "Número do processo", "Prefeitura, cartório…", 2],
+  ["indicacao", "Referência para localização", "Pontos de referência, acesso…", 4]
+];
+const NUM_IMOVEL = ["areaHa", "areaTerrenoM2", "areaConstruidaM2", "testada"];
+const numArea = v => { if (v == null || String(v).trim() === "") return null; const t = String(v).trim().replace(/\s/g, ""); const n = parseFloat(t.includes(",") ? t.replace(/\./g, "").replace(",", ".") : t); return isNaN(n) ? null : Math.round(n * 10000) / 10000; };
+const fmtArea = v => v == null || v === "" ? "" : String(v).replace(".", ",");
+function camposImovelHtml(tipo, im, attr){
+  const lista = tipo === "urbano" ? CAMPOS_URBANO : CAMPOS_IMOVEL;
+  return lista.map(([k, rot, ph, span]) => {
+    const val = NUM_IMOVEL.includes(k) ? fmtArea(im[k]) : (im[k] ?? "");
+    return k === "indicacao"
+      ? `<label class="f span${span}">${rot}<textarea ${attr}="${k}" rows="2" placeholder="${esc(ph)}">${esc(val)}</textarea></label>`
+      : `<label class="f span${span}">${rot}<input ${attr}="${k}" value="${esc(val)}" placeholder="${esc(ph)}" ${NUM_IMOVEL.includes(k) ? 'inputmode="decimal"' : k === "cep" ? 'inputmode="numeric"' : ""} ${k === "municipio" ? 'list="cad-municipios"' : ""}></label>`;
+  }).join("");
+}
+function tipoImovelHtml(nome, tipo){
+  return `<div class="seg-tipo" role="radiogroup" aria-label="Tipo de imóvel"><label><input type="radio" name="${nome}" data-imtipo value="rural" ${tipo !== "urbano" ? "checked" : ""}><span>🌾 Rural</span></label><label><input type="radio" name="${nome}" data-imtipo value="urbano" ${tipo === "urbano" ? "checked" : ""}><span>🏙️ Urbano</span></label></div>`;
+}
+function lerCamposImovel(box, attr){
+  const tipo = box.querySelector("[data-imtipo]:checked")?.value || "rural";
+  const g = box.querySelector(`[data-grupo="${tipo}"]`) || box;
+  const v = k => (g.querySelector(`[${attr}="${k}"]`)?.value || "").trim();
+  if (tipo === "urbano") return {tipo, denominacao: v("denominacao"), inscricao: v("inscricao"), cep: fmtCep(v("cep")), logradouro: v("logradouro"), numero: v("numero"), complemento: v("complemento"), bairro: v("bairro"), municipio: v("municipio"),
+    loteamento: v("loteamento"), quadra: v("quadra"), lote: v("lote"), zona: v("zona"), areaTerrenoM2: numArea(v("areaTerrenoM2")), areaConstruidaM2: numArea(v("areaConstruidaM2")), testada: numArea(v("testada")),
+    matricula: v("matricula"), cib: v("cib"), geocodigo: v("geocodigo"), numProcesso: v("numProcesso"), indicacao: v("indicacao")};
+  return {tipo, denominacao: v("denominacao"), areaHa: numArea(v("areaHa")), codigoIR: fmtCodIR(v("codigoIR")), codMunicipio: v("codMunicipio"), municipio: v("municipio"),
+    matricula: v("matricula"), ccir: v("ccir"), car: v("car").toUpperCase(), itr: fmtNirf(v("itr")), cib: v("cib"), geocodigo: v("geocodigo"), numProcesso: v("numProcesso"), indicacao: v("indicacao")};
+}
+const enderecoUrbano = im => [[im.logradouro, im.numero].filter(Boolean).join(", "), im.complemento, im.bairro, im.municipio, im.cep ? "CEP " + im.cep : ""].filter(Boolean).join(" · ");
 const soDigCad = t => String(t || "").replace(/\D/g, "");
 const fmtCodIR = v => { const d = soDigCad(v); return d.length === 13 ? d.replace(/^(\d{3})(\d{3})(\d{3})(\d{3})(\d)$/, "$1.$2.$3.$4-$5") : v; };
 const fmtNirf = v => { const d = soDigCad(v); return d.length === 8 ? d.replace(/^(\d)(\d{3})(\d{3})(\d)$/, "$1.$2.$3-$4") : v; };
 const fmtTel = v => { const d = soDigCad(v); return d.length === 11 ? d.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3") : d.length === 10 ? d.replace(/^(\d{2})(\d{4})(\d{4})$/, "($1) $2-$3") : v; };
-const nomeCurtoImovel = (im, n) => (im?.denominacao || "").trim() || `Propriedade ${n}`;
+const nomeCurtoImovel = (im, n) => (im?.denominacao || "").trim() || (im?.tipo === "urbano" && im.logradouro ? [im.logradouro, im.numero].filter(Boolean).join(", ") : "") || `Propriedade ${n}`;
 const clienteDe = d => d?.clienteId ? S.clientes.find(c => c.id === d.clienteId) : null;
 const propriedadesDe = cid => S.demandas.filter(x => x.clienteId === cid).sort((a, b) => (a.propriedadeN || 0) - (b.propriedadeN || 0));
 
 function imovelBlocoHtml(n, im = {}){
-  return `<fieldset class="cad-imovel" data-imn="${n}"><legend>Propriedade ${n}</legend><div class="fgrid">
-    ${CAMPOS_IMOVEL.map(([k, rot, ph, span]) => k === "indicacao"
-      ? `<label class="f span${span}">${rot}<textarea name="${k}" rows="2" placeholder="${esc(ph)}">${esc(im[k] || "")}</textarea></label>`
-      : `<label class="f span${span}">${rot}<input name="${k}" value="${esc(im[k] ?? "")}" placeholder="${esc(ph)}" ${k === "areaHa" ? 'inputmode="decimal"' : ""} ${k === "municipio" ? 'list="cad-municipios"' : ""}></label>`).join("")}
-  </div></fieldset>`;
+  const tipo = im.tipo || "rural";
+  return `<fieldset class="cad-imovel" data-imn="${n}"><legend>Propriedade ${n}</legend>${tipoImovelHtml("imtipo-" + n + "-" + uid(), tipo)}
+    <div class="fgrid" data-grupo="rural" ${tipo === "urbano" ? "hidden" : ""}>${camposImovelHtml("rural", tipo === "rural" ? im : {}, "name")}</div>
+    <div class="fgrid" data-grupo="urbano" ${tipo === "urbano" ? "" : "hidden"}>${camposImovelHtml("urbano", tipo === "urbano" ? im : {}, "name")}</div>
+  </fieldset>`;
 }
 const MUNICIPIOS_ES = "Afonso Cláudio;Água Doce do Norte;Águia Branca;Alegre;Alfredo Chaves;Alto Rio Novo;Anchieta;Apiacá;Aracruz;Atílio Vivácqua;Baixo Guandu;Barra de São Francisco;Boa Esperança;Bom Jesus do Norte;Brejetuba;Cachoeiro de Itapemirim;Cariacica;Castelo;Colatina;Conceição da Barra;Conceição do Castelo;Divino de São Lourenço;Domingos Martins;Dores do Rio Preto;Ecoporanga;Fundão;Governador Lindenberg;Guaçuí;Guarapari;Ibatiba;Ibiraçu;Ibitirama;Iconha;Irupi;Itaguaçu;Itapemirim;Itarana;Iúna;Jaguaré;Jerônimo Monteiro;João Neiva;Laranja da Terra;Linhares;Mantenópolis;Marataízes;Marechal Floriano;Marilândia;Mimoso do Sul;Montanha;Mucurici;Muniz Freire;Muqui;Nova Venécia;Pancas;Pedro Canário;Pinheiros;Piúma;Ponto Belo;Presidente Kennedy;Rio Bananal;Rio Novo do Sul;Santa Leopoldina;Santa Maria de Jetibá;Santa Teresa;São Domingos do Norte;São Gabriel da Palha;São José do Calçado;São Mateus;São Roque do Canaã;Serra;Sooretama;Vargem Alta;Venda Nova do Imigrante;Viana;Vila Pavão;Vila Valério;Vila Velha;Vitória".split(";");
 
+document.addEventListener("change", e => {
+  if (!e.target.matches?.("[data-imtipo]")) return;
+  const box = e.target.closest(".cad-imovel, #d-imdados"); if (!box) return;
+  box.querySelectorAll("[data-grupo]").forEach(g => g.hidden = g.dataset.grupo !== e.target.value);
+});
+document.addEventListener("input", async e => {
+  const i = e.target; if (!i.closest?.('[data-grupo="urbano"]') || !["cep"].includes(i.name || i.dataset.im)) return;
+  const d = soDigCad(i.value); if (d.length !== 8 || i.dataset.buscado === d) return; i.dataset.buscado = d; i.value = fmtCep(d);
+  const g = i.closest('[data-grupo="urbano"]'); const at = i.name ? "name" : "data-im";
+  const pre = (k, v) => { const x = g.querySelector(`[${at}="${k}"]`); if (x && !x.value.trim() && v) x.value = v; };
+  try { const r = await fetch(`https://viacep.com.br/ws/${d}/json/`); const j = await r.json(); if (j.erro) return; pre("logradouro", j.logradouro); pre("bairro", j.bairro); pre("municipio", j.localidade && j.uf ? j.localidade + "/" + j.uf : ""); } catch {}
+});
+function contatoPjHtml(c = {}){
+  return `<div class="rep-it ct-pj"><button type="button" class="btn sm ghost rep-rm" aria-label="Remover contato">✕</button><div class="fgrid">
+    <label class="f span3">Nome<input data-ct="nome" value="${esc(c.nome || "")}"></label>
+    <label class="f span3">Cargo / função<input data-ct="cargo" value="${esc(c.cargo || "")}" placeholder="Ex.: sócio-administrador, financeiro"></label>
+    <label class="f span2">Telefone (WhatsApp)<input data-ct="telefone" inputmode="tel" value="${esc(c.telefone || "")}" placeholder="(27) 99999-0000"></label>
+    <label class="f span3">E-mail<input data-ct="email" type="email" value="${esc(c.email || "")}"></label>
+    <label class="chk span1" style="align-self:end;padding-bottom:8px"><input type="radio" name="ct-principal" data-ct="principal" ${c.principal ? "checked" : ""}> Principal</label>
+  </div></div>`;
+}
+document.addEventListener("click", e => {
+  const m = e.target.closest(".ct-mais"); if (!m) return;
+  const l = m.parentElement.querySelector(".ct-lista"); l.insertAdjacentHTML("beforeend", contatoPjHtml()); l.lastElementChild.querySelector("input").focus();
+});
 function abrirCadastroCliente(cid){
   const c = cid ? S.clientes.find(x => x.id === cid) : null;
   if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
   S.dlg = {tipo: "cadcliente", id: cid || null, unsubs: []};
   const dlg = $("#dlg"); dlg.className = "big";
   const props = c ? propriedadesDe(c.id) : [];
+  const pj = c?.tipoPessoa === "PJ";
   dlg.innerHTML = `<div class="dlg-h"><div><span class="label">${c ? "Cadastro do cliente" : "Novo cliente"}</span><h2 style="font-size:19px">${c ? esc(c.nome) : "Cadastrar cliente e propriedades"}</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
   <form id="fCad" class="dlg-b" autocomplete="off" novalidate>
     <datalist id="cad-municipios">${MUNICIPIOS_ES.map(m => `<option value="${esc(m)}/ES">`).join("")}</datalist>
-    <div class="label cad-sec">Cliente</div>
+    <div class="cad-pessoa"><span class="label" style="margin:0">Tipo de cliente</span><div class="seg-tipo" role="radiogroup" aria-label="Tipo de cliente">
+      <label><input type="radio" name="tipoPessoa" value="PF" ${pj ? "" : "checked"}><span>👤 Pessoa física</span></label><label><input type="radio" name="tipoPessoa" value="PJ" ${pj ? "checked" : ""}><span>🏢 Pessoa jurídica</span></label></div></div>
+    <div class="label cad-sec"><span data-so="pf" ${pj ? "hidden" : ""}>Cliente</span><span data-so="pj" ${pj ? "" : "hidden"}>Empresa (cliente)</span></div>
     <div class="fgrid">
-      <label class="f span4">Nome completo<input name="nome" required value="${esc(c?.nome || "")}" autocomplete="off"></label>
-      <label class="f span2">CPF<input name="cpf" inputmode="numeric" value="${esc(c?.cpf || "")}" placeholder="000.000.000-00"><small class="doc-msg" data-docmsg="cpf"></small></label>
-      <label class="f span2">Telefone (WhatsApp)<input name="telefone" inputmode="tel" required value="${esc(c?.telefone || "")}" placeholder="(27) 99999-0000"></label>
-      <label class="f span4">Endereço de moradia<input name="endereco" value="${esc(c?.endereco || "")}" placeholder="Rua, número, bairro, cidade/UF, CEP"></label>
+      <label class="f span4"><span data-so="pf" ${pj ? "hidden" : ""}>Nome completo</span><span data-so="pj" ${pj ? "" : "hidden"}>Razão social</span><input name="nome" required value="${esc(c?.nome || "")}" autocomplete="off"></label>
+      <label class="f span2"><span data-so="pf" ${pj ? "hidden" : ""}>CPF</span><span data-so="pj" ${pj ? "" : "hidden"}>CNPJ</span><input name="cpf" inputmode="numeric" value="${esc(c?.cpf || "")}" placeholder="${pj ? "00.000.000/0000-00" : "000.000.000-00"}"><small class="doc-msg" data-docmsg="cpf"></small></label>
+      <label class="f span3" data-so="pj" ${pj ? "" : "hidden"}>Nome fantasia<input name="fantasia" value="${esc(c?.fantasia || "")}"></label>
+      <label class="f span3" data-so="pj" ${pj ? "" : "hidden"}>Inscrição estadual / municipal<input name="inscricaoPj" value="${esc(c?.inscricaoPj || "")}"></label>
+      <label class="f span2"><span data-so="pf" ${pj ? "hidden" : ""}>Telefone (WhatsApp)</span><span data-so="pj" ${pj ? "" : "hidden"}>Telefone principal (WhatsApp)</span><input name="telefone" inputmode="tel" required value="${esc(c?.telefone || "")}" placeholder="(27) 99999-0000"></label>
+      <label class="f span4"><span data-so="pf" ${pj ? "hidden" : ""}>Endereço de moradia</span><span data-so="pj" ${pj ? "" : "hidden"}>Endereço da sede</span><input name="endereco" value="${esc(c?.endereco || "")}" placeholder="Rua, número, bairro, cidade/UF"></label>
+      <label class="f span2">CEP<input name="cepCli" inputmode="numeric" value="${esc(c?.cep || "")}" placeholder="00000-000"></label>
     </div>
+    <div data-so="pj" ${pj ? "" : "hidden"}>
+      <div class="label cad-sec">Contatos na empresa</div>
+      <div class="ct-lista">${(c?.contatos?.length ? c.contatos : [{principal: true}]).map(contatoPjHtml).join("")}</div>
+      <button type="button" class="btn sm ct-mais">+ Contato</button>
+      <div class="label cad-sec">Contrato social <span class="sub" style="text-transform:none;letter-spacing:0">(com a última alteração)</span></div>
+      ${c?.contratoSocial?.id ? `<div class="cf-docs"><span class="cf-doc"><a data-blob="${esc(c.contratoSocial.id)}" data-nome="${esc(c.contratoSocial.nome)}" target="_blank" rel="noopener">${ICON.file}${esc(c.contratoSocial.nome)}</a></span></div>` : ""}
+      <div class="fgrid">
+        <label class="f span2">Última alteração (nº)<input name="csAlteracao" value="${esc(c?.contratoSocial?.alteracao || "")}" placeholder="Ex.: 5ª alteração"></label>
+        <label class="f span2">Data da última alteração<input name="csData" type="date" value="${esc(c?.contratoSocial?.data || "")}"></label>
+        <label class="f span2">${c?.contratoSocial?.id ? "Substituir arquivo" : "Arquivo (PDF ou foto)"}<input name="csArq" type="file" accept="application/pdf,image/*"></label>
+      </div>
+    </div>
+    <div data-so="pf" ${pj ? "hidden" : ""}>
     <div class="label cad-sec">Cônjuge <span class="sub" style="text-transform:none;letter-spacing:0">(se houver)</span></div>
     <div class="fgrid">
       <label class="f span4">Nome completo do cônjuge<input name="conjugeNome" value="${esc(c?.conjuge?.nome || "")}"></label>
@@ -4649,6 +4806,7 @@ function abrirCadastroCliente(cid){
     </div>
     <div class="label cad-sec">Empresa <span class="sub" style="text-transform:none;letter-spacing:0">(se estiver incluída no processo)</span></div>
     ${empresasHtml(c?.empresas)}
+    </div>
     ${c ? `<div class="label cad-sec">Propriedades deste cliente</div>
       <div class="cad-props">${props.map(p => `<button type="button" class="li" data-proc="${p.id}"><span class="t"><b>${p.propriedadeN ? "Propriedade " + p.propriedadeN + " · " : ""}${esc(p.imovelDados?.denominacao || p.imovel || p.cliente)}</b></span><span class="sub">${esc(p.codigo)} · ${esc(p.etapa)}</span></button>`).join("") || `<p class="sub">Nenhuma propriedade.</p>`}</div>
       <button type="button" class="btn sm" data-addprop="${c.id}">+ Adicionar propriedade</button>`
@@ -4660,12 +4818,27 @@ function abrirCadastroCliente(cid){
   <div class="dlg-f"><span class="sub">${c ? "Alterações de CPF e telefone são aplicadas a todas as propriedades." : "O login do portal é criado automaticamente."}</span><div style="display:flex;gap:8px"><button type="button" class="btn" data-close>Cancelar</button><button type="submit" form="fCad" class="btn primary" id="cad-salvar">${c ? "Salvar cadastro" : "Cadastrar cliente"}</button></div></div>`;
   if (!dlg.open) dlg.showModal();
   const f = $("#fCad");
+  f.addEventListener("change", e => {
+    if (e.target.name !== "tipoPessoa") return; const ehPj = e.target.value === "PJ";
+    f.querySelectorAll("[data-so]").forEach(x => x.hidden = x.dataset.so !== (ehPj ? "pj" : "pf"));
+    f.elements.cpf.placeholder = ehPj ? "00.000.000/0000-00" : "000.000.000-00";
+    if (ehPj && !f.querySelector(".ct-lista .ct-pj")) f.querySelector(".ct-lista").insertAdjacentHTML("beforeend", contatoPjHtml({principal: true}));
+    valDoc("cpf");
+  });
+  f.addEventListener("input", async e => {
+    const i = e.target;
+    if (i.name === "cepCli") { const d = soDigCad(i.value); if (d.length === 8 && i.dataset.buscado !== d) { i.dataset.buscado = d; i.value = fmtCep(d); if (!f.elements.endereco.value.trim()) try { const j = await (await fetch(`https://viacep.com.br/ws/${d}/json/`)).json(); if (!j.erro) f.elements.endereco.value = [j.logradouro, j.bairro, j.localidade && j.uf ? j.localidade + "/" + j.uf : ""].filter(Boolean).join(", "); } catch {} } }
+    if (i.name === "cpf" && f.elements.tipoPessoa.value === "PJ") { const d = soDigCad(i.value); if (d.length === 14 && cnpjOk(d) && i.dataset.buscado !== d) { i.dataset.buscado = d;
+      try { const r = await fetch("https://brasilapi.com.br/api/cnpj/v1/" + d); if (!r.ok) return; const j = await r.json(); const pre = (k, v) => { if (v && !f.elements[k].value.trim()) f.elements[k].value = v; };
+        pre("nome", j.razao_social); pre("fantasia", j.nome_fantasia); pre("endereco", [[j.descricao_tipo_de_logradouro, j.logradouro].filter(Boolean).join(" "), j.numero, j.complemento, j.bairro, j.municipio && j.uf ? j.municipio + "/" + j.uf : ""].filter(Boolean).join(", ")); pre("cepCli", fmtCep(String(j.cep || "")));
+        if (j.ddd_telefone_1) pre("telefone", fmtTel(j.ddd_telefone_1)); } catch {} } }
+  });
   const valDoc = nome => { const i = f.elements[nome]; const m = f.querySelector(`[data-docmsg="${nome}"]`); const v = i.value.trim(); if (!v) { m.textContent = ""; m.className = "doc-msg"; return true; } const r = validarDocs(v); m.textContent = r.ok ? "válido" : r.msg; m.className = "doc-msg " + (r.ok ? "ok" : "erro"); return r.ok; };
   f.addEventListener("input", e => { if (["cpf", "conjugeCpf"].includes(e.target.name)) valDoc(e.target.name); });
   f.addEventListener("focusout", e => {
     const i = e.target;
     if (["cpf", "conjugeCpf"].includes(i.name) && validarDocs(i.value).ok && i.value.trim()) i.value = formatarDocs(i.value);
-    if (i.name === "telefone") i.value = fmtTel(i.value);
+    if (i.name === "telefone" || i.dataset.ct === "telefone") i.value = fmtTel(i.value);
     if (i.name === "codigoIR") i.value = fmtCodIR(i.value);
     if (i.name === "itr") i.value = fmtNirf(i.value);
   });
@@ -4680,18 +4853,28 @@ function abrirCadastroCliente(cid){
     ev.preventDefault();
     const erro = t => { const e = $("#cad-erro"); e.textContent = t; e.hidden = !t; if (t) e.scrollIntoView({block: "center", behavior: "smooth"}); };
     const v = k => (f.elements[k]?.value || "").trim();
-    if (!v("nome") || v("nome").split(/\s+/).length < 2) return erro("Informe o nome completo do cliente.");
+    const ehPj = f.elements.tipoPessoa.value === "PJ";
+    if (!ehPj && (!v("nome") || v("nome").split(/\s+/).length < 2)) return erro("Informe o nome completo do cliente.");
+    if (ehPj && !v("nome")) return erro("Informe a razão social da empresa.");
+    if (ehPj && v("cpf") && soDigCad(v("cpf")).length !== 14) return erro("Para pessoa jurídica, informe o CNPJ (14 dígitos).");
+    const csArq = f.elements.csArq?.files?.[0];
+    if (csArq && csArq.size > 20 * 1024 * 1024) return erro("O contrato social deve ter no máximo 20 MB.");
     if (!telefone(v("telefone"))) return erro("Informe o telefone do cliente com DDD.");
     if (!valDoc("cpf")) return erro("O CPF do cliente está inválido.");
-    if (!valDoc("conjugeCpf")) return erro("O CPF do cônjuge está inválido.");
-    const eEmp = validarEmpresas(f.querySelector(".emp-box")); if (eEmp) return erro(eEmp);
+    if (!ehPj && !valDoc("conjugeCpf")) return erro("O CPF do cônjuge está inválido.");
+    const eEmp = ehPj ? "" : validarEmpresas(f.querySelector(".emp-box")); if (eEmp) return erro(eEmp);
+    const contatos = ehPj ? [...f.querySelectorAll(".ct-pj")].map(b => { const g = k => (b.querySelector(`[data-ct="${k}"]`)?.value || "").trim(); return {nome: g("nome"), cargo: g("cargo"), telefone: fmtTel(g("telefone")), email: g("email"), principal: !!b.querySelector('[data-ct="principal"]')?.checked}; }).filter(x => x.nome || x.telefone || x.email) : [];
+    if (contatos.some(x => !x.nome)) return erro("Informe o nome de cada contato da empresa.");
     erro("");
-    const dados = {nome: v("nome"), cpf: formatarDocs(v("cpf")), telefone: fmtTel(v("telefone")), endereco: v("endereco"),
-      conjuge: v("conjugeNome") || v("conjugeCpf") ? {nome: v("conjugeNome"), cpf: formatarDocs(v("conjugeCpf"))} : null,
-      empresas: lerEmpresas(f.querySelector(".emp-box"))};
+    const dados = {tipoPessoa: ehPj ? "PJ" : "PF", nome: v("nome"), cpf: formatarDocs(v("cpf")), telefone: fmtTel(v("telefone")), endereco: v("endereco"), cep: fmtCep(v("cepCli")),
+      conjuge: !ehPj && (v("conjugeNome") || v("conjugeCpf")) ? {nome: v("conjugeNome"), cpf: formatarDocs(v("conjugeCpf"))} : null,
+      empresas: ehPj ? [] : lerEmpresas(f.querySelector(".emp-box")),
+      fantasia: ehPj ? v("fantasia") : "", inscricaoPj: ehPj ? v("inscricaoPj") : "", contatos,
+      contratoSocial: ehPj ? {...(c?.contratoSocial || {}), alteracao: v("csAlteracao"), data: v("csData")} : (c?.contratoSocial || null)};
     const docs = [dados.cpf, dados.conjuge?.cpf, ...dados.empresas.map(e => e.cnpj)].filter(Boolean).join("; ");
     const btn = $("#cad-salvar"); btn.disabled = true; btn.textContent = "Salvando…";
     try {
+      if (csArq && ehPj) { btn.textContent = "Enviando contrato social…"; const r = await S.assets.upload(csArq, {pasta: "clientes/contratos"}); dados.contratoSocial = {...dados.contratoSocial, id: r.id, nome: csArq.name, tipo: r.contentType, tam: csArq.size, em: agoraISO(), por: S.me}; btn.textContent = "Salvando…"; }
       if (c) {
         await S.db.doc("clientes/" + c.id).set({...c, ...dados, id: undefined, atualizadoEm: agoraISO(), atualizadoPor: S.me});
         for (const p of propriedadesDe(c.id)) {
@@ -4700,11 +4883,7 @@ function abrirCadastroCliente(cid){
         }
         fecharDlg(); toast("Cadastro do cliente atualizado");
       } else {
-        const imoveis = [...f.querySelectorAll(".cad-imovel")].map(fs => {
-          const g = k => (fs.querySelector(`[name="${k}"]`)?.value || "").trim();
-          return {denominacao: g("denominacao"), areaHa: numBR(g("areaHa")), codigoIR: fmtCodIR(g("codigoIR")), codMunicipio: g("codMunicipio"), municipio: g("municipio"),
-            matricula: g("matricula"), ccir: g("ccir"), car: g("car").toUpperCase(), itr: fmtNirf(g("itr")), indicacao: g("indicacao")};
-        });
+        const imoveis = [...f.querySelectorAll(".cad-imovel")].map(fs => lerCamposImovel(fs, "name"));
         await criarClienteComPropriedades(dados, imoveis, docs);
         fecharDlg();
       }
@@ -4727,7 +4906,7 @@ async function criarClienteComPropriedades(dados, imoveis, docs, clienteExistent
       codigo: `SAO-${ano}-${String(++seq).padStart(3, "0")}`, cliente: `${dados.nome} — ${nomeCurtoImovel(im, n)}`,
       clienteId: cref.id, propriedadeN: n,
       servicos: [], etapa: "Orçamento", responsavel: S.me, prazo: null,
-      contato: dados.telefone, documento: docs, imovel: im.denominacao || "", municipio: im.municipio || "", areaHa: im.areaHa ?? null,
+      contato: dados.telefone, documento: docs, imovel: nomeCurtoImovel(im, n), municipio: im.municipio || "", areaHa: im.tipo === "urbano" ? (im.areaTerrenoM2 ? Math.round(im.areaTerrenoM2) / 10000 : null) : (im.areaHa ?? null),
       imovelDados: im, protocoloOrgao: "", protocoloNumero: "", protocoloPrevisao: null, notas: "", checklist: [],
       vinculos: [], historico: [{em: quando, pessoa: S.me, txt: `criou a demanda pelo cadastro do cliente (propriedade ${n} de ${total})`}],
       criadoEm: quando, atualizadoEm: quando, atualizadoPor: S.me
@@ -4758,7 +4937,7 @@ function abrirNovaPropriedade(cid){
   if (!dlg.open) dlg.showModal();
   $("#fProp2").addEventListener("submit", async ev => {
     ev.preventDefault(); const fs = ev.target.querySelector(".cad-imovel"); const g = k => (fs.querySelector(`[name="${k}"]`)?.value || "").trim();
-    const im = {denominacao: g("denominacao"), areaHa: numBR(g("areaHa")), codigoIR: fmtCodIR(g("codigoIR")), codMunicipio: g("codMunicipio"), municipio: g("municipio"), matricula: g("matricula"), ccir: g("ccir"), car: g("car").toUpperCase(), itr: fmtNirf(g("itr")), indicacao: g("indicacao")};
+    const im = lerCamposImovel(fs, "name"); void g;
     ev.target.querySelector("input")?.blur();
     try { await criarClienteComPropriedades({nome: c.nome, telefone: c.telefone}, [im], [c.cpf, c.conjuge?.cpf, ...(c.empresas || []).map(e => e.cnpj)].filter(Boolean).join("; "), c); fecharDlg(); } catch (err) { falhaEscrita(err); }
   });
@@ -4777,29 +4956,38 @@ function clienteCardHtml(d){
   if (!c && !im) return "";
   const linha = (k, v) => v ? `<div><span class="label">${k}</span><b>${esc(v)}</b></div>` : "";
   return `<div class="card cad-card" style="margin-top:16px">
-    ${c ? `<div class="card-h"><div><span class="label">Cliente</span><h3>${esc(c.nome)}</h3></div>${S.somenteLeitura ? "" : `<button type="button" class="btn sm" data-editcliente="${c.id}">Editar cadastro</button>`}</div>
-    <div class="cad-dados">${linha("CPF", c.cpf)}${linha("Telefone", c.telefone)}${linha("Endereço", c.endereco)}${c.conjuge?.nome ? linha("Cônjuge", c.conjuge.nome + (c.conjuge.cpf ? " · CPF " + c.conjuge.cpf : "")) : ""}</div>
+    ${c ? `<div class="card-h"><div><span class="label">${c.tipoPessoa === "PJ" ? "Cliente · pessoa jurídica" : "Cliente"}</span><h3>${esc(c.nome)}</h3></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" class="btn sm primary" data-fichacli="${c.id}">Ficha completa</button>${S.somenteLeitura ? "" : `<button type="button" class="btn sm" data-editcliente="${c.id}">Editar cadastro</button>`}</div></div>
+    <div class="cad-dados">${linha(c.tipoPessoa === "PJ" ? "CNPJ" : "CPF", c.cpf)}${linha("Nome fantasia", c.fantasia)}${linha("Telefone", c.telefone)}${linha(c.tipoPessoa === "PJ" ? "Sede" : "Endereço", [c.endereco, c.cep ? "CEP " + c.cep : ""].filter(Boolean).join(" · "))}${c.conjuge?.nome ? linha("Cônjuge", c.conjuge.nome + (c.conjuge.cpf ? " · CPF " + c.conjuge.cpf : "")) : ""}${c.contratoSocial?.id || c.contratoSocial?.alteracao ? `<div><span class="label">Contrato social</span><b>${c.contratoSocial.id ? `<a data-blob="${esc(c.contratoSocial.id)}" data-nome="${esc(c.contratoSocial.nome)}" target="_blank" rel="noopener">${esc(c.contratoSocial.alteracao || "Abrir")}</a>` : esc(c.contratoSocial.alteracao)}${c.contratoSocial.data ? " · " + dataBR(c.contratoSocial.data) : ""}</b></div>` : ""}</div>
+    ${(c.contatos || []).length ? `<div class="label" style="margin:12px 0 6px">Contatos na empresa</div><div class="ct-cards">${c.contatos.map(x => { const t = telefone(x.telefone); return `<div class="ct-card"><b>${esc(x.nome)}${x.principal ? ` <span class="chip ok">principal</span>` : ""}</b><span class="sub">${esc(x.cargo || "")}</span><span class="sub">${[x.telefone, x.email].filter(Boolean).map(esc).join(" · ")}</span>${t ? `<a class="btn sm" href="https://wa.me/${t}" target="_blank" rel="noopener">WhatsApp</a>` : ""}</div>`; }).join("")}</div>` : ""}
     ${(c.empresas || []).length ? `<div class="label" style="margin:12px 0 6px">Empresa${c.empresas.length > 1 ? "s" : ""} no processo</div>${c.empresas.map(e => `<div class="cad-dados" style="margin-bottom:6px">${linha("Denominação", e.denominacao)}${linha("CNPJ", e.cnpj)}${linha("Localização", e.endereco)}${linha("CEP", e.cep)}</div>`).join("")}` : ""}
     ${props.length > 1 || !S.somenteLeitura ? `<div class="label" style="margin:12px 0 6px">Propriedades (${props.length})</div><div class="cad-props-chips">${props.map(p => `<button type="button" class="chip-prop ${p.id === d.id ? "on" : ""}" data-proc="${p.id}">${p.propriedadeN || "•"} · ${esc(p.imovelDados?.denominacao || p.imovel || p.codigo)}</button>`).join("")}${S.somenteLeitura ? "" : `<button type="button" class="chip-prop add" data-addprop="${c.id}">+ propriedade</button>`}</div>` : ""}` : ""}
-    ${im ? `<div class="label" style="margin:14px 0 6px">Dados do imóvel${d.propriedadeN ? " · propriedade " + d.propriedadeN : ""}</div>
-    <div class="cad-dados">${linha("Denominação", im.denominacao)}${linha("Área total", im.areaHa != null ? String(im.areaHa).replace(".", ",") + " ha" : "")}${linha("Código do imóvel rural", im.codigoIR)}${linha("Código do município", im.codMunicipio)}${linha("Município", im.municipio)}${linha("Matrícula", im.matricula)}${linha("CCIR", im.ccir)}${linha("CAR", im.car)}${linha("ITR (NIRF)", im.itr)}</div>
+    ${im ? `<div class="label" style="margin:14px 0 6px">Dados do imóvel ${im.tipo === "urbano" ? "urbano" : "rural"}${d.propriedadeN ? " · propriedade " + d.propriedadeN : ""}</div>
+    <div class="cad-dados">${imovelLinhas(im).map(([k, v]) => linha(k, v)).join("")}</div>
     ${im.indicacao ? `<p class="cad-ind"><span class="label">Como chegar</span>${esc(im.indicacao)}</p>` : ""}` : ""}
   </div>`;
 }
+function imovelLinhas(im){
+  if (!im) return [];
+  const u = im.tipo === "urbano";
+  const l = u ? [["Identificação", im.denominacao], ["Endereço", enderecoUrbano(im)], ["Inscrição imobiliária", im.inscricao], ["Loteamento / condomínio", im.loteamento], ["Quadra / lote", [im.quadra && "Qd. " + im.quadra, im.lote && "Lt. " + im.lote].filter(Boolean).join(" · ")], ["Zona", im.zona],
+      ["Área do terreno", im.areaTerrenoM2 != null ? fmtArea(im.areaTerrenoM2) + " m²" : ""], ["Área construída", im.areaConstruidaM2 != null ? fmtArea(im.areaConstruidaM2) + " m²" : ""], ["Testada", im.testada != null ? fmtArea(im.testada) + " m" : ""]]
+    : [["Denominação", im.denominacao], ["Área total", im.areaHa != null ? fmtArea(im.areaHa) + " ha" : ""], ["Código do imóvel rural", im.codigoIR], ["Código do município", im.codMunicipio], ["Município", im.municipio], ["CCIR", im.ccir], ["CAR", im.car], ["ITR (NIRF)", im.itr]];
+  return [...l, ["Matrícula", im.matricula], ["CIB", im.cib], ["Geocódigo", im.geocodigo], ["Número do processo", im.numProcesso]].filter(([, v]) => v);
+}
 // formulário do cartão da demanda: campos do imóvel
 function imovelFormHtml(d){
-  const im = d.imovelDados || {};
-  return `<details class="mais" ${Object.values(im).some(v => v) ? "open" : ""}><summary>Dados do imóvel rural <span class="sub">(código do imóvel, CCIR, CAR, ITR…)</span></summary>
-    <div class="fgrid" style="margin-top:12px" id="d-imdados">${CAMPOS_IMOVEL.filter(([k]) => !["municipio"].includes(k)).map(([k, rot, ph, span]) => k === "indicacao"
-      ? `<label class="f span${span}">${rot}<textarea data-im="${k}" rows="2" placeholder="${esc(ph)}">${esc(im[k] || "")}</textarea></label>`
-      : `<label class="f span${span}">${rot}<input data-im="${k}" value="${esc(k === "areaHa" ? (im[k] ?? d.areaHa ?? "") : k === "denominacao" ? (im[k] || d.imovel || "") : (im[k] ?? ""))}" placeholder="${esc(ph)}"></label>`).join("")}</div></details>`;
+  const im0 = d.imovelDados || {}; const tipo = im0.tipo || "rural";
+  const im = {...im0, denominacao: im0.denominacao || d.imovel || "", areaHa: im0.areaHa ?? d.areaHa ?? null, municipio: im0.municipio || d.municipio || ""};
+  return `<details class="mais" ${Object.values(im0).some(v => v) ? "open" : ""}><summary>Dados do imóvel <span class="sub">(rural ou urbano: matrícula, CCIR, CAR, ITR, CIB, inscrição…)</span></summary>
+    <div id="d-imdados" style="margin-top:12px">${tipoImovelHtml("d-imtipo", tipo)}
+      <div class="fgrid" data-grupo="rural" ${tipo === "urbano" ? "hidden" : ""}>${camposImovelHtml("rural", tipo === "rural" ? im : {}, "data-im")}</div>
+      <div class="fgrid" data-grupo="urbano" ${tipo === "urbano" ? "" : "hidden"}>${camposImovelHtml("urbano", tipo === "urbano" ? im : {}, "data-im")}</div></div></details>`;
 }
 
 function lerImovelForm(dlg, d){
   const box = dlg.querySelector("#d-imdados"); if (!box) return d.imovelDados || null;
-  const im = {...(d.imovelDados || {})};
-  box.querySelectorAll("[data-im]").forEach(i => { const k = i.dataset.im; let val = i.value.trim(); if (k === "areaHa") val = numBR(val); if (k === "codigoIR") val = fmtCodIR(val); if (k === "itr") val = fmtNirf(val); if (k === "car") val = val.toUpperCase(); im[k] = val; });
-  return Object.values(im).some(x => x !== "" && x != null) ? im : null;
+  const im = lerCamposImovel(box, "data-im");
+  return Object.entries(im).some(([k, x]) => k !== "tipo" && x !== "" && x != null) ? im : (d.imovelDados ? im : null);
 }
 (function ligarV15(){
   const iv = setInterval(() => { if (!S.db) return; clearInterval(iv);
@@ -5075,6 +5263,389 @@ document.addEventListener("click", e => {
 (function ligarV16(){
   const iv = setInterval(() => { if (!S.db) return; clearInterval(iv);
     S.db.collection("confrontantes").onSnapshot(s => { S.confrontantes = s.docs.map(d => ({id: d.id, ...d.data()})); if (S.tab === "clientes") render(); }, () => {});
+  }, 300);
+})();
+
+
+/* ====================================================================
+   v18 · ficha completa, contatos da equipe no portal, anexos com prévia,
+   liberar/bloquear arquivos para o cliente, mapa + memorial no portal
+   ==================================================================== */
+const dataBR = iso => iso ? new Date(String(iso).length <= 10 ? iso + "T12:00:00" : iso).toLocaleDateString("pt-BR") : "";
+const nomeSeguro = n => String(n || "arquivo").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^\w.\-]+/g, "_").slice(-80);
+
+/* ---------- Ficha completa do cliente ---------- */
+function fichaClienteHtml(c){
+  const props = propriedadesDe(c.id);
+  const lin = (k, v) => v ? `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>` : "";
+  const pj = c.tipoPessoa === "PJ"; const a = props.map(p => acessoDe(p.id)).find(Boolean);
+  return `<div class="doc-memo ficha">
+    <div class="rc-top">${logoSrc() ? `<img src="${logoSrc()}" alt="Saotech Geotecnologia">` : "<b>SAOTECH GEOTECNOLOGIA</b>"}<div><div class="rc-t">FICHA DO CLIENTE</div><div class="rc-n">${new Date().toLocaleDateString("pt-BR")}</div></div></div>
+    <h4>${pj ? "Cliente · pessoa jurídica" : "Cliente · pessoa física"}</h4>
+    <table class="rc-tab">${lin(pj ? "Razão social" : "Nome completo", c.nome)}${lin(pj ? "CNPJ" : "CPF", c.cpf)}${lin("Nome fantasia", c.fantasia)}${lin("Inscrição estadual / municipal", c.inscricaoPj)}${lin("Telefone", c.telefone)}${lin(pj ? "Endereço da sede" : "Endereço", c.endereco)}${lin("CEP", c.cep)}${lin("Usuário do portal", a?.usuario)}${lin("Cadastrado em", dataBR(c.criadoEm))}</table>
+    ${c.conjuge?.nome ? `<h4>Cônjuge</h4><table class="rc-tab">${lin("Nome completo", c.conjuge.nome)}${lin("CPF", c.conjuge.cpf)}</table>` : ""}
+    ${(c.contatos || []).length ? `<h4>Contatos na empresa</h4><table class="doc-itens ficha-ct"><thead><tr><th>Nome</th><th>Cargo / função</th><th>Telefone</th><th>E-mail</th></tr></thead><tbody>${c.contatos.map(x => `<tr><td>${esc(x.nome)}${x.principal ? " (principal)" : ""}</td><td>${esc(x.cargo || "")}</td><td>${esc(x.telefone || "")}</td><td>${esc(x.email || "")}</td></tr>`).join("")}</tbody></table>` : ""}
+    ${pj && c.contratoSocial && (c.contratoSocial.id || c.contratoSocial.alteracao) ? `<h4>Contrato social</h4><table class="rc-tab">${lin("Última alteração", c.contratoSocial.alteracao)}${lin("Data da alteração", dataBR(c.contratoSocial.data))}${lin("Arquivo", c.contratoSocial.nome)}</table>` : ""}
+    ${(c.empresas || []).map((e, i) => `<h4>Empresa envolvida no processo${c.empresas.length > 1 ? " " + (i + 1) : ""}</h4><table class="rc-tab">${lin("Denominação", e.denominacao)}${lin("CNPJ", e.cnpj)}${lin("Localização", e.endereco)}${lin("CEP", e.cep)}</table>`).join("")}
+    ${props.map(p => { const im = p.imovelDados || {}; const cf = confrontantesDe(p.id);
+      return `<h4>Propriedade ${p.propriedadeN || ""} · imóvel ${im.tipo === "urbano" ? "urbano" : "rural"}</h4><table class="rc-tab">${lin("Processo", `${p.codigo} · ${p.etapa}`)}${lin("Serviços", (p.servicos || []).join(", "))}${imovelLinhas(im).map(([k, v]) => lin(k, v)).join("")}${lin(im.tipo === "urbano" ? "Referência para localização" : "Indicação para localização", im.indicacao)}${lin("Prazo", dataBR(p.prazo))}${lin("Confrontantes", cf.map(x => nomesConf(x) + (x.imovel?.matricula ? ` (Mat. ${x.imovel.matricula})` : "")).join("; "))}</table>`; }).join("")}
+  </div>`;
+}
+function abrirFichaCliente(cid){
+  const c = S.clientes.find(x => x.id === cid); if (!c) return;
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "ficha", id: cid, unsubs: []};
+  const dlg = $("#dlg"); dlg.className = "big";
+  const props = propriedadesDe(c.id);
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">Ficha completa · ${props.length} propriedade${props.length === 1 ? "" : "s"}</span><h2 style="font-size:19px">${esc(c.nome)}</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+    <div class="dlg-b"><div class="ficha-wrap" id="fc-doc">${fichaClienteHtml(c)}</div>
+      ${props.length ? `<div class="label" style="margin-bottom:-6px">Abrir processo</div><div class="cad-props-chips">${props.map(p => `<button type="button" class="chip-prop" data-proc="${p.id}">${p.propriedadeN || "•"} · ${esc(p.imovelDados?.denominacao || p.imovel || p.codigo)}</button>`).join("")}</div>` : ""}</div>
+    <div class="dlg-f"><span class="sub">Dados cadastrais completos. Valores financeiros não entram na ficha.</span><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn" id="fc-copiar">Copiar texto</button><button type="button" class="btn" id="fc-pdf">PDF / imprimir</button>${S.somenteLeitura ? "" : `<button type="button" class="btn primary" data-editcliente="${c.id}">Editar cadastro</button>`}</div></div>`;
+  if (!dlg.open) dlg.showModal();
+  $("#fc-copiar").addEventListener("click", async () => {
+    const t = [...$("#fc-doc").querySelectorAll("h4, tr")].map(x => x.tagName === "H4" ? "\n" + x.textContent.toUpperCase() : [...x.children].map(td => td.textContent.trim()).join(": ")).join("\n").trim();
+    try { await navigator.clipboard.writeText(t); toast("Ficha copiada"); } catch { toast("Não foi possível copiar"); }
+  });
+  $("#fc-pdf").addEventListener("click", () => window.SaotechDoc.imprimir("Ficha " + c.nome, fichaClienteHtml(c)));
+}
+document.addEventListener("click", e => { const f = e.target.closest("[data-fichacli]"); if (!f) return; e.stopPropagation(); abrirFichaCliente(f.dataset.fichacli); }, true);
+
+/* ---------- Contatos da equipe (aparecem no portal do cliente) ---------- */
+S.contatosEq = null;
+function contatosPadrao(){ return PESSOAS.map(p => ({nome: p.nome, ocupacao: p.papel || "", telefone: "", email: "", visivel: true})); }
+function contatoEqHtml(x = {}){
+  return `<div class="rep-it ceq"><button type="button" class="btn sm ghost rep-rm" aria-label="Remover contato">✕</button><div class="fgrid">
+    <label class="f span3">Nome<input data-ce="nome" value="${esc(x.nome || "")}"></label>
+    <label class="f span3">Ocupação / o que faz<input data-ce="ocupacao" value="${esc(x.ocupacao || "")}" placeholder="Ex.: técnico de campo, atendimento e documentos"></label>
+    <label class="f span2">Telefone (WhatsApp)<input data-ce="telefone" inputmode="tel" value="${esc(x.telefone || "")}" placeholder="(27) 99999-0000"></label>
+    <label class="f span3">E-mail<input data-ce="email" type="email" value="${esc(x.email || "")}"></label>
+    <label class="chk span1" style="align-self:end;padding-bottom:8px"><input type="checkbox" data-ce="visivel" ${x.visivel !== false ? "checked" : ""}> Mostrar</label>
+  </div></div>`;
+}
+function abrirContatosEquipe(){
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "contatoseq", unsubs: []};
+  const lista = S.contatosEq?.lista?.length ? S.contatosEq.lista : contatosPadrao();
+  const dlg = $("#dlg"); dlg.className = "big";
+  dlg.innerHTML = `<div class="dlg-h"><div><span class="label">Portal do cliente</span><h2 style="font-size:19px">Contatos da equipe</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+    <form id="fCe" class="dlg-b" novalidate><p class="sub" style="margin:0">Estes contatos aparecem para todos os clientes no portal, com nome, ocupação, WhatsApp e e-mail. Desmarque "Mostrar" para esconder alguém.</p>
+      <div class="ct-lista" id="ce-lista">${lista.map(contatoEqHtml).join("")}</div><button type="button" class="btn sm" id="ce-mais" style="align-self:flex-start">+ Contato</button></form>
+    <div class="dlg-f"><span class="sub">Use telefones e e-mails de trabalho.</span><div style="display:flex;gap:8px"><button type="button" class="btn" data-close>Cancelar</button><button type="submit" form="fCe" class="btn primary">Salvar</button></div></div>`;
+  if (!dlg.open) dlg.showModal();
+  $("#ce-mais").addEventListener("click", () => { $("#ce-lista").insertAdjacentHTML("beforeend", contatoEqHtml({visivel: true})); $("#ce-lista").lastElementChild.querySelector("input").focus(); });
+  $("#fCe").addEventListener("focusout", e => { if (e.target.dataset.ce === "telefone") e.target.value = fmtTel(e.target.value); });
+  $("#fCe").addEventListener("submit", async ev => {
+    ev.preventDefault();
+    const nova = [...document.querySelectorAll("#ce-lista .ceq")].map(b => { const g = k => (b.querySelector(`[data-ce="${k}"]`)?.value || "").trim(); return {nome: g("nome"), ocupacao: g("ocupacao"), telefone: fmtTel(g("telefone")), email: g("email"), visivel: !!b.querySelector('[data-ce="visivel"]').checked}; }).filter(x => x.nome);
+    try { await S.db.doc("config/contatos").set({lista: nova, atualizadoEm: agoraISO(), atualizadoPor: S.me}); S.contatosEq = {lista: nova}; fecharDlg(); toast("Contatos da equipe salvos"); } catch (err) { falhaEscrita(err); }
+  });
+}
+document.addEventListener("click", e => { if (!e.target.closest("[data-contatoseq]")) return; e.stopPropagation(); abrirContatosEquipe(); }, true);
+
+/* ---------- Arquivos: estado, liberar e bloquear para o cliente ---------- */
+const metaArq = (d, id) => (d.arquivos || {})[id] || {};
+const pubDe = (d, id) => (d.docsCliente || []).find(x => x.origem === id || x.id === id);
+const noPortal = (d, id) => { const x = pubDe(d, id); return !!x && !x.bloqueado; };
+const ehImgArq = a => isImg(a.tipo) || /\.(jpe?g|png|webp|gif)$/i.test(a.nome || "");
+const ehPdfArq = a => /pdf/i.test(a.tipo || "") || extDe(a.nome) === "pdf";
+async function salvarMetaArq(d, ids, patch, txt){
+  const atual = S.demandas.find(x => x.id === d.id) || d; const arq = {...(atual.arquivos || {})};
+  ids.forEach(id => { arq[id] = {...(arq[id] || {}), ...patch, em: agoraISO(), por: S.me}; });
+  await S.db.doc("demandas/" + d.id).update({arquivos: arq, historico: histAdd(atual, txt)});
+}
+async function liberarArquivos(d, itens, rotulo){
+  const a = acessoDe(d.id); if (!a) { toast("Este cliente ainda não tem acesso ao portal."); return 0; }
+  const atual = S.demandas.find(x => x.id === d.id) || d; let lista = [...(atual.docsCliente || [])]; const feitos = [];
+  for (const it of itens) {
+    const ex = lista.find(x => x.origem === it.id || x.id === it.id);
+    if (ex && !ex.bloqueado) continue;
+    const origem = ex?.origem || it.id;
+    const para = `portal/${a.usuario}/docs/${uid()}${uid()}-${nomeSeguro(it.nome)}`;
+    await S.user.copiarArquivo(origem, para);
+    const novo = {id: para, nome: it.nome, tipo: it.tipo || "", tam: it.tam || null, rotulo: ex?.rotulo || rotulo || "Documento", em: agoraISO(), por: S.me, origem};
+    lista = ex ? lista.map(x => x === ex ? novo : x) : [...lista, novo]; feitos.push(novo);
+  }
+  if (!feitos.length) return 0;
+  await S.db.doc("demandas/" + d.id).update({docsCliente: lista, historico: histAdd(atual, `liberou ${feitos.length === 1 ? `"${feitos[0].nome}"` : feitos.length + " arquivos"} para o cliente no portal`), atualizadoEm: agoraISO()});
+  S.user.responderCliente(a.usuario, `📄 ${feitos.length === 1 ? `Disponibilizamos o documento "${feitos[0].rotulo !== "Documento" ? feitos[0].rotulo : feitos[0].nome}"` : `Disponibilizamos ${feitos.length} documentos`} na área de documentos do portal.`).catch(() => {});
+  return feitos.length;
+}
+async function bloquearArquivos(d, ids){
+  const atual = S.demandas.find(x => x.id === d.id) || d; let lista = [...(atual.docsCliente || [])]; let n = 0; const nomes = [];
+  for (const id of ids) {
+    const ex = lista.find(x => x.origem === id || x.id === id); if (!ex || ex.bloqueado) continue;
+    let origem = ex.origem;
+    if (!origem) { origem = `internos/${d.id}/${uid()}${uid()}-${nomeSeguro(ex.nome)}`; await S.user.copiarArquivo(ex.id, origem); }
+    try { await S.assets.delete(ex.id); } catch {}
+    lista = lista.map(x => x === ex ? {...ex, id: origem, origem, bloqueado: true, bloqueadoEm: agoraISO(), bloqueadoPor: S.me} : x); n++; nomes.push(ex.nome);
+  }
+  if (!n) return 0;
+  await S.db.doc("demandas/" + d.id).update({docsCliente: lista, historico: histAdd(atual, `bloqueou ${n === 1 ? `"${nomes[0]}"` : n + " arquivos"} no portal do cliente`), atualizadoEm: agoraISO()});
+  return n;
+}
+async function arquivosComoFiles(itens){
+  const out = [];
+  for (const a of itens) { try { const b = await S.user.baixarArquivo(a.id); out.push(new File([b], a.nome, {type: b.type || a.tipo || "application/octet-stream"})); } catch {} }
+  return out;
+}
+async function baixarComoZip(files, nomeZip){
+  if (files.length === 1) { baixarBlob(files[0], files[0].name); return; }
+  const JSZip = await carregarJSZip(); const z = new JSZip(); const usados = new Set();
+  files.forEach(f => { let n = f.name, i = 2; while (usados.has(n)) n = f.name.replace(/(\.[^.]+)?$/, ` (${i++})$1`); usados.add(n); z.file(n, f); });
+  baixarBlob(await z.generateAsync({type: "blob"}), nomeZip + ".zip");
+}
+
+/* ---------- Aba Anexos: prévias, filtros, seleção e visualizador dividido ---------- */
+const thumbsPdf = new Map();
+function anxEstado(){ return S.dlg.anx || (S.dlg.anx = {filtro: "todos", sel: new Set(), modoSel: false, aberto: null, prontos: null}); }
+function anxItens(d){
+  const conv = S.dlg.conversa.flatMap(doc => (doc.msgs || []).flatMap(m => (m.anexos || []).map(a => ({...a, em: m.em, pessoa: doc.pessoa}))));
+  const ids = new Set(conv.map(a => a.id));
+  const pub = (d.docsCliente || []).map(x => ({id: x.origem || x.id, nome: x.nome, tipo: x.tipo, tam: x.tam, em: x.em, pessoa: x.por, rotulo: x.rotulo})).filter(x => !ids.has(x.id) && !ids.has(x.id));
+  return [...conv, ...pub].sort((a, b) => a.em < b.em ? 1 : -1);
+}
+function anxFiltrados(d, itens, f){
+  return itens.filter(a => f === "todos" || (f === "atual" && metaArq(d, a.id).st === "atual") || (f === "antigo" && metaArq(d, a.id).st === "antigo") || (f === "portal" && noPortal(d, a.id)));
+}
+function anxThumb(a){
+  if (ehImgArq(a)) return `<img data-blob="${esc(a.id)}" alt="" loading="lazy">`;
+  if (ehPdfArq(a)) return `<img data-pdfth="${esc(a.id)}" alt="" ${typeof thumbsPdf.get(a.id) === "string" ? `src="${thumbsPdf.get(a.id)}"` : ""}><span class="anx-ext">PDF</span>`;
+  return `<span class="anx-ext grande">${esc((extDe(a.nome) || "arq").toUpperCase().slice(0, 5))}</span>`;
+}
+function anxBadges(d, a){
+  const m = metaArq(d, a.id), p = pubDe(d, a.id);
+  return `${m.st === "atual" ? `<span class="anx-b ok">Atualizado</span>` : m.st === "antigo" ? `<span class="anx-b velho">Antigo</span>` : ""}${p && !p.bloqueado ? `<span class="anx-b cli">👁 Cliente vê</span>` : p?.bloqueado ? `<span class="anx-b bloq">Bloqueado</span>` : ""}`;
+}
+function carregarMiniaturas(el){
+  if (!window.SaotechPdf || !S.user?.baixarArquivo) return;
+  el.querySelectorAll("img[data-pdfth]:not([src])").forEach(img => {
+    const id = img.dataset.pdfth; const c = thumbsPdf.get(id);
+    if (typeof c === "string") { img.src = c; return; }
+    if (c === null) return;
+    if (!c) thumbsPdf.set(id, window.SaotechPdf.miniatura(id, () => S.user.baixarArquivo(id)).then(u => { thumbsPdf.set(id, u || null); if (u) document.querySelectorAll(`img[data-pdfth="${CSS.escape(id)}"]`).forEach(i => i.src = u); return u; }));
+  });
+}
+function anxConteudo(el, a){
+  el.innerHTML = "";
+  if (ehImgArq(a)) el.innerHTML = `<img class="anx-img" data-blob="${esc(a.id)}" alt="${esc(a.nome)}">`;
+  else if (ehPdfArq(a) && window.SaotechPdf && S.user?.baixarArquivo) { const box = document.createElement("div"); box.className = "pdf-pags"; el.appendChild(box); window.SaotechPdf.renderizar(a.id, () => S.user.baixarArquivo(a.id), box); }
+  else el.innerHTML = `<div class="anx-semprev"><span class="anx-ext grande">${esc((extDe(a.nome) || "arq").toUpperCase())}</span><p>Este tipo de arquivo não tem prévia.</p><a class="btn primary" data-blob="${esc(a.id)}" data-noprev target="_blank" rel="noopener" download="${esc(a.nome)}">Baixar arquivo</a></div>`;
+}
+function paneAnexos(d){
+  const el = $('#dlg [data-pane="anexos"]'); if (!el) return;
+  const st = anxEstado(); const todos = anxItens(d);
+  const cont = {todos: todos.length, atual: anxFiltrados(d, todos, "atual").length, antigo: anxFiltrados(d, todos, "antigo").length, portal: anxFiltrados(d, todos, "portal").length};
+  const itens = anxFiltrados(d, todos, st.filtro);
+  const aberto = st.aberto ? todos.find(a => a.id === st.aberto) : null;
+  if (st.aberto && !aberto) st.aberto = null;
+  $("#dlg").classList.toggle("anx-wide", !!aberto);
+  const temCli = !!acessoDe(d.id); const ro = S.somenteLeitura;
+  const filtros = `<div class="anx-filtros" role="tablist">${[["todos", "Todos"], ["atual", "Atualizados"], ["antigo", "Antigos"], ["portal", "No portal"]].map(([k, n]) => `<button type="button" role="tab" aria-selected="${st.filtro === k}" data-anxf="${k}">${n} <span>${cont[k]}</span></button>`).join("")}</div>`;
+  const vbAnt = el.querySelector(".anx-vb");
+  if (aberto) {
+    const m = metaArq(d, aberto.id); const pc = noPortal(d, aberto.id);
+    const outros = itens.filter(a => a.id !== aberto.id);
+    el.innerHTML = `<div class="anx-split">
+      <section class="anx-view">
+        <div class="anx-vh"><button type="button" class="btn primary sm anx-voltar" data-anxa="voltar">← Voltar</button><b class="nm" title="${esc(aberto.nome)}">${esc(aberto.nome)}</b><span class="anx-bs">${anxBadges(d, aberto)}</span></div>
+        <div class="anx-vacts">
+          ${ro ? "" : `<button type="button" class="btn sm ${m.st === "atual" ? "on" : ""}" data-anxa="v-atual">${m.st === "atual" ? "✓ Atualizado" : "Marcar atualizado"}</button><button type="button" class="btn sm ${m.st === "antigo" ? "on" : ""}" data-anxa="v-antigo">${m.st === "antigo" ? "✓ Antigo" : "Marcar antigo"}</button>
+          ${temCli ? `<button type="button" class="btn sm ${pc ? "" : "lima"}" data-anxa="v-portal">${pc ? "🔒 Bloquear para o cliente" : "👁 Liberar ao cliente"}</button>` : ""}`}
+          <button type="button" class="btn sm" data-anxa="v-share">Compartilhar</button><a class="btn sm" data-blob="${esc(aberto.id)}" data-noprev target="_blank" rel="noopener" download="${esc(aberto.nome)}">Baixar</a></div>
+        <div class="anx-vb" data-id="${esc(aberto.id)}"></div>
+      </section>
+      <aside class="anx-side"><div class="label">Outros arquivos · ${outros.length}</div><div class="anx-side-l">${outros.map(a => `<button type="button" class="anx-si" data-anx="${esc(a.id)}"><span class="th">${anxThumb(a)}</span><span class="t"><span class="nm">${esc(a.nome)}</span><span class="sub">${fmtQuando(a.em)}</span><span class="anx-bs">${anxBadges(d, a)}</span></span></button>`).join("") || `<p class="sub">Nenhum outro arquivo neste filtro.</p>`}</div></aside>
+    </div>`;
+    const vb = el.querySelector(".anx-vb");
+    if (vbAnt && vbAnt.dataset.id === aberto.id) vb.replaceWith(vbAnt); else anxConteudo(vb, aberto);
+  } else {
+    const n = st.sel.size;
+    el.innerHTML = `
+      <p class="sub" style="margin:0">Fotos de campo, matrículas, PDFs e documentos do processo. Toque em um arquivo para abrir a prévia; use "Selecionar" para compartilhar, marcar ou liberar vários.</p>
+      ${S.assets && !ro ? `<form class="composer" data-composer="da" style="border:0;padding:0;margin:0"><div class="row2"><label class="filebtn">${ICON.clip} Escolher arquivos<input type="file" id="da-file" multiple accept="image/*,application/pdf,.csv,.txt,.json,.md,.doc,.docx,.xls,.xlsx,.kml,.kmz,.dwg,.dxf,.zip"></label><input type="hidden" id="da-txt" value=""><span class="pend" id="da-pend"></span><button class="btn primary">Enviar</button></div></form>` : ""}
+      <div class="anx-bar">${filtros}<button type="button" class="btn sm ${st.modoSel ? "primary" : ""}" data-anxa="modo">${st.modoSel ? "Concluir seleção" : "Selecionar"}</button></div>
+      ${st.modoSel ? `<div class="anx-acoes"><b>${n} selecionado${n === 1 ? "" : "s"}</b><button type="button" class="btn sm ghost" data-anxa="todos">${n && n === itens.length ? "Limpar" : "Selecionar todos"}</button>
+        <span class="anx-sep"></span>
+        <button type="button" class="btn sm" data-anxa="compartilhar" ${n ? "" : "disabled"}>Compartilhar</button><button type="button" class="btn sm" data-anxa="zip" ${n ? "" : "disabled"}>Baixar ${n > 1 ? "(ZIP)" : ""}</button>
+        ${ro ? "" : `<button type="button" class="btn sm" data-anxa="atual" ${n ? "" : "disabled"}>Marcar atualizado</button><button type="button" class="btn sm" data-anxa="antigo" ${n ? "" : "disabled"}>Marcar antigo</button><button type="button" class="btn sm ghost" data-anxa="limpar" ${n ? "" : "disabled"}>Tirar marcação</button>
+        ${temCli ? `<span class="anx-sep"></span><select id="anx-rot" aria-label="Tipo de documento para o cliente">${ROTULOS_DOC.map(r => `<option>${r}</option>`).join("")}</select><button type="button" class="btn sm lima" data-anxa="liberar" ${n ? "" : "disabled"}>👁 Liberar ao cliente</button><button type="button" class="btn sm" data-anxa="bloquear" ${n ? "" : "disabled"}>🔒 Bloquear</button>` : `<span class="sub">Cliente sem acesso ao portal: liberar fica disponível quando ele tiver login.</span>`}`}
+        ${st.prontos ? `<button type="button" class="btn sm primary" data-anxa="share-go">Compartilhar agora (${st.prontos.length})</button>` : ""}</div>` : ""}
+      <div class="anx-grid">${itens.map(a => { const s = st.sel.has(a.id); return `<button type="button" class="anx-it ${s ? "sel" : ""}" data-anx="${esc(a.id)}" aria-pressed="${st.modoSel ? s : false}">${st.modoSel ? `<span class="anx-chk" aria-hidden="true">${s ? "✓" : ""}</span>` : ""}<span class="th">${anxThumb(a)}</span><span class="nm" title="${esc(a.nome)}">${esc(a.nome)}</span><span class="sub">${esc(primeiro(a.pessoa) || "")} · ${fmtQuando(a.em)}</span><span class="anx-bs">${anxBadges(d, a)}</span></button>`; }).join("") || `<p class="muted">${todos.length ? "Nenhum arquivo neste filtro." : "Nenhum arquivo ainda."}</p>`}</div>`;
+  }
+  carregarMiniaturas(el);
+}
+async function anxAcao(acao, d, alvo){
+  const st = anxEstado(); const todos = anxItens(d);
+  const selItens = alvo ? todos.filter(a => a.id === alvo) : todos.filter(a => st.sel.has(a.id));
+  const ids = selItens.map(a => a.id);
+  const re = () => paneAnexos(S.demandas.find(x => x.id === d.id) || d);
+  try {
+    if (acao === "voltar") { st.aberto = null; re(); return; }
+    if (acao === "modo") { st.modoSel = !st.modoSel; st.sel.clear(); st.prontos = null; re(); return; }
+    if (acao === "todos") { const vis = anxFiltrados(d, todos, st.filtro); if (st.sel.size === vis.length) st.sel.clear(); else vis.forEach(a => st.sel.add(a.id)); re(); return; }
+    if (!ids.length) return;
+    if (acao === "atual" || acao === "antigo" || acao === "limpar") {
+      await salvarMetaArq(d, ids, {st: acao === "limpar" ? null : acao}, `${acao === "limpar" ? "tirou a marcação de" : "marcou como " + (acao === "atual" ? "atualizado" : "antigo")} ${ids.length === 1 ? `"${selItens[0].nome}"` : ids.length + " arquivos"}`);
+      toast(acao === "limpar" ? "Marcação removida" : `Marcado como ${acao === "atual" ? "atualizado" : "antigo"}`); return;
+    }
+    if (acao === "liberar") { const n = await liberarArquivos(d, selItens, $("#anx-rot")?.value); if (n) toast(`${n} arquivo${n > 1 ? "s" : ""} liberado${n > 1 ? "s" : ""} no portal`); else toast("Já estavam liberados"); return; }
+    if (acao === "bloquear") { const n = await bloquearArquivos(d, ids); toast(n ? `${n} arquivo${n > 1 ? "s" : ""} bloqueado${n > 1 ? "s" : ""} para o cliente` : "Nenhum estava liberado"); return; }
+    if (acao === "zip" || acao === "compartilhar") {
+      toast("Preparando arquivos…");
+      const files = await arquivosComoFiles(selItens);
+      if (!files.length) { toast("Não foi possível baixar os arquivos."); return; }
+      if (acao === "zip") { await baixarComoZip(files, `${(d.codigo || "arquivos").toLowerCase()}-arquivos`); return; }
+      if (navigator.canShare?.({files})) {
+        try { await navigator.share({files, title: d.codigo}); } catch (err) { if (err?.name === "NotAllowedError") { st.prontos = files; st.modoSel = true; re(); } }
+      } else { await baixarComoZip(files, `${(d.codigo || "arquivos").toLowerCase()}-compartilhar`); toast("Este navegador não envia arquivos direto para outros apps. Baixamos para você anexar onde quiser."); }
+      return;
+    }
+  } catch (err) { falhaEscrita(err); }
+}
+$("#dlg").addEventListener("click", async e => {
+  if (!S.dlg || S.dlg.tipo !== "demanda" || S.dlg.tab !== "anexos") return;
+  const d = S.demandas.find(x => x.id === S.dlg.id); if (!d) return;
+  const st = anxEstado();
+  const f = e.target.closest("[data-anxf]"); if (f) { st.filtro = f.dataset.anxf; st.sel.clear(); paneAnexos(d); return; }
+  const it = e.target.closest("[data-anx]");
+  if (it) {
+    const id = it.dataset.anx;
+    if (st.modoSel && !st.aberto) { st.sel.has(id) ? st.sel.delete(id) : st.sel.add(id); st.prontos = null; paneAnexos(d); return; }
+    st.aberto = id; paneAnexos(d); $('#dlg [data-pane="anexos"]').scrollTop = 0; return;
+  }
+  const b = e.target.closest("[data-anxa]"); if (!b) return;
+  const a = b.dataset.anxa;
+  if (a === "share-go") { const files = st.prontos; st.prontos = null; try { await navigator.share({files, title: d.codigo}); } catch {} paneAnexos(d); return; }
+  if (a.startsWith("v-") && st.aberto) {
+    const id = st.aberto, m = metaArq(d, id);
+    if (a === "v-atual" || a === "v-antigo") { const alvo = a === "v-atual" ? "atual" : "antigo"; return anxAcao(m.st === alvo ? "limpar" : alvo, d, id); }
+    if (a === "v-portal") { if (noPortal(d, id)) { if (b.dataset.ok !== "1") { b.dataset.ok = "1"; b.textContent = "Confirmar bloqueio"; return; } return anxAcao("bloquear", d, id); } return anxAcao("liberar", d, id); }
+    if (a === "v-share") return anxAcao("compartilhar", d, id);
+  }
+  b.disabled = true; await anxAcao(a, d); if (b.isConnected) b.disabled = false;
+});
+$("#dlg").addEventListener("cancel", e => { if (S.dlg?.tipo === "demanda" && S.dlg.tab === "anexos" && S.dlg.anx?.aberto) { e.preventDefault(); S.dlg.anx.aberto = null; const d = S.demandas.find(x => x.id === S.dlg.id); if (d) paneAnexos(d); } });
+{
+  const _mostrarAba = mostrarAba;
+  mostrarAba = k => { if (S.dlg?.anx && k !== "anexos") { S.dlg.anx.aberto = null; $("#dlg").classList.remove("anx-wide"); } _mostrarAba(k); };
+  $("#dlg").addEventListener("close", () => $("#dlg").classList.remove("anx-wide"));
+}
+// Prévia genérica (fora da aba Anexos): botão Voltar legível e, se veio de um cartão, volta para ele
+{
+  const _abrirPreview = abrirPreview;
+  abrirPreview = (blobId, nome) => {
+    const volta = S.dlg?.tipo === "demanda" && S.dlg.id ? {id: S.dlg.id, tab: S.dlg.tab} : null;
+    if (volta && S.dlg.tab === "anexos") { const st = anxEstado(); st.aberto = blobId; const d = S.demandas.find(x => x.id === volta.id); if (d) { paneAnexos(d); return; } }
+    _abrirPreview(blobId, nome);
+    const dlg = $("#dlg"); const fechar = dlg.querySelector(".prev-h [data-close]");
+    if (fechar) { fechar.outerHTML = `<button type="button" class="btn sm primary prev-voltar" id="prev-voltar">← Voltar</button>`; }
+    const pdf = extDe(nome) === "pdf";
+    if (pdf && window.SaotechPdf && S.user?.baixarArquivo) { const b = dlg.querySelector(".prev-b"); b.innerHTML = `<div class="pdf-pags"></div>`; b.classList.add("pdf"); window.SaotechPdf.renderizar(blobId, () => S.user.baixarArquivo(blobId), b.firstChild); }
+    $("#prev-voltar")?.addEventListener("click", () => { if (volta && S.demandas.some(x => x.id === volta.id)) abrirDemanda(volta.id, volta.tab); else fecharDlg(); });
+  };
+}
+
+/* ---------- Documentos do cliente: liberar / bloquear ---------- */
+docsClienteHtml = function(d){
+  const a = acessoDe(d.id); if (!a || d.exemplo) return "";
+  const lista = d.docsCliente || [];
+  const p = S.portais.find(x => x.usuario === a.usuario);
+  const av = (p?.avaliacoes || []).find(x => x.demanda === d.id);
+  const vis = lista.filter(x => !x.bloqueado).length;
+  return `<div class="card" style="margin-top:16px"><div class="card-h"><div><span class="label">Portal do cliente</span><h3>Documentos do cliente${lista.length ? ` <span class="sub" style="font-size:13px">${vis} visíve${vis === 1 ? "l" : "is"}${lista.length - vis ? ` · ${lista.length - vis} bloqueado${lista.length - vis > 1 ? "s" : ""}` : ""}</span>` : ""}</h3></div>${S.somenteLeitura ? "" : `<button type="button" class="btn sm primary" data-pubdoc="${d.id}">Publicar documento</button>`}</div>
+    ${lista.length ? `<div class="docs-cli">${lista.map(x => { const k = x.origem || x.id; return `<div class="doc-cli ${x.bloqueado ? "bloq" : ""}"><a class="file" data-blob="${esc(x.id)}" data-nome="${esc(x.nome)}" target="_blank" rel="noopener">${ICON.file}<span><b>${esc(x.rotulo || "Documento")}</b> · ${esc(x.nome)}</span></a><span class="sub">${x.bloqueado ? `🔒 bloqueado ${fmtQuando(x.bloqueadoEm)}` : `👁 visível · ${fmtQuando(x.em)} · ${esc(primeiro(x.por))}`}</span>${S.somenteLeitura ? "" : x.bloqueado ? `<button type="button" class="btn sm lima" data-docvis="lib|${d.id}|${esc(k)}">Liberar</button>` : `<button type="button" class="btn sm ghost" data-docvis="bloq|${d.id}|${esc(k)}" title="O cliente deixa de ver este arquivo">Bloquear</button>`}</div>`; }).join("")}</div>`
+      : `<p class="sub" style="margin:0">Nada publicado. Publique a planta final, o memorial, CCIR, ITR, matrícula ou recibos e ${esc(a.nome.split(" ")[0])} vê, baixa e compacta tudo pelo portal. Na aba Anexos do cartão, você também libera arquivos com um toque.</p>`}
+    ${av ? `<div class="aval-box"><span class="label">Avaliação do cliente</span><div class="estrelas" aria-label="${av.nota} de 5">${"★".repeat(av.nota)}<span>${"★".repeat(5 - av.nota)}</span></div>${av.comentario ? `<p>“${esc(av.comentario)}”</p>` : ""}<span class="sub">${fmtQuando(av.em)}${av.autoriza ? " · autorizou usar como depoimento" : " · não autorizou divulgação"}</span></div>` : ["Entregue", "Concluída"].includes(d.etapa) ? `<p class="sub" style="margin:10px 0 0">O portal já está pedindo a avaliação do serviço para o cliente.</p>` : ""}
+  </div>`;
+};
+document.addEventListener("click", async e => {
+  const b = e.target.closest("[data-docvis]"); if (!b) return; e.stopPropagation(); e.preventDefault();
+  const [acao, id, k] = b.dataset.docvis.split("|"); const d = S.demandas.find(x => x.id === id); if (!d) return;
+  if (acao === "bloq" && b.dataset.ok !== "1") { b.dataset.ok = "1"; b.textContent = "Confirmar"; return; }
+  b.disabled = true;
+  try {
+    const x = (d.docsCliente || []).find(y => (y.origem || y.id) === k);
+    if (acao === "bloq") { await bloquearArquivos(d, [k]); toast("O cliente não vê mais este arquivo"); }
+    else { await liberarArquivos(d, [{id: k, nome: x?.nome, tipo: x?.tipo, tam: x?.tam}], x?.rotulo); toast("Arquivo liberado para o cliente"); }
+  } catch (err) { falhaEscrita(err); b.disabled = false; }
+}, true);
+
+/* ---------- Mapa + memorial em PDF publicado no portal ---------- */
+let html2pdfP = null;
+const carregarHtml2pdf = () => html2pdfP || (html2pdfP = new Promise((ok, falha) => { if (window.html2pdf) return ok(window.html2pdf); const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"; s.onload = () => ok(window.html2pdf); s.onerror = () => { html2pdfP = null; falha(new Error("Não foi possível carregar o gerador de PDF. Verifique a internet.")); }; document.head.appendChild(s); }));
+function plantaSvg(d, md){
+  const vs = md.vv.vs; if (!vs?.length) return "";
+  const W = 680, H = 460, P = 56;
+  const es = vs.map(v => v.e), ns = vs.map(v => v.n);
+  const minE = Math.min(...es), maxE = Math.max(...es), minN = Math.min(...ns), maxN = Math.max(...ns);
+  const k = Math.min((W - 2 * P) / ((maxE - minE) || 1), (H - 2 * P) / ((maxN - minN) || 1));
+  const ox = (W - (maxE - minE) * k) / 2, oy = (H - (maxN - minN) * k) / 2;
+  const X = e => +(ox + (e - minE) * k).toFixed(1), Y = n => +(H - oy - (n - minN) * k).toFixed(1);
+  const cx = vs.reduce((s, v) => s + X(v.e), 0) / vs.length, cy = vs.reduce((s, v) => s + Y(v.n), 0) / vs.length;
+  const conf = confLados(md);
+  const rotulos = md.m.lados.map((l, i) => {
+    if (i > 0 && conf[i] === conf[i - 1]) return "";
+    const mx = (X(l.de.e) + X(l.ate.e)) / 2, my = (Y(l.de.n) + Y(l.ate.n)) / 2;
+    const dx = mx - cx, dy = my - cy, dd = Math.hypot(dx, dy) || 1;
+    const tx = mx + dx / dd * 22, ty = my + dy / dd * 22; const txt = (conf[i] || "").slice(0, 34);
+    return txt && txt !== "—" ? `<text x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="middle" font-size="10" fill="#5C6B3D" font-style="italic">${esc(txt)}</text>` : "";
+  }).join("");
+  // barra de escala
+  const alvo = (W - 2 * P) / 4 / k; const pot = Math.pow(10, Math.floor(Math.log10(alvo))); const passo = [1, 2, 5, 10].map(x => x * pot).filter(x => x <= alvo).pop() || pot; const comp = passo * k;
+  return `<div class="planta"><svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Poppins, Arial, sans-serif">
+    <rect x="0" y="0" width="${W}" height="${H}" fill="#FBFBF5" stroke="#D9DBC4"/>
+    <polygon points="${vs.map(v => X(v.e) + "," + Y(v.n)).join(" ")}" fill="#E7EDC9" fill-opacity=".8" stroke="#2E3319" stroke-width="1.6"/>
+    ${vs.map(v => `<circle cx="${X(v.e)}" cy="${Y(v.n)}" r="3.2" fill="#2E3319"/><text x="${X(v.e) + 5}" y="${Y(v.n) - 5}" font-size="9" fill="#2E3319">${esc(v.nome || "")}</text>`).join("")}
+    ${rotulos}
+    <g transform="translate(${W - 34},34)"><polygon points="0,-18 7,6 0,1 -7,6" fill="#2E3319"/><text x="0" y="20" text-anchor="middle" font-size="11" font-weight="700" fill="#2E3319">N</text></g>
+    <g transform="translate(${P - 30},${H - 22})"><rect x="0" y="-6" width="${comp.toFixed(1)}" height="6" fill="#2E3319"/><text x="0" y="12" font-size="9" fill="#2E3319">0</text><text x="${comp.toFixed(1)}" y="12" font-size="9" text-anchor="end" fill="#2E3319">${mBR(passo, 0)} m</text></g>
+    <text x="${W / 2}" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#2E3319">${esc(md.mem.imovel || d.imovelDados?.denominacao || d.codigo)} · ${mBR(md.m.areaHa, 4)} ha · perímetro ${mBR(md.m.perimetro)} m</text>
+  </svg></div>`;
+}
+async function publicarMapaMemorial(id){
+  const d = S.demandas.find(x => x.id === id); const a = acessoDe(id); const md = S.dlg?.md;
+  if (!d || !md) return;
+  if (!a) { toast("Este cliente ainda não tem acesso ao portal."); return; }
+  const dlg = $("#dlg");
+  dlg.querySelectorAll("[data-mm]").forEach(i => md.mem[i.dataset.mm] = i.value.trim());
+  dlg.querySelectorAll("[data-mmc]").forEach(i => md.mem.conf[+i.dataset.mmc] = i.value.trim());
+  const btn = $("#mm-portal"); btn.disabled = true; btn.textContent = "Gerando PDF…";
+  const box = document.createElement("div"); box.className = "pdf-gerar";
+  box.innerHTML = `<style>${window.SaotechDoc.CSS.replace(/body\{/, ".pdf-gerar{")} .pdf-gerar .planta{margin:0 0 14px;border-radius:6px;overflow:hidden} .pdf-gerar h4{page-break-after:avoid} .pdf-gerar tr{page-break-inside:avoid}</style>${memorialHtml(d, md).replace('<h4>Descrição do perímetro</h4>', `<h4>Planta do imóvel</h4>${plantaSvg(d, md)}<h4>Descrição do perímetro</h4>`)}`;
+  box.style.cssText = "position:fixed;left:-12000px;top:0;width:760px;background:#fff";
+  document.body.appendChild(box);
+  try {
+    const h2p = await carregarHtml2pdf();
+    const blob = await h2p().set({margin: [10, 10, 12, 10], image: {type: "jpeg", quality: .95}, html2canvas: {scale: 2, useCORS: true, backgroundColor: "#ffffff"}, jsPDF: {unit: "mm", format: "a4", orientation: "portrait"}, pagebreak: {mode: ["css", "legacy"]}}).from(box).outputPdf("blob");
+    const nome = `mapa-e-memorial-${(d.codigo || "").toLowerCase()}.pdf`;
+    btn.textContent = "Enviando ao portal…";
+    const arq = new File([blob], nome, {type: "application/pdf"});
+    const r = await S.assets.upload(arq, {pasta: `portal/${a.usuario}/docs`});
+    const atual = S.demandas.find(x => x.id === id) || d;
+    const antigos = (atual.docsCliente || []).filter(x => x.auto === "mapa-memorial" && !x.bloqueado);
+    for (const x of antigos) { try { await S.assets.delete(x.id); } catch {} }
+    const lista = [...(atual.docsCliente || []).filter(x => !antigos.includes(x)), {id: r.id, nome, tipo: "application/pdf", tam: arq.size, rotulo: "Mapa e memorial descritivo", em: agoraISO(), por: S.me, auto: "mapa-memorial"}];
+    await S.db.doc("demandas/" + id).update({docsCliente: lista, geo: {...(atual.geo || {}), memorial: {...md.mem}}, historico: histAdd(atual, "publicou o mapa e o memorial descritivo (PDF) no portal do cliente"), atualizadoEm: agoraISO()});
+    S.user.responderCliente(a.usuario, "🗺️ O mapa do seu imóvel com o memorial descritivo e os confrontantes está disponível em PDF na área de documentos do portal.").catch(() => {});
+    toast("Mapa e memorial publicados no portal"); btn.textContent = "Publicado ✓";
+    if (window.__testePdf) window.__testePdf(blob);
+  } catch (err) { btn.disabled = false; btn.textContent = "Publicar no portal"; toast(err?.message || "Não foi possível gerar o PDF"); }
+  finally { box.remove(); }
+}
+{
+  const _abrirMemorial = abrirMemorial;
+  abrirMemorial = id => {
+    _abrirMemorial(id);
+    if (S.dlg?.tipo !== "memorial" || S.somenteLeitura || !acessoDe(id)) return;
+    const pdfBtn = $("#mm-pdf"); if (!pdfBtn) return;
+    pdfBtn.insertAdjacentHTML("afterend", `<button type="button" class="btn lima" id="mm-portal" title="Gera o PDF com planta, memorial e confrontantes e libera para o cliente">Publicar no portal</button>`);
+    $("#mm-portal").addEventListener("click", () => publicarMapaMemorial(id));
+  };
+}
+
+(function ligarV18(){
+  const iv = setInterval(() => { if (!S.db) return; clearInterval(iv);
+    S.db.doc("config/contatos").onSnapshot(s => { S.contatosEq = s.exists ? s.data() : null; }, () => {});
   }, 300);
 })();
 

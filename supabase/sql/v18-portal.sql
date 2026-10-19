@@ -1,0 +1,4 @@
+-- v18 · portal_dados: oculta documentos bloqueados pela equipe e envia ao portal
+-- dados do imóvel (rural/urbano), mapa (polígono) e contatos da equipe (config/contatos).
+-- Aplicado em 19/10/2026 (migration portal_dados_v18). Ver definição completa no banco:
+--   select pg_get_functiondef('public.portal_dados'::regproc);
