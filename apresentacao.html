@@ -194,6 +194,13 @@ footer b{color:var(--tinta)}
 .docsp{display:grid;gap:6px;font-size:12px}
 .docsp .d{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--linha);border-radius:10px;padding:7px 10px} .docsp .d span{flex:1;min-width:0} .docsp .d em{font-style:normal;font-weight:600;color:var(--oliva);font-size:11px}
 .docsp .est{color:#C9A227;letter-spacing:2px;font-size:15px} .docsp .av{background:#EFF2E0;border-radius:10px;padding:8px 10px}
+.cfd{display:grid;gap:8px;font-size:12px}
+.cfd .cf{background:#fff;border:1px solid var(--linha);border-radius:14px;padding:12px 14px}
+.cfd .cf .h{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap} .cfd .cf b{font-weight:600;font-size:13px} .cfd .lado{font-size:10.5px;border:1px solid var(--linha);border-radius:999px;padding:2px 8px;color:var(--tinta-3)}
+.cfd .st{font-size:10.5px;font-weight:600;border-radius:999px;padding:2px 9px} .cfd .st.ok{background:#E3EED2;color:#3F6212} .cfd .st.pe{background:#F6ECD4;color:#8A5A00}
+.cfd .reps{display:grid;gap:4px;margin:8px 0 0} .cfd .reps div{display:flex;justify-content:space-between;gap:8px;border-top:1px dashed var(--linha);padding-top:4px} .cfd .reps span{color:var(--tinta-3)}
+.cfd .emp{margin-top:8px;color:var(--tinta-3)} .cfd .emp b{color:var(--tinta);font-size:12px}
+.cfd .docs{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px} .cfd .docs i{font-style:normal;border:1px solid var(--linha);border-radius:999px;padding:2px 9px;font-size:11px}
 @media (max-width:620px){.cad .imv .g{grid-template-columns:repeat(2,minmax(0,1fr))} .cad .pessoa{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head><body>
@@ -286,8 +293,8 @@ footer b{color:var(--tinta)}
       <div style="display:flex;flex-direction:column;gap:12px">
         <span class="eyebrow">Cadastro</span>
         <h3 style="font-size:clamp(24px,2.6vw,32px)">Um cliente, todas as propriedades dele</h3>
-        <p>O cadastro do cliente é separado da demanda: nome, CPF, cônjuge, telefone e endereço uma única vez. Cada imóvel informado vira um processo próprio, com etapas, checklist, mapa, memorial e contrato, todos vinculados ao mesmo cliente e com um único login no portal.</p>
-        <ul><li>Código do imóvel rural, código do município, matrícula, CCIR, CAR e ITR</li><li>Área total e indicação de como chegar à propriedade</li><li>CPF conferido na hora, com aviso de cadastro incompleto</li><li>Correção de CPF ou telefone vale para todas as propriedades</li></ul>
+        <p>O cadastro do cliente é separado da demanda: nome, CPF, cônjuge, telefone, endereço e, se houver, a empresa envolvida, uma única vez. Cada imóvel informado vira um processo próprio, com etapas, checklist, mapa, memorial e contrato, todos vinculados ao mesmo cliente e com um único login no portal.</p>
+        <ul><li>Código do imóvel rural, código do município, matrícula, CCIR, CAR e ITR</li><li>Área total e indicação de como chegar à propriedade</li><li>Empresa no processo: razão social, CNPJ, localização e CEP, preenchidos a partir do CNPJ</li><li>CPF e CNPJ conferidos na hora, com aviso de cadastro incompleto</li><li>Correção de CPF ou telefone vale para todas as propriedades</li></ul>
       </div>
       <div class="demo cad" aria-label="Exemplo de cadastro">
         <div class="pessoa"><div><span>Cliente</span><b>José Carlos da Silva</b></div><div><span>CPF</span><b class="mono">529.982.247-25</b></div><div><span>Cônjuge</span><b>Maria Aparecida da Silva</b></div><div><span>Telefone</span><b class="mono">(27) 99988-7766</b></div></div>
@@ -311,6 +318,21 @@ footer b{color:var(--tinta)}
     <article class="rc"><h3>Ficha de campo, com ou sem sinal</h3><p>Marcos encontrados e implantados, confrontantes presentes, observações e fotos com GPS. Sem internet, tudo fica guardado no celular e sobe sozinho quando o sinal volta.</p>
       <div class="demo ficha"><div class="off">Sem internet · 3 itens aguardando envio</div><div><b>4</b> marcos encontrados · <b>1</b> implantado</div><div class="gps">📍 −20,390100, −40,493200 · ± 3 m</div></div></article>
 
+    <article class="rc largo" id="confrontantes">
+      <div>
+        <span class="eyebrow">Confrontantes</span>
+        <h3 style="font-size:clamp(24px,2.6vw,32px)">Todos os vizinhos, sem virar cliente</h3>
+        <p>Os confrontantes ficam num cadastro interno da equipe, sem login nem acesso ao portal. Cada um é ligado só às propriedades do cliente que ele realmente confronta, com o lado da divisa e a situação da anuência.</p>
+        <ul><li>Vários confrontantes cadastrados de uma vez, em blocos numerados</li><li>Sócios, herdeiros e procuradores do mesmo imóvel, cada um com a sua assinatura acompanhada</li><li>Empresa do confrontante com CNPJ, localização e CEP</li><li>Documentos anexados: RG, matrícula, contrato social, procuração e anuência assinada</li><li>Os nomes entram automaticamente no memorial descritivo</li></ul>
+      </div>
+      <div class="demo cfd" aria-label="Exemplo de confrontante">
+        <div class="cf"><div class="h"><b>Antônio Pereira Lima <span style="font-weight:400;color:var(--tinta-3)">(sócio)</span></b><span class="lado">Norte</span><span class="st pe">Anuência pendente</span></div>
+          <div class="reps"><div><b style="font-size:12px">Carla Pereira Lima</b><span>sócia · assinou ✓</span></div><div><b style="font-size:12px">Paulo Lima Neto</b><span>procurador · pendente</span></div></div>
+          <div class="emp">Empresa: <b>Lima Agropecuária Ltda</b> · <span class="mono">11.222.333/0001-81</span> · CEP 29135-000</div>
+          <div class="docs"><i>📄 Contrato social</i><i>📄 Procuração</i><i>📄 Matrícula 8.765</i></div></div>
+        <div class="cf"><div class="h"><b>Rosa Maria Souza</b><span class="lado">Leste</span><span class="st ok">Anuência assinada</span></div><div class="emp">Confronta as propriedades 1 e 2 do cliente</div></div>
+      </div>
+    </article>
     <article class="rc"><h3>Mapa com bases oficiais</h3><p>Imóveis da Saotech no satélite, confrontantes ligados entre si e as camadas do SIGEF, SNCI e CAR para conferir vizinhos antes de ir a campo.</p>
       <div class="demo camadas"><label><i style="background:#D9E15A"></i>SIGEF · imóveis certificados</label><label><i style="background:#4C9BE8"></i>SNCI · certificados antigos</label><label><i style="background:#E08A2E"></i>CAR · imóveis (SICAR)</label><div class="alerta-sob">Sobreposição de 0,0412 ha (0,67%) com imóvel do CAR</div></div></article>
     <article class="rc"><h3>Portal e conversas, com aviso no celular</h3><p>Chat interno por processo, mural da equipe e chat exclusivo com cada cliente, com fotos e documentos. Notificações chegam no celular mesmo com o app fechado.</p>
@@ -343,6 +365,8 @@ footer b{color:var(--tinta)}
     <div class="itens">
       <div><h3>Acesso individual</h3><p>Equipe e clientes entram com usuário no formato nome.sobrenome e senha própria. Ninguém de fora cria conta.</p></div>
       <div><h3>Cada perfil vê o seu</h3><p>A separação é feita no próprio banco de dados: valores só para o financeiro, e cada cliente só enxerga o próprio processo.</p></div>
+      <div><h3>Confrontantes só para a equipe</h3><p>Dados e documentos dos vizinhos ficam numa área interna: eles não têm acesso, e o cliente não vê.</p></div>
+      <div><h3>Arquivos em área privada</h3><p>Documentos, fotos e anexos só abrem com link temporário, gerado para quem tem permissão.</p></div>
       <div><h3>Lixeira de 30 dias</h3><p>Uma demanda excluída por engano pode ser restaurada com conversas, agenda e contrato.</p></div>
       <div><h3>Cópia de segurança semanal</h3><p>Todo domingo os dados são copiados automaticamente, e o backup completo com arquivos sai em um clique.</p></div>
     </div>
