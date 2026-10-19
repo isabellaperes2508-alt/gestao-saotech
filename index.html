@@ -776,6 +776,11 @@ body.modo-portal #bv{display:none}
 .conf-it{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);flex-wrap:wrap} .conf-it:first-child{border-top:0} .conf-it .grow{flex:1;min-width:200px}
 .cf-bloco{border:1px solid var(--line-2);border-radius:12px;padding:10px 12px 12px;margin:0 0 12px;position:relative} .cf-bloco legend{font-family:var(--f-display);font-weight:700;padding:0 6px;color:var(--accent)} .cf-rm{position:absolute;top:4px;right:6px}
 .cf-props{display:flex;flex-direction:column;gap:6px} .cf-prop{display:flex;gap:8px;align-items:center;flex-wrap:wrap;border:1px solid var(--line);border-radius:10px;padding:8px 10px} .cf-prop .chk{flex:1;min-width:180px} .cf-prop select{width:auto}
+.emp-box{border:1px dashed var(--line-2);border-radius:12px;padding:10px 12px;margin:8px 0} .emp-bloco{padding:8px 0;border-top:1px solid var(--line)} .emp-bloco:first-child{border-top:0} .emp-bloco .emp-rm{margin-top:6px} .emp-dica{margin:6px 0 0}
+.rep-it{border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:0 0 8px;position:relative} .rep-it .rep-rm{position:absolute;top:2px;right:4px} .rep-it .fgrid{padding-right:28px}
+.cf-docs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px} .cf-doc{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line-2);border-radius:999px;padding:3px 4px 3px 10px;font-size:13px;max-width:100%} .cf-doc a{display:inline-flex;align-items:center;gap:4px;color:inherit;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:260px} .cf-doc a svg{width:14px;height:14px;flex:none} .cf-doc.rm{opacity:.45;text-decoration:line-through} .cf-doc button{border:0;background:none;cursor:pointer;color:var(--muted);padding:0 6px;font-size:13px}
+.cf-arq{display:flex;flex-wrap:wrap;gap:8px;align-items:center} .cf-arq select{width:auto}
+.conf-it .cf-docs{margin:6px 0 0}
 .cad-sec{margin:14px 0 6px} .cad-sec:first-of-type{margin-top:0}
 .cad-qtd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:16px 0 6px;padding-top:12px;border-top:1px solid var(--line)}
 .cad-imovel{border:1px solid var(--line-2);border-radius:12px;padding:10px 12px 12px;margin:0 0 12px} .cad-imovel legend{font-family:var(--f-display);font-weight:700;padding:0 6px;color:var(--accent)}
@@ -4642,6 +4647,8 @@ function abrirCadastroCliente(cid){
       <label class="f span4">Nome completo do cônjuge<input name="conjugeNome" value="${esc(c?.conjuge?.nome || "")}"></label>
       <label class="f span2">CPF do cônjuge<input name="conjugeCpf" inputmode="numeric" value="${esc(c?.conjuge?.cpf || "")}" placeholder="000.000.000-00"><small class="doc-msg" data-docmsg="conjugeCpf"></small></label>
     </div>
+    <div class="label cad-sec">Empresa <span class="sub" style="text-transform:none;letter-spacing:0">(se estiver incluída no processo)</span></div>
+    ${empresasHtml(c?.empresas)}
     ${c ? `<div class="label cad-sec">Propriedades deste cliente</div>
       <div class="cad-props">${props.map(p => `<button type="button" class="li" data-proc="${p.id}"><span class="t"><b>${p.propriedadeN ? "Propriedade " + p.propriedadeN + " · " : ""}${esc(p.imovelDados?.denominacao || p.imovel || p.cliente)}</b></span><span class="sub">${esc(p.codigo)} · ${esc(p.etapa)}</span></button>`).join("") || `<p class="sub">Nenhuma propriedade.</p>`}</div>
       <button type="button" class="btn sm" data-addprop="${c.id}">+ Adicionar propriedade</button>`
@@ -4677,10 +4684,12 @@ function abrirCadastroCliente(cid){
     if (!telefone(v("telefone"))) return erro("Informe o telefone do cliente com DDD.");
     if (!valDoc("cpf")) return erro("O CPF do cliente está inválido.");
     if (!valDoc("conjugeCpf")) return erro("O CPF do cônjuge está inválido.");
+    const eEmp = validarEmpresas(f.querySelector(".emp-box")); if (eEmp) return erro(eEmp);
     erro("");
     const dados = {nome: v("nome"), cpf: formatarDocs(v("cpf")), telefone: fmtTel(v("telefone")), endereco: v("endereco"),
-      conjuge: v("conjugeNome") || v("conjugeCpf") ? {nome: v("conjugeNome"), cpf: formatarDocs(v("conjugeCpf"))} : null};
-    const docs = [dados.cpf, dados.conjuge?.cpf].filter(Boolean).join("; ");
+      conjuge: v("conjugeNome") || v("conjugeCpf") ? {nome: v("conjugeNome"), cpf: formatarDocs(v("conjugeCpf"))} : null,
+      empresas: lerEmpresas(f.querySelector(".emp-box"))};
+    const docs = [dados.cpf, dados.conjuge?.cpf, ...dados.empresas.map(e => e.cnpj)].filter(Boolean).join("; ");
     const btn = $("#cad-salvar"); btn.disabled = true; btn.textContent = "Salvando…";
     try {
       if (c) {
@@ -4751,7 +4760,7 @@ function abrirNovaPropriedade(cid){
     ev.preventDefault(); const fs = ev.target.querySelector(".cad-imovel"); const g = k => (fs.querySelector(`[name="${k}"]`)?.value || "").trim();
     const im = {denominacao: g("denominacao"), areaHa: numBR(g("areaHa")), codigoIR: fmtCodIR(g("codigoIR")), codMunicipio: g("codMunicipio"), municipio: g("municipio"), matricula: g("matricula"), ccir: g("ccir"), car: g("car").toUpperCase(), itr: fmtNirf(g("itr")), indicacao: g("indicacao")};
     ev.target.querySelector("input")?.blur();
-    try { await criarClienteComPropriedades({nome: c.nome, telefone: c.telefone}, [im], [c.cpf, c.conjuge?.cpf].filter(Boolean).join("; "), c); fecharDlg(); } catch (err) { falhaEscrita(err); }
+    try { await criarClienteComPropriedades({nome: c.nome, telefone: c.telefone}, [im], [c.cpf, c.conjuge?.cpf, ...(c.empresas || []).map(e => e.cnpj)].filter(Boolean).join("; "), c); fecharDlg(); } catch (err) { falhaEscrita(err); }
   });
 }
 document.addEventListener("click", e => {
@@ -4770,6 +4779,7 @@ function clienteCardHtml(d){
   return `<div class="card cad-card" style="margin-top:16px">
     ${c ? `<div class="card-h"><div><span class="label">Cliente</span><h3>${esc(c.nome)}</h3></div>${S.somenteLeitura ? "" : `<button type="button" class="btn sm" data-editcliente="${c.id}">Editar cadastro</button>`}</div>
     <div class="cad-dados">${linha("CPF", c.cpf)}${linha("Telefone", c.telefone)}${linha("Endereço", c.endereco)}${c.conjuge?.nome ? linha("Cônjuge", c.conjuge.nome + (c.conjuge.cpf ? " · CPF " + c.conjuge.cpf : "")) : ""}</div>
+    ${(c.empresas || []).length ? `<div class="label" style="margin:12px 0 6px">Empresa${c.empresas.length > 1 ? "s" : ""} no processo</div>${c.empresas.map(e => `<div class="cad-dados" style="margin-bottom:6px">${linha("Denominação", e.denominacao)}${linha("CNPJ", e.cnpj)}${linha("Localização", e.endereco)}${linha("CEP", e.cep)}</div>`).join("")}` : ""}
     ${props.length > 1 || !S.somenteLeitura ? `<div class="label" style="margin:12px 0 6px">Propriedades (${props.length})</div><div class="cad-props-chips">${props.map(p => `<button type="button" class="chip-prop ${p.id === d.id ? "on" : ""}" data-proc="${p.id}">${p.propriedadeN || "•"} · ${esc(p.imovelDados?.denominacao || p.imovel || p.codigo)}</button>`).join("")}${S.somenteLeitura ? "" : `<button type="button" class="chip-prop add" data-addprop="${c.id}">+ propriedade</button>`}</div>` : ""}` : ""}
     ${im ? `<div class="label" style="margin:14px 0 6px">Dados do imóvel${d.propriedadeN ? " · propriedade " + d.propriedadeN : ""}</div>
     <div class="cad-dados">${linha("Denominação", im.denominacao)}${linha("Área total", im.areaHa != null ? String(im.areaHa).replace(".", ",") + " ha" : "")}${linha("Código do imóvel rural", im.codigoIR)}${linha("Código do município", im.codMunicipio)}${linha("Município", im.municipio)}${linha("Matrícula", im.matricula)}${linha("CCIR", im.ccir)}${linha("CAR", im.car)}${linha("ITR (NIRF)", im.itr)}</div>
@@ -4807,7 +4817,8 @@ S.confrontantes = [];
 const LADOS = ["", "Norte", "Nordeste", "Leste", "Sudeste", "Sul", "Sudoeste", "Oeste", "Noroeste", "Frente", "Fundos"];
 const ANUENCIA = {pendente: ["Anuência pendente", "warn"], assinada: ["Anuência assinada", "ok"], recusada: ["Recusou assinar", "crit"], dispensada: ["Não precisa", ""]};
 const confrontantesDe = id => S.confrontantes.filter(c => (c.vinculos || []).some(v => v.demanda === id));
-const nomeConfTxt = c => `${c.nome}${c.imovel?.denominacao ? " — " + c.imovel.denominacao : ""}${c.imovel?.matricula ? " (Mat. " + c.imovel.matricula + ")" : ""}`;
+const nomesConf = c => { const n = [c.nome, ...(c.representantes || []).map(r => r.nome)].filter(Boolean); return n.length > 1 ? n.slice(0, -1).join(", ") + " e " + n[n.length - 1] : n[0] || ""; };
+const nomeConfTxt = c => `${nomesConf(c)}${c.imovel?.denominacao ? " — " + c.imovel.denominacao : ""}${c.imovel?.matricula ? " (Mat. " + c.imovel.matricula + ")" : ""}`;
 
 function confrontantesCardHtml(d){
   const ext = confrontantesDe(d.id);
@@ -4815,13 +4826,90 @@ function confrontantesCardHtml(d){
   return `<div class="card" style="margin-top:16px"><div class="card-h"><div><span class="label">Vizinhos do imóvel</span><h3>Confrontantes${ext.length + cli.length ? ` (${ext.length + cli.length})` : ""}</h3></div>${S.somenteLeitura ? "" : `<button type="button" class="btn sm primary" data-confnovo="${d.id}">+ Confrontante</button>`}</div>
     ${ext.length || cli.length ? `<div class="conf-lista">
       ${ext.map(c => { const v = c.vinculos.find(x => x.demanda === d.id) || {}; const [at, ac] = ANUENCIA[v.anuencia || "pendente"] || ANUENCIA.pendente; const tel = telefone(c.telefone);
-        return `<div class="conf-it"><div class="grow"><b>${esc(c.nome)}</b>${v.lado ? ` <span class="chip">${esc(v.lado)}</span>` : ""}<div class="sub">${[c.imovel?.denominacao, c.imovel?.matricula ? "Mat. " + c.imovel.matricula : "", c.cpf ? "CPF " + c.cpf : "", c.telefone].filter(Boolean).map(esc).join(" · ") || "sem dados do imóvel"}</div>${(c.vinculos || []).length > 1 ? `<div class="sub">Confronta também: ${c.vinculos.filter(x => x.demanda !== d.id).map(x => esc(S.demandas.find(y => y.id === x.demanda)?.imovelDados?.denominacao || S.demandas.find(y => y.id === x.demanda)?.codigo || "")).filter(Boolean).join(", ")}</div>` : ""}</div>
+        return `<div class="conf-it"><div class="grow"><b>${esc(c.nome)}</b>${v.lado ? ` <span class="chip">${esc(v.lado)}</span>` : ""}${c.qualidade && c.qualidade !== "Proprietário" ? ` <span class="sub">(${esc(c.qualidade)})</span>` : ""}<div class="sub">${[c.imovel?.denominacao, c.imovel?.matricula ? "Mat. " + c.imovel.matricula : "", c.cpf ? "CPF " + c.cpf : "", c.telefone].filter(Boolean).map(esc).join(" · ") || "sem dados do imóvel"}</div>${(c.representantes || []).length ? `<div class="sub">Sócios / representantes: ${c.representantes.map(r => `<b>${esc(r.nome)}</b>${r.qualidade ? " (" + esc(r.qualidade) + ")" : ""}${r.anuencia === "assinada" ? " · assinou" : ""}`).join(", ")}</div>` : ""}${(c.empresas || []).length ? `<div class="sub">Empresa: ${c.empresas.map(e => esc([e.denominacao, e.cnpj].filter(Boolean).join(" · "))).join("; ")}</div>` : ""}${(c.docs || []).length ? `<div class="cf-docs">${c.docs.map(a => `<span class="cf-doc"><a data-blob="${esc(a.id)}" data-nome="${esc(a.nome)}" target="_blank" rel="noopener" title="${esc(a.nome)}">${ICON.file}${esc(a.rotulo ? a.rotulo + " · " : "")}${esc(a.nome)}</a></span>`).join("")}</div>` : ""}${(c.vinculos || []).length > 1 ? `<div class="sub">Confronta também: ${c.vinculos.filter(x => x.demanda !== d.id).map(x => esc(S.demandas.find(y => y.id === x.demanda)?.imovelDados?.denominacao || S.demandas.find(y => y.id === x.demanda)?.codigo || "")).filter(Boolean).join(", ")}</div>` : ""}</div>
           <span class="chip ${ac}">${at}</span>
           <div class="pend-acts">${tel ? `<a class="btn sm" href="https://wa.me/${tel}" target="_blank" rel="noopener">WhatsApp</a>` : ""}${S.somenteLeitura ? "" : `<button type="button" class="btn sm" data-confedit="${c.id}|${d.id}">Editar</button>`}</div></div>`; }).join("")}
       ${cli.map(x => `<div class="conf-it"><div class="grow"><b>${esc(x.cliente)}</b> <span class="chip ok">cliente Saotech</span><div class="sub">${esc(x.codigo)} · ${esc(x.etapa)}</div></div><div class="pend-acts"><button type="button" class="btn sm" data-proc="${x.id}">Ver processo</button></div></div>`).join("")}
     </div>` : `<p class="sub" style="margin:0">Nenhum confrontante cadastrado. Adicione os vizinhos com os dados que a equipe precisa para a anuência e o memorial; eles não ganham acesso à plataforma.</p>`}
   </div>`;
 }
+
+/* ---------- v17 · empresas, sócios/representantes e documentos ---------- */
+const QUALIDADES = ["Proprietário", "Coproprietário", "Sócio", "Herdeiro", "Inventariante", "Procurador", "Representante legal", "Posseiro", "Usufrutuário", "Arrendatário"];
+const DOC_ROTULOS = ["Documento pessoal (RG/CNH)", "CPF", "Comprovante de endereço", "Certidão de casamento", "Matrícula", "CCIR", "ITR", "CAR", "Contrato social / CNPJ", "Procuração", "Anuência assinada", "Planta / croqui", "Outro"];
+const fmtCep = v => { const d = soDigCad(v); return d.length === 8 ? d.replace(/^(\d{5})(\d{3})$/, "$1-$2") : v; };
+const empTemDados = e => e && [e.denominacao, e.cnpj, e.endereco, e.cep].some(x => String(x || "").trim());
+function empBlocoHtml(e = {}){
+  return `<div class="emp-bloco"><div class="fgrid">
+    <label class="f span4">Denominação da empresa (razão social)<input data-emp="denominacao" value="${esc(e.denominacao || "")}"></label>
+    <label class="f span2">CNPJ<input data-emp="cnpj" inputmode="numeric" value="${esc(e.cnpj || "")}" placeholder="00.000.000/0000-00"><small class="doc-msg"></small></label>
+    <label class="f span4">Localização (endereço da empresa)<input data-emp="endereco" value="${esc(e.endereco || "")}" placeholder="Rua, número, bairro, cidade/UF"></label>
+    <label class="f span2">CEP<input data-emp="cep" inputmode="numeric" value="${esc(e.cep || "")}" placeholder="00000-000"></label>
+  </div><button type="button" class="btn sm ghost emp-rm">Remover empresa</button></div>`;
+}
+function empresasHtml(lista){
+  const tem = (lista || []).filter(empTemDados);
+  return `<div class="emp-box"><label class="chk"><input type="checkbox" class="emp-on" ${tem.length ? "checked" : ""}> Há empresa envolvida no processo</label>
+    <div class="emp-lista" ${tem.length ? "" : "hidden"}>${(tem.length ? tem : [{}]).map(empBlocoHtml).join("")}<button type="button" class="btn sm emp-mais">+ Outra empresa</button><p class="sub emp-dica">Ao digitar um CNPJ ou CEP válido, a denominação e o endereço são preenchidos automaticamente (consulta pública à Receita/Correios).</p></div></div>`;
+}
+function lerEmpresas(box){
+  if (!box || !box.querySelector(".emp-on")?.checked) return [];
+  return [...box.querySelectorAll(".emp-bloco")].map(b => { const g = k => (b.querySelector(`[data-emp="${k}"]`)?.value || "").trim();
+    return {denominacao: g("denominacao"), cnpj: formatarDocs(g("cnpj")), endereco: g("endereco"), cep: fmtCep(g("cep"))}; }).filter(empTemDados);
+}
+function validarEmpresas(box){
+  if (!box || !box.querySelector(".emp-on")?.checked) return "";
+  for (const b of box.querySelectorAll(".emp-bloco")) {
+    const g = k => (b.querySelector(`[data-emp="${k}"]`)?.value || "").trim();
+    if (!empTemDados({denominacao: g("denominacao"), cnpj: g("cnpj"), endereco: g("endereco"), cep: g("cep")})) continue;
+    if (!g("denominacao")) return "Informe a denominação da empresa.";
+    if (g("cnpj") && !cnpjOk(g("cnpj"))) return `CNPJ da empresa "${g("denominacao")}" está inválido.`;
+    if (g("cep") && soDigCad(g("cep")).length !== 8) return `CEP da empresa "${g("denominacao")}" deve ter 8 dígitos.`;
+  }
+  return "";
+}
+function repHtml(r = {}){
+  return `<div class="rep-it"><button type="button" class="btn sm ghost rep-rm" aria-label="Remover representante">✕</button><div class="fgrid">
+    <label class="f span4">Nome completo<input data-r="nome" value="${esc(r.nome || "")}"></label>
+    <label class="f span2">CPF / CNPJ<input data-r="cpf" inputmode="numeric" value="${esc(r.cpf || "")}"><small class="doc-msg"></small></label>
+    <label class="f span2">Telefone<input data-r="telefone" inputmode="tel" value="${esc(r.telefone || "")}" placeholder="(27) 99999-0000"></label>
+    <label class="f span2">Qualidade<select data-r="qualidade">${QUALIDADES.map(q => `<option ${(r.qualidade || "Sócio") === q ? "selected" : ""}>${q}</option>`).join("")}</select></label>
+    <label class="f span2">Assinatura da anuência<select data-r="anuencia">${Object.entries(ANUENCIA).map(([k, [t]]) => `<option value="${k}" ${(r.anuencia || "pendente") === k ? "selected" : ""}>${t}</option>`).join("")}</select></label>
+  </div></div>`;
+}
+// eventos dos blocos de empresa (cadastro do cliente e do confrontante)
+document.addEventListener("change", e => {
+  if (e.target.classList?.contains("emp-on")) { const l = e.target.closest(".emp-box").querySelector(".emp-lista"); l.hidden = !e.target.checked; if (e.target.checked) l.querySelector('[data-emp="denominacao"]')?.focus(); }
+  if (e.target.matches?.("[data-cfarq]")) { const n = e.target.files.length; e.target.closest(".cf-arq").querySelector(".cf-arqn").textContent = n ? `${n} arquivo${n > 1 ? "s" : ""} para enviar ao salvar` : ""; }
+});
+document.addEventListener("click", e => {
+  const t = e.target;
+  if (t.closest(".emp-mais")) { const l = t.closest(".emp-lista"); t.closest(".emp-mais").insertAdjacentHTML("beforebegin", empBlocoHtml()); l.querySelectorAll(".emp-bloco")[l.querySelectorAll(".emp-bloco").length - 1].querySelector("input").focus(); return; }
+  if (t.closest(".emp-rm")) { const box = t.closest(".emp-box"); t.closest(".emp-bloco").remove(); if (!box.querySelector(".emp-bloco")) { box.querySelector(".emp-on").checked = false; box.querySelector(".emp-mais").insertAdjacentHTML("beforebegin", empBlocoHtml()); box.querySelector(".emp-lista").hidden = true; } return; }
+  if (t.closest(".rep-mais")) { const l = t.closest(".cf-bloco").querySelector(".rep-lista"); l.insertAdjacentHTML("beforeend", repHtml()); l.lastElementChild.querySelector("input").focus(); return; }
+  if (t.closest(".rep-rm")) { t.closest(".rep-it").remove(); return; }
+  if (t.closest(".cf-docrm")) { const d = t.closest(".cf-doc"); d.classList.toggle("rm"); t.closest(".cf-docrm").textContent = d.classList.contains("rm") ? "↺" : "✕"; t.closest(".cf-docrm").setAttribute("aria-label", d.classList.contains("rm") ? "Manter documento" : "Retirar documento"); return; }
+});
+const preencherVazio = (b, k, v) => { const i = b.querySelector(`[data-emp="${k}"]`); if (i && !i.value.trim() && v) i.value = v; };
+document.addEventListener("input", async e => {
+  const i = e.target, k = i.dataset?.emp; if (!k) return;
+  const b = i.closest(".emp-bloco");
+  if (k === "cnpj") {
+    const m = i.parentElement.querySelector(".doc-msg"); const d = soDigCad(i.value);
+    if (!d) { m.textContent = ""; return; }
+    if (d.length < 14) { m.textContent = ""; m.className = "doc-msg"; return; }
+    const ok = cnpjOk(d); m.textContent = ok ? "válido" : "CNPJ com dígito verificador errado"; m.className = "doc-msg " + (ok ? "ok" : "erro");
+    if (!ok || i.dataset.buscado === d) return; i.dataset.buscado = d; i.value = fmtCnpj(d);
+    try { m.textContent = "consultando…"; const r = await fetch("https://brasilapi.com.br/api/cnpj/v1/" + d); if (!r.ok) throw 0; const j = await r.json();
+      preencherVazio(b, "denominacao", j.razao_social); preencherVazio(b, "endereco", [[j.descricao_tipo_de_logradouro, j.logradouro].filter(Boolean).join(" "), j.numero, j.complemento, j.bairro, j.municipio && j.uf ? j.municipio + "/" + j.uf : ""].filter(Boolean).join(", ")); preencherVazio(b, "cep", fmtCep(String(j.cep || "")));
+      m.textContent = "válido · dados da Receita preenchidos"; } catch { m.textContent = "válido"; }
+  }
+  if (k === "cep") {
+    const d = soDigCad(i.value); if (d.length !== 8 || i.dataset.buscado === d) return; i.dataset.buscado = d; i.value = fmtCep(d);
+    try { const r = await fetch(`https://viacep.com.br/ws/${d}/json/`); const j = await r.json(); if (j.erro) return;
+      preencherVazio(b, "endereco", [j.logradouro, j.bairro, j.localidade && j.uf ? j.localidade + "/" + j.uf : ""].filter(Boolean).join(", ")); } catch {}
+  }
+});
 
 function confBlocoHtml(i, c, props, demId, outros, unico){
   const vin = id => (c?.vinculos || []).find(v => v.demanda === id);
@@ -4832,10 +4920,16 @@ function confBlocoHtml(i, c, props, demId, outros, unico){
       <label class="f span4">Nome completo<input data-k="nome" value="${esc(c?.nome || "")}"></label>
       <label class="f span2">CPF / CNPJ<input data-k="cpf" inputmode="numeric" value="${esc(c?.cpf || "")}"><small class="doc-msg"></small></label>
       <label class="f span2">Telefone<input data-k="telefone" inputmode="tel" value="${esc(c?.telefone || "")}" placeholder="(27) 99999-0000"></label>
-      <label class="f span4">Endereço<input data-k="endereco" value="${esc(c?.endereco || "")}"></label>
+      <label class="f span2">Qualidade<select data-k="qualidade">${QUALIDADES.map(q => `<option ${(c?.qualidade || "Proprietário") === q ? "selected" : ""}>${q}</option>`).join("")}</select></label>
+      <label class="f span6">Endereço<input data-k="endereco" value="${esc(c?.endereco || "")}"></label>
       <label class="f span4">Cônjuge<input data-k="conjugeNome" value="${esc(c?.conjuge?.nome || "")}"></label>
       <label class="f span2">CPF do cônjuge<input data-k="conjugeCpf" inputmode="numeric" value="${esc(c?.conjuge?.cpf || "")}"><small class="doc-msg"></small></label>
     </div>
+    <div class="label cad-sec">Sócios e outros representantes do imóvel</div>
+    <div class="rep-lista">${(c?.representantes || []).map(repHtml).join("")}</div>
+    <button type="button" class="btn sm rep-mais">+ Sócio / representante</button>
+    <div class="label cad-sec">Empresa <span class="sub" style="text-transform:none;letter-spacing:0">(se estiver incluída no processo)</span></div>
+    ${empresasHtml(c?.empresas)}
     <div class="label cad-sec">Imóvel do confrontante</div>
     <div class="fgrid">
       <label class="f span3">Denominação<input data-k="denominacao" value="${esc(c?.imovel?.denominacao || "")}"></label>
@@ -4852,6 +4946,9 @@ function confBlocoHtml(i, c, props, demId, outros, unico){
       <select data-cfl="${p.id}" aria-label="Lado">${LADOS.map(l => `<option value="${l}" ${v?.lado === l ? "selected" : ""}>${l || "Lado (opcional)"}</option>`).join("")}</select>
       <select data-cfa="${p.id}" aria-label="Anuência">${Object.entries(ANUENCIA).map(([k, [t]]) => `<option value="${k}" ${(v?.anuencia || "pendente") === k ? "selected" : ""}>${t}</option>`).join("")}</select>
     </div>`; }).join("")}</div>
+    <div class="label cad-sec">Documentos do confrontante</div>
+    ${(c?.docs || []).length ? `<div class="cf-docs">${c.docs.map((a, j) => `<span class="cf-doc" data-j="${j}"><a data-blob="${esc(a.id)}" data-nome="${esc(a.nome)}" target="_blank" rel="noopener" title="${esc(a.nome)}">${ICON.file}${esc(a.rotulo ? a.rotulo + " · " : "")}${esc(a.nome)}</a><button type="button" class="cf-docrm" aria-label="Retirar documento">✕</button></span>`).join("")}</div>` : ""}
+    ${S.assets ? `<div class="cf-arq"><select data-k="docRot" aria-label="Tipo de documento">${DOC_ROTULOS.map(r => `<option>${r}</option>`).join("")}</select><label class="filebtn">${ICON.clip} Anexar documentos<input type="file" data-cfarq multiple hidden accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.odt,.kml,.kmz,.dwg,.dxf,.zip"></label><span class="sub cf-arqn"></span></div>` : `<p class="sub">Anexos indisponíveis nesta conexão.</p>`}
     <label class="f" style="margin-top:10px">Observações<textarea data-k="obs" rows="2" placeholder="Ex.: prefere contato à tarde; divisa por cerca de arame">${esc(c?.obs || "")}</textarea></label>
   </fieldset>`;
 }
@@ -4886,8 +4983,8 @@ function abrirConfrontante(demId, confId){
   f.addEventListener("click", e => { const r = e.target.closest("[data-cfrm]"); if (!r) return; r.closest(".cf-bloco").remove(); renumerar(); const n = f.querySelectorAll(".cf-bloco").length; $("#cf-salvar").textContent = n > 1 ? `Salvar ${n} confrontantes` : "Salvar"; });
   f.addEventListener("change", e => { if (e.target.dataset.k === "existente") e.target.closest(".cf-bloco").querySelector(".cf-dados").hidden = !!e.target.value; });
   const valDocEl = i => { const m = i.parentElement.querySelector(".doc-msg"); const v = i.value.trim(); if (!v) { if (m) m.textContent = ""; return true; } const r = validarDocs(v); if (m) { m.textContent = r.ok ? "válido" : r.msg; m.className = "doc-msg " + (r.ok ? "ok" : "erro"); } return r.ok; };
-  f.addEventListener("input", e => { if (["cpf", "conjugeCpf"].includes(e.target.dataset.k)) valDocEl(e.target); });
-  f.addEventListener("focusout", e => { const i = e.target, k = i.dataset.k; if (["cpf", "conjugeCpf"].includes(k) && i.value.trim() && validarDocs(i.value).ok) i.value = formatarDocs(i.value); if (k === "telefone") i.value = fmtTel(i.value); if (k === "codigoIR") i.value = fmtCodIR(i.value); });
+  f.addEventListener("input", e => { if (["cpf", "conjugeCpf"].includes(e.target.dataset.k) || e.target.dataset.r === "cpf") valDocEl(e.target); });
+  f.addEventListener("focusout", e => { const i = e.target, k = i.dataset.k || (i.dataset.r ? "r" + i.dataset.r : ""); if (["cpf", "conjugeCpf", "rcpf"].includes(k) && i.value.trim() && validarDocs(i.value).ok) i.value = formatarDocs(i.value); if (k === "telefone" || k === "rtelefone") i.value = fmtTel(i.value); if (k === "codigoIR") i.value = fmtCodIR(i.value); });
   f.addEventListener("submit", async ev => {
     ev.preventDefault();
     const erro = t => { const e = $("#cf-erro"); e.textContent = t; e.hidden = !t; if (t) e.scrollIntoView({block: "center"}); };
@@ -4901,31 +4998,48 @@ function abrirConfrontante(demId, confId){
       if (!exist && !v("nome")) { if (blocos.length > 1 && !sel.length) continue; return erro(rot + "informe o nome."); }
       if (!sel.length) return erro(rot + "marque pelo menos uma propriedade com a qual ele confronta.");
       if (!exist && ![...b.querySelectorAll('[data-k="cpf"],[data-k="conjugeCpf"]')].every(valDocEl)) return erro(rot + "confira o CPF/CNPJ.");
+      if (!exist && ![...b.querySelectorAll('[data-r="cpf"]')].every(valDocEl)) return erro(rot + "confira o CPF/CNPJ dos sócios/representantes.");
+      const reps = exist ? null : [...b.querySelectorAll(".rep-it")].map(r => { const g = k => (r.querySelector(`[data-r="${k}"]`)?.value || "").trim();
+        return {nome: g("nome"), cpf: formatarDocs(g("cpf")), telefone: fmtTel(g("telefone")), qualidade: g("qualidade"), anuencia: g("anuencia")}; }).filter(r => r.nome || r.cpf);
+      if (reps?.some(r => !r.nome)) return erro(rot + "informe o nome de cada sócio/representante.");
+      const eEmp = exist ? "" : validarEmpresas(b.querySelector(".emp-box")); if (eEmp) return erro(rot + eEmp);
+      const arqs = [...(b.querySelector("[data-cfarq]")?.files || [])];
+      if (arqs.some(a => a.size > 20 * 1024 * 1024)) return erro(rot + "cada documento deve ter no máximo 20 MB.");
+      const rmJ = new Set([...b.querySelectorAll(".cf-doc.rm")].map(x => +x.dataset.j));
+      const docRot = v("docRot");
       let doc, ref;
       if (exist) {
         const x = S.confrontantes.find(y => y.id === exist); ref = S.db.doc("confrontantes/" + exist);
-        doc = {...x, vinculos: [...(x.vinculos || []).filter(y => !sel.some(s => s.demanda === y.demanda)), ...sel], obs: v("obs") || x.obs || ""}; delete doc.id;
+        doc = {...x, vinculos: [...(x.vinculos || []).filter(y => !sel.some(s => s.demanda === y.demanda)), ...sel], obs: v("obs") || x.obs || "", docs: [...(x.docs || [])]}; delete doc.id;
       } else {
         ref = c ? S.db.doc("confrontantes/" + c.id) : S.db.collection("confrontantes").doc();
         const propsIds = props.map(p => p.id);
         const fora = (c?.vinculos || []).filter(y => !propsIds.includes(y.demanda));
         doc = {nome: v("nome"), cpf: formatarDocs(v("cpf")), telefone: fmtTel(v("telefone")), endereco: v("endereco"),
           conjuge: v("conjugeNome") || v("conjugeCpf") ? {nome: v("conjugeNome"), cpf: formatarDocs(v("conjugeCpf"))} : null,
+          qualidade: v("qualidade") || "Proprietário", representantes: reps, empresas: lerEmpresas(b.querySelector(".emp-box")),
+          docs: (c?.docs || []).filter((_, j) => !rmJ.has(j)),
           imovel: {denominacao: v("denominacao"), matricula: v("matricula"), codigoIR: fmtCodIR(v("codigoIR")), ccir: v("ccir"), car: v("car").toUpperCase(), sigef: v("sigef")},
           obs: v("obs"), vinculos: [...fora, ...sel], criadoEm: c?.criadoEm || agoraISO(), criadoPor: c?.criadoPor || S.me, atualizadoEm: agoraISO(), atualizadoPor: S.me};
       }
-      planos.push({ref, doc, sel});
+      planos.push({ref, doc, sel, arqs, docRot, confId: exist || c?.id || ref.id});
     }
     if (!planos.length) return erro("Preencha pelo menos um confrontante.");
     erro("");
     const btn = $("#cf-salvar"); btn.disabled = true;
     try {
-      for (const {ref, doc, sel} of planos) {
+      for (const {ref, doc, sel, arqs, docRot, confId} of planos) {
+        for (const [ai, a] of arqs.entries()) {
+          btn.textContent = `Enviando documento ${ai + 1} de ${arqs.length}…`;
+          const r = await S.assets.upload(a, {pasta: "confrontantes/" + confId});
+          doc.docs = [...(doc.docs || []), {id: r.id, nome: a.name, tipo: r.contentType, tam: a.size, rotulo: docRot, em: agoraISO(), por: S.me}];
+        }
+        btn.textContent = "Salvando…";
         await ref.set(doc);
         for (const s of sel) { const p = S.demandas.find(y => y.id === s.demanda); if (p && !(c?.vinculos || []).some(y => y.demanda === s.demanda)) await S.db.doc("demandas/" + p.id).update({historico: histAdd(S.demandas.find(y => y.id === s.demanda) || p, `adicionou ${doc.nome} como confrontante${s.lado ? " (" + s.lado + ")" : ""}`)}); }
       }
       fecharDlg(); toast(planos.length > 1 ? `${planos.length} confrontantes salvos` : "Confrontante salvo");
-    } catch (err) { falhaEscrita(err); btn.disabled = false; }
+    } catch (err) { falhaEscrita(err); btn.disabled = false; btn.textContent = "Salvar"; }
   });
   $("#cf-del")?.addEventListener("click", async e => {
     if (e.target.dataset.ok !== "1") { e.target.dataset.ok = "1"; e.target.textContent = "Remover deste processo?"; return; }
@@ -4942,13 +5056,13 @@ async function abrirListaConfrontantes(){
   S.dlg = {tipo: "listaconf", unsubs: []};
   const dlg = $("#dlg"); dlg.className = "";
   dlg.innerHTML = `<div class="dlg-h"><div><span class="label">Cadastro interno</span><h2 style="font-size:19px">Confrontantes</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
-    <div class="dlg-b"><input id="cfl-busca" type="search" placeholder="Buscar nome, CPF, matrícula ou imóvel" style="width:100%;margin-bottom:10px"><div id="cfl-lista"></div></div>
+    <div class="dlg-b"><input id="cfl-busca" type="search" placeholder="Buscar nome, CPF, sócio, empresa, matrícula ou imóvel" style="width:100%;margin-bottom:10px"><div id="cfl-lista"></div></div>
     <div class="dlg-f"><span class="sub">Para adicionar, abra o processo do cliente e use "+ Confrontante".</span><button type="button" class="btn" data-close>Fechar</button></div>`;
   if (!dlg.open) dlg.showModal();
   const desenhar = () => {
     const q = ($("#cfl-busca").value || "").toLowerCase();
-    const l = S.confrontantes.filter(c => !q || [c.nome, c.cpf, c.imovel?.matricula, c.imovel?.denominacao, c.telefone].join(" ").toLowerCase().includes(q)).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
-    $("#cfl-lista").innerHTML = l.map(c => `<div class="lg-it"><div class="grow"><b>${esc(c.nome)}</b><div class="sub">${[c.cpf, c.telefone, c.imovel?.denominacao, c.imovel?.matricula ? "Mat. " + c.imovel.matricula : ""].filter(Boolean).map(esc).join(" · ")}</div>
+    const l = S.confrontantes.filter(c => !q || [c.nome, c.cpf, c.imovel?.matricula, c.imovel?.denominacao, c.telefone, ...(c.representantes || []).flatMap(r => [r.nome, r.cpf]), ...(c.empresas || []).flatMap(e => [e.denominacao, e.cnpj])].join(" ").toLowerCase().includes(q)).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+    $("#cfl-lista").innerHTML = l.map(c => `<div class="lg-it"><div class="grow"><b>${esc(nomesConf(c))}</b>${(c.docs || []).length ? ` <span class="chip">${c.docs.length} doc${c.docs.length > 1 ? "s" : ""}</span>` : ""}<div class="sub">${[c.cpf, c.telefone, c.imovel?.denominacao, c.imovel?.matricula ? "Mat. " + c.imovel.matricula : ""].filter(Boolean).map(esc).join(" · ")}</div>
       <div class="sub">Confronta: ${(c.vinculos || []).map(v => { const p = S.demandas.find(x => x.id === v.demanda); return p ? `<a href="#" data-proc="${p.id}">${esc((p.cliente || "").split(/\s+[—–]\s+/)[0])} · ${esc(p.imovelDados?.denominacao || p.codigo)}</a>` : ""; }).filter(Boolean).join(", ") || "—"}</div></div></div>`).join("") || `<p class="muted" style="margin:0">Nenhum confrontante cadastrado ainda.</p>`;
   };
   desenhar(); $("#cfl-busca").addEventListener("input", desenhar);
