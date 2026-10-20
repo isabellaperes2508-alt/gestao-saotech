@@ -700,6 +700,21 @@ body.pt-visor-on{overflow:hidden}
 .pt-etapas .n{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line-2);display:grid;place-items:center;font-size:12px;font-weight:700;flex:none} .pt-etapas li.done .n{background:var(--musgo);color:var(--creme);border-color:var(--musgo)} .pt-etapas li.cur .n{background:var(--accent);border-color:var(--accent);color:#2E3319}
 .pt-eqlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-top:8px}
 .pt-eq{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:10px} .pt-eq .av{width:38px;height:38px;border-radius:50%;background:var(--musgo);color:var(--creme);display:grid;place-items:center;font-weight:700;font-size:13px;flex:none} .pt-eq .grow{display:flex;flex-direction:column;gap:2px;min-width:0} .pt-eqacts{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+
+/* v19 · agenda individual */
+.tf-top{align-items:flex-end;gap:12px;flex-wrap:wrap} .tf-top>div{flex:1;min-width:200px} .tf-top select{width:auto}
+.tf-rapida{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 12px;margin-bottom:16px} .tf-rapida #tf-rap-t{flex:1;min-width:200px} .tf-rapida input[type=date],.tf-rapida input[type=time]{width:auto}
+.tf-grupos{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;align-items:start}
+.tf-grupo h3{margin:0 0 6px} .tf-grupo.g-atrasadas{border-color:#E1A08C;background:linear-gradient(180deg,#FBEDE7,var(--surface) 60px)} .tf-grupo.g-hoje{border-color:var(--accent)}
+.tf-it{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--line)} .tf-it:first-of-type{border-top:0}
+.tf-ok{width:22px;height:22px;border-radius:50%;border:2px solid var(--line-2);background:var(--surface);flex:none;margin-top:2px;cursor:pointer;position:relative} .tf-ok:hover{border-color:var(--musgo);background:#E3EED2} .tf-ok:hover::after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--musgo)}
+.tf-it.pri-alta .tf-ok{border-color:#C8573A} .tf-it.pri-baixa{opacity:.8}
+.tf-txt{flex:1;min-width:0;text-align:left;background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;display:flex;flex-direction:column;gap:2px} .tf-txt b{font-weight:600;overflow-wrap:anywhere} .tf-txt .sub{overflow-wrap:anywhere}
+.tf-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px} .tf-prazo{font-size:12px;color:var(--muted)} .tf-prazo.crit{color:#B4442A;font-weight:600}
+.tf-feita{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line)} .tf-feita .grow{flex:1;min-width:0;display:flex;flex-direction:column} .tf-chk{width:22px;height:22px;border-radius:50%;background:var(--musgo);color:var(--creme);display:grid;place-items:center;font-size:12px;flex:none}
+.tf-opc{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line-2);border-radius:12px;padding:10px 12px;cursor:pointer} .tf-opc:has(input:checked){border-color:var(--musgo);background:#F1F4E2} .tf-opc>span{display:flex;flex-direction:column;gap:2px} .tf-opc input{margin-top:4px;width:auto;flex:none}
+.tf-banner{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px} .crit-t{color:#B4442A}
+@media (max-width:560px){.tf-grupos{grid-template-columns:minmax(0,1fr)} .tf-rapida #tf-rap-t{flex-basis:100%}}
 /* pré-visualização */
 dialog.prev{width:min(1100px,calc(100vw - 16px));height:calc(100dvh - 24px);display:flex;flex-direction:column}
 dialog.prev:not([open]){display:none}
@@ -3321,7 +3336,7 @@ function render(){
   const mesmo = v.dataset.ctx === ctx; v.dataset.ctx = ctx; v.dataset.tab = S.tab;
   const nomeBrand = document.querySelector(".brand p"); if (nomeBrand) nomeBrand.textContent = `${saudacao()}, ${primeiro(S.me)} · ${capital(fmtDia(hoje()))}`;
   const agVals = capturarAgForm(v);
-  v.innerHTML = S.tab === "inicio" ? viewInicio() : S.tab === "clientes" ? viewClientes() : S.tab === "conversas" ? viewConversas() : S.tab === "galeria" ? viewGaleria() : S.tab === "mapa" ? viewMapa() : S.tab === "historico" ? viewHistorico() : S.tab === "registro" ? viewRegistro() : S.tab === "produtividade" ? viewProdutividade() : S.tab === "financeiro" ? viewFinanceiro() : S.tab === "agenda" ? viewAgenda() : viewDemandas();
+  v.innerHTML = S.tab === "inicio" ? viewInicio() : S.tab === "minha" ? viewMinhaAgenda() : S.tab === "clientes" ? viewClientes() : S.tab === "conversas" ? viewConversas() : S.tab === "galeria" ? viewGaleria() : S.tab === "mapa" ? viewMapa() : S.tab === "historico" ? viewHistorico() : S.tab === "registro" ? viewRegistro() : S.tab === "produtividade" ? viewProdutividade() : S.tab === "financeiro" ? viewFinanceiro() : S.tab === "agenda" ? viewAgenda() : viewDemandas();
   if (mesmo) for (const [id, val] of Object.entries(keep)) { if (["busca","fResp","pPessoa","pDias","r-pessoa","g-dem","g-pes","cl-busca","cv-busca","aud-pessoa","aud-tipo","aud-dias","aud-busca"].includes(id)) continue; const el = document.getElementById(id); if (!el || !v.contains(el)) continue; if (el.type === "checkbox") el.checked = val; else if (el.tagName !== "SELECT" || [...el.options].some(o => o.value === val)) el.value = val; }
   if (mesmo && fileSel?.length) { const fi = v.querySelector("#mu-file"); try { fi.files = fileSel; } catch {} }
   const f = focusId && document.getElementById(focusId);
@@ -5647,6 +5662,210 @@ async function publicarMapaMemorial(id){
   const iv = setInterval(() => { if (!S.db) return; clearInterval(iv);
     S.db.doc("config/contatos").onSnapshot(s => { S.contatosEq = s.exists ? s.data() : null; }, () => {});
   }, 300);
+})();
+
+
+/* ====================================================================
+   v19 · agenda individual de cada membro
+   Tarefas próprias com prazo opcional (data e hora). Ao concluir:
+   arquivar (sai da agenda, conta no relatório) ou lançar nas demandas
+   gerais escolhendo a lista (etapa) do cartão.
+   ==================================================================== */
+S.tarefas = []; S.agPessoa = null; S.agVerFeitas = false;
+const tarefasDe = p => S.tarefas.filter(t => t.pessoa === p);
+const prazoTarefa = t => t.prazoData ? t.prazoData + "T" + (t.prazoHora || "23:59") : null;
+const atrasada = t => t.status === "aberta" && t.prazoData && prazoTarefa(t) < new Date().toLocaleString("sv-SE").slice(0, 16).replace(" ", "T");
+function grupoTarefa(t){
+  if (!t.prazoData) return "sem";
+  if (atrasada(t)) return "atrasadas";
+  if (t.prazoData === hoje()) return "hoje";
+  if (t.prazoData === addDias(hoje(), 1)) return "amanha";
+  return t.prazoData <= addDias(hoje(), 7) ? "semana" : "depois";
+}
+const GRUPOS_TAREFA = [["atrasadas", "Atrasadas"], ["hoje", "Hoje"], ["amanha", "Amanhã"], ["semana", "Próximos 7 dias"], ["depois", "Mais adiante"], ["sem", "Sem prazo"]];
+const prazoTxt = t => t.prazoData ? `${t.prazoData === hoje() ? "Hoje" : t.prazoData === addDias(hoje(), 1) ? "Amanhã" : dataBR(t.prazoData)}${t.prazoHora ? " às " + t.prazoHora : ""}` : "";
+function tarefaItemHtml(t){
+  const d = t.demandaId ? S.demandas.find(x => x.id === t.demandaId) : null;
+  const at = atrasada(t);
+  return `<div class="tf-it ${at ? "atr" : ""} pri-${t.prioridade || "normal"}">
+    <button type="button" class="tf-ok" data-tfok="${t.id}" aria-label="Concluir ${esc(t.titulo)}" title="Concluir"></button>
+    <button type="button" class="tf-txt" data-tfedit="${t.id}"><b>${esc(t.titulo)}</b>${t.descricao ? `<span class="sub">${esc(t.descricao.length > 140 ? t.descricao.slice(0, 140) + "…" : t.descricao)}</span>` : ""}
+      <span class="tf-meta">${t.prazoData ? `<span class="tf-prazo ${at ? "crit" : ""}">🕑 ${esc(prazoTxt(t))}</span>` : ""}${t.prioridade === "alta" ? `<span class="chip crit">alta</span>` : ""}${d ? `<span class="chip">${esc(d.codigo)} · ${esc((d.cliente || "").split(/\s+[—–]\s+/)[0])}</span>` : ""}</span></button>
+  </div>`;
+}
+function viewMinhaAgenda(){
+  const P = S.agPessoa || S.me; const eu = P === S.me;
+  const minhas = tarefasDe(P);
+  const abertas = minhas.filter(t => t.status === "aberta").sort((a, b) => (prazoTarefa(a) || "9999") < (prazoTarefa(b) || "9999") ? -1 : (prazoTarefa(a) || "9999") > (prazoTarefa(b) || "9999") ? 1 : (a.criadoEm < b.criadoEm ? -1 : 1));
+  const feitas = minhas.filter(t => t.status !== "aberta").sort((a, b) => (a.concluidoEm || "") < (b.concluidoEm || "") ? 1 : -1);
+  const nAtr = abertas.filter(atrasada).length, nHoje = abertas.filter(t => t.prazoData === hoje()).length;
+  const sem7 = feitas.filter(t => (t.concluidoEm || "") >= addDias(hoje(), -6));
+  return `
+  <div class="toolbar tf-top">
+    <div><span class="label">Agenda individual</span><h2 style="margin:2px 0 0;font-size:22px">${eu ? "Minha agenda" : "Agenda de " + esc(pessoa(P).nome.split(" ")[0])}</h2></div>
+    <select id="agPessoa" aria-label="Agenda de">${PESSOAS.map(p => `<option value="${p.id}" ${P === p.id ? "selected" : ""}>${esc(p.nome)}${p.id === S.me ? " (você)" : ""}</option>`).join("")}</select>
+    <button type="button" class="btn primary" data-tfnova>+ Nova tarefa</button>
+  </div>
+  <section class="kpis">
+    <div class="kpi"><span class="label">Abertas</span><span class="v">${abertas.length}</span><span class="s">na agenda</span></div>
+    <div class="kpi ${nHoje ? "warn" : ""}"><span class="label">Para hoje</span><span class="v">${nHoje}</span><span class="s">com prazo hoje</span></div>
+    <div class="kpi ${nAtr ? "warn" : ""}"><span class="label">Atrasadas</span><span class="v">${nAtr}</span><span class="s">prazo vencido</span></div>
+    <div class="kpi"><span class="label">Concluídas · 7 dias</span><span class="v">${sem7.length}</span><span class="s">${sem7.filter(t => t.status === "lancada").length} lançada${sem7.filter(t => t.status === "lancada").length === 1 ? "" : "s"} nas demandas</span></div>
+  </section>
+  <form class="card tf-rapida" id="tf-rapida" autocomplete="off"><input id="tf-rap-t" placeholder="${eu ? "Anotar uma tarefa rápida e apertar Enter…" : "Adicionar tarefa para " + esc(pessoa(P).nome.split(" ")[0]) + "…"}" aria-label="Nova tarefa rápida">
+    <input type="date" id="tf-rap-d" aria-label="Prazo (opcional)"><input type="time" id="tf-rap-h" aria-label="Hora (opcional)"><button class="btn primary">Adicionar</button></form>
+  <div class="tf-grupos">${GRUPOS_TAREFA.map(([g, n]) => { const l = abertas.filter(t => grupoTarefa(t) === g); return l.length ? `<section class="card tf-grupo g-${g}"><h3>${n} <small>${l.length}</small></h3>${l.map(tarefaItemHtml).join("")}</section>` : ""; }).join("") || `<div class="card empty">${eu ? "Sua agenda está livre. Anote acima o que precisa fazer — com ou sem prazo." : "Nenhuma tarefa aberta."}</div>`}</div>
+  <section class="card" style="margin-top:16px"><div class="card-h"><h3 style="margin:0">Concluídas <small>${feitas.length}</small></h3><button type="button" class="btn sm ghost" data-tffeitas>${S.agVerFeitas ? "Esconder" : "Mostrar"}</button></div>
+    ${S.agVerFeitas ? (feitas.length ? feitas.slice(0, 60).map(t => { const d = t.destino?.demandaId ? S.demandas.find(x => x.id === t.destino.demandaId) : null;
+      return `<div class="tf-feita"><span class="tf-chk">✓</span><div class="grow"><b>${esc(t.titulo)}</b><span class="sub">${fmtQuando(t.concluidoEm)}${t.status === "arquivada" ? " · arquivada" : ` · lançada em <b>${esc(t.destino?.etapa || "")}</b>${d ? ` — <a href="#" data-proc="${d.id}">${esc(d.codigo)}</a>` : ""}`}${t.prazoData && t.concluidoEm ? (t.concluidoEm.slice(0, 16) <= prazoTarefa(t) ? " · no prazo" : " · após o prazo") : ""}</span></div><button type="button" class="btn sm ghost" data-tfreabrir="${t.id}">Reabrir</button></div>`; }).join("") : `<p class="sub" style="margin:0">Nada concluído ainda.</p>`) : `<p class="sub" style="margin:0">Tarefas arquivadas saem da agenda, mas continuam contando no relatório de Produtividade.</p>`}
+  </section>`;
+}
+function abrirTarefa(id){
+  const t = id ? S.tarefas.find(x => x.id === id) : null; const P = t?.pessoa || S.agPessoa || S.me;
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "tarefa", id, unsubs: []};
+  const dlg = $("#dlg"); dlg.className = "";
+  dlg.innerHTML = `<form id="fTf"><div class="dlg-h"><div><span class="label">Agenda de ${esc(pessoa(P).nome)}</span><h2 style="font-size:19px">${t ? "Editar tarefa" : "Nova tarefa"}</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+    <div class="dlg-b">
+      <label class="f">O que precisa ser feito<input name="titulo" required maxlength="160" value="${esc(t?.titulo || "")}" placeholder="Ex.: Conferir matrícula da Fazenda Boa Vista"></label>
+      <label class="f">Detalhes (opcional)<textarea name="descricao" rows="3">${esc(t?.descricao || "")}</textarea></label>
+      <div class="fgrid">
+        <label class="f span2">Prazo (opcional)<input type="date" name="prazoData" value="${esc(t?.prazoData || "")}"></label>
+        <label class="f span2">Hora (opcional)<input type="time" name="prazoHora" value="${esc(t?.prazoHora || "")}"></label>
+        <label class="f span2">Prioridade<select name="prioridade">${[["normal", "Normal"], ["alta", "Alta"], ["baixa", "Baixa"]].map(([v, n]) => `<option value="${v}" ${(t?.prioridade || "normal") === v ? "selected" : ""}>${n}</option>`).join("")}</select></label>
+        <label class="f span4">Ligada a um processo (opcional)<select name="demandaId"><option value="">Nenhum</option>${S.demandas.filter(d => !d.exemplo && (ATIVAS.includes(d.etapa) || d.id === t?.demandaId)).sort((a, b) => (a.codigo < b.codigo ? 1 : -1)).map(d => `<option value="${d.id}" ${t?.demandaId === d.id ? "selected" : ""}>${esc(d.codigo + " · " + d.cliente)}</option>`).join("")}</select></label>
+        <label class="f span2">Responsável<select name="pessoa">${PESSOAS.map(p => `<option value="${p.id}" ${P === p.id ? "selected" : ""}>${esc(p.nome)}</option>`).join("")}</select></label>
+      </div>
+      <p class="ag-erro" id="tf-erro" hidden></p>
+    </div>
+    <div class="dlg-f"><div>${t ? `<button type="button" class="btn danger" id="tf-del">Excluir</button>` : ""}</div><div style="display:flex;gap:8px">${t && t.status === "aberta" ? `<button type="button" class="btn" data-tfok="${t.id}">Concluir</button>` : ""}<button type="button" class="btn" data-close>Cancelar</button><button class="btn primary">${t ? "Salvar" : "Adicionar à agenda"}</button></div></div></form>`;
+  if (!dlg.open) dlg.showModal();
+  dlg.querySelector('[name="titulo"]').focus();
+  $("#fTf").addEventListener("submit", async ev => {
+    ev.preventDefault(); const f = ev.target; const g = k => (f.elements[k]?.value || "").trim();
+    if (!g("titulo")) return;
+    if (g("prazoHora") && !g("prazoData")) { const e = $("#tf-erro"); e.textContent = "Para usar a hora, escolha também a data do prazo."; e.hidden = false; return; }
+    const dados = {titulo: g("titulo"), descricao: g("descricao"), prazoData: g("prazoData") || null, prazoHora: g("prazoHora") || null, prioridade: g("prioridade"), demandaId: g("demandaId") || null, pessoa: g("pessoa"), atualizadoEm: agoraISO(), atualizadoPor: S.me};
+    try {
+      if (t) await S.db.doc("tarefas/" + t.id).update(dados);
+      else await S.db.collection("tarefas").doc().set({...dados, status: "aberta", criadoEm: agoraISO(), criadoPor: S.me});
+      fecharDlg(); toast(t ? "Tarefa atualizada" : dados.pessoa === S.me ? "Tarefa adicionada à sua agenda" : `Tarefa adicionada à agenda de ${pessoa(dados.pessoa).nome.split(" ")[0]}`);
+    } catch (err) { falhaEscrita(err); }
+  });
+  $("#tf-del")?.addEventListener("click", async e => {
+    if (e.target.dataset.ok !== "1") { e.target.dataset.ok = "1"; e.target.textContent = "Excluir mesmo?"; return; }
+    try { await S.db.doc("tarefas/" + t.id).delete(); fecharDlg(); toast("Tarefa excluída"); } catch (err) { falhaEscrita(err); }
+  });
+}
+function abrirConcluirTarefa(id){
+  const t = S.tarefas.find(x => x.id === id); if (!t) return;
+  const dv = t.demandaId ? S.demandas.find(x => x.id === t.demandaId) : null;
+  if (S.dlg) (S.dlg.unsubs || []).forEach(u => { try { u(); } catch {} });
+  S.dlg = {tipo: "concluirtarefa", id, unsubs: []};
+  const dlg = $("#dlg"); dlg.className = "";
+  dlg.innerHTML = `<form id="fTfOk"><div class="dlg-h"><div><span class="label">Concluir tarefa</span><h2 style="font-size:19px">${esc(t.titulo)}</h2></div><button type="button" class="btn ghost" data-close aria-label="Fechar">✕</button></div>
+    <div class="dlg-b">
+      <p class="sub" style="margin:0">O que fazer com ela agora?</p>
+      <label class="tf-opc"><input type="radio" name="destino" value="arquivar" checked><span><b>📦 Arquivar</b><span class="sub">Sai da sua agenda, mas continua contando no relatório de Produtividade.</span></span></label>
+      <label class="tf-opc"><input type="radio" name="destino" value="lancar"><span><b>➜ Lançar nas demandas gerais</b><span class="sub">${dv ? `Move o cartão <b>${esc(dv.codigo)}</b> (hoje em ${esc(dv.etapa)}) para a lista escolhida.` : "Cria um cartão no quadro de Demandas, na lista que você escolher."}</span></span></label>
+      <div class="tf-lancar" hidden>
+        <label class="f">Lista de destino<select name="etapa">${ETAPAS.map(e => `<option ${(dv ? dv.etapa === e.k : e.k === "Orçamento") ? "selected" : ""}>${e.k}</option>`).join("")}</select></label>
+        ${dv ? `<label class="chk" style="margin-top:8px"><input type="checkbox" name="novoCartao"> Criar um cartão novo em vez de mover ${esc(dv.codigo)}</label>` : ""}
+        <div class="tf-novo" ${dv ? "hidden" : ""}>
+          <label class="f" style="margin-top:8px">Título do cartão (cliente ou assunto)<input name="cliente" value="${esc(t.titulo)}"></label>
+          <label class="f" style="margin-top:8px">Responsável pelo cartão<select name="resp">${PESSOAS.map(p => `<option value="${p.id}" ${t.pessoa === p.id ? "selected" : ""}>${esc(p.nome)}</option>`).join("")}</select></label>
+        </div>
+      </div>
+    </div>
+    <div class="dlg-f"><span></span><div style="display:flex;gap:8px"><button type="button" class="btn" data-close>Cancelar</button><button class="btn primary" id="tfok-btn">Arquivar</button></div></div></form>`;
+  if (!dlg.open) dlg.showModal();
+  const f = $("#fTfOk");
+  const sinc = () => { const l = f.elements.destino.value === "lancar"; f.querySelector(".tf-lancar").hidden = !l; $("#tfok-btn").textContent = l ? "Lançar nas demandas" : "Arquivar"; if (dv) f.querySelector(".tf-novo").hidden = !f.elements.novoCartao.checked; };
+  f.addEventListener("change", sinc);
+  f.addEventListener("submit", async ev => {
+    ev.preventDefault(); const btn = $("#tfok-btn"); btn.disabled = true;
+    const agora = agoraISO(); const quem = pessoa(t.pessoa).nome.split(" ")[0];
+    try {
+      if (f.elements.destino.value === "arquivar") {
+        await S.db.doc("tarefas/" + t.id).update({status: "arquivada", concluidoEm: agora, concluidoPor: S.me});
+        fecharDlg(); toast("Tarefa concluída e arquivada"); return;
+      }
+      const etapa = f.elements.etapa.value; let demId;
+      if (dv && !f.elements.novoCartao?.checked) {
+        const atual = S.demandas.find(x => x.id === dv.id) || dv; demId = dv.id;
+        const hist = [...(atual.historico || []).slice(-148), {em: agora, pessoa: S.me, txt: `concluiu a tarefa "${t.titulo}" da agenda de ${quem}`}];
+        if (atual.etapa !== etapa) hist.push({em: agora, pessoa: S.me, txt: `moveu de ${atual.etapa} para ${etapa}`});
+        await S.db.doc("demandas/" + dv.id).update({etapa, historico: hist, atualizadoEm: agora, atualizadoPor: S.me});
+      } else {
+        const cliente = (f.elements.cliente?.value || t.titulo).trim();
+        const ref = S.db.collection("demandas").doc(); demId = ref.id;
+        await ref.set({codigo: proximoCodigo(), cliente, servicos: [], etapa, responsavel: f.elements.resp?.value || t.pessoa, prazo: t.prazoData || null, contato: "", imovel: "", municipio: "", areaHa: null,
+          protocoloOrgao: "", protocoloNumero: "", protocoloPrevisao: null, notas: [t.descricao, t.prazoHora ? `Prazo da tarefa: ${dataBR(t.prazoData)} às ${t.prazoHora}` : ""].filter(Boolean).join("\n"), exemplo: false, checklist: [],
+          origemTarefa: t.id, historico: [{em: agora, pessoa: S.me, txt: `criou o cartão a partir da agenda de ${quem} (lista ${etapa})`}], criadoEm: agora, atualizadoEm: agora, atualizadoPor: S.me});
+      }
+      await S.db.doc("tarefas/" + t.id).update({status: "lancada", concluidoEm: agora, concluidoPor: S.me, destino: {etapa, demandaId: demId}});
+      fecharDlg(); toast(`Lançada em ${etapa} no quadro de Demandas`);
+    } catch (err) { falhaEscrita(err); btn.disabled = false; }
+  });
+}
+document.addEventListener("click", async e => {
+  if (e.target.closest("[data-tfnova]")) { e.stopPropagation(); abrirTarefa(); return; }
+  const ok = e.target.closest("[data-tfok]"); if (ok) { e.stopPropagation(); abrirConcluirTarefa(ok.dataset.tfok); return; }
+  const ed = e.target.closest("[data-tfedit]"); if (ed) { e.stopPropagation(); abrirTarefa(ed.dataset.tfedit); return; }
+  if (e.target.closest("[data-tffeitas]")) { S.agVerFeitas = !S.agVerFeitas; render(); return; }
+  if (e.target.closest("[data-irminha]")) { S.tab = "minha"; S.agPessoa = null; ls.set("sao.tab", S.tab); render(); window.scrollTo({top: 0}); return; }
+  const ra = e.target.closest("[data-tfreabrir]"); if (ra) { try { await S.db.doc("tarefas/" + ra.dataset.tfreabrir).update({status: "aberta", concluidoEm: null, destino: null}); toast("Tarefa reaberta"); } catch (err) { falhaEscrita(err); } }
+}, true);
+document.addEventListener("change", e => { if (e.target.id === "agPessoa") { S.agPessoa = e.target.value === S.me ? null : e.target.value; render(); } });
+document.addEventListener("submit", async e => {
+  if (e.target.id !== "tf-rapida") return; e.preventDefault();
+  const t = $("#tf-rap-t").value.trim(); if (!t) return;
+  const dt = $("#tf-rap-d").value || null; const h = dt ? ($("#tf-rap-h").value || null) : null;
+  try { await S.db.collection("tarefas").doc().set({titulo: t, descricao: "", prazoData: dt, prazoHora: h, prioridade: "normal", demandaId: null, pessoa: S.agPessoa || S.me, status: "aberta", criadoEm: agoraISO(), criadoPor: S.me}); $("#tf-rap-t").value = ""; $("#tf-rap-d").value = ""; $("#tf-rap-h").value = ""; $("#tf-rap-t").focus(); }
+  catch (err) { falhaEscrita(err); }
+});
+// nova aba no painel
+{
+  const _tabs = tabsDisponiveis;
+  tabsDisponiveis = () => { const t = _tabs(); const n = tarefasDe(S.me).filter(x => x.status === "aberta" && (atrasada(x) || x.prazoData === hoje())).length; t.splice(1, 0, ["minha", "Minha agenda" + (n ? `<span class="badge">${n}</span>` : "")]); return t; };
+}
+// Início: lembrete das tarefas de hoje
+{
+  const _ini = viewInicio;
+  viewInicio = function(){
+    const ab = tarefasDe(S.me).filter(t => t.status === "aberta"); const atr = ab.filter(atrasada).length, hj = ab.filter(t => t.prazoData === hoje() && !atrasada(t)).length;
+    const aviso = atr || hj ? `<div class="banner tf-banner"><span>📋 <b>Sua agenda:</b> ${[hj ? `${hj} tarefa${hj > 1 ? "s" : ""} para hoje` : "", atr ? `<b class="crit-t">${atr} atrasada${atr > 1 ? "s" : ""}</b>` : ""].filter(Boolean).join(" · ")}</span><button type="button" class="btn sm" data-irminha>Abrir minha agenda</button></div>` : "";
+    return aviso + _ini();
+  };
+}
+// Produtividade: tarefas da agenda individual
+function agendaProdHtml(){
+  const P = S.prodPessoa, D = S.prodDias; const desde = addDias(hoje(), -(D - 1));
+  const base = S.tarefas.filter(t => !P || t.pessoa === P);
+  const feitas = base.filter(t => t.status !== "aberta" && (t.concluidoEm || "").slice(0, 10) >= desde);
+  const comPrazo = feitas.filter(t => t.prazoData); const noPrazo = comPrazo.filter(t => t.concluidoEm.slice(0, 16) <= prazoTarefa(t)).length;
+  const abertas = base.filter(t => t.status === "aberta"); const atr = abertas.filter(atrasada).length;
+  const porP = PESSOAS.map(p => [p, feitas.filter(t => t.pessoa === p.id).length, abertas.filter(t => t.pessoa === p.id).length]).filter(x => x[1] || x[2]);
+  const max = Math.max(1, ...porP.map(x => x[1]));
+  return `<div class="card" style="margin-bottom:16px"><h3>Agenda individual <small>tarefas próprias · últimos ${D} dias</small></h3>
+    <div class="kpis" style="margin:0 0 10px">
+      <div class="kpi"><span class="label">Concluídas</span><span class="v">${feitas.length}</span><span class="s">${feitas.filter(t => t.status === "arquivada").length} arquivadas · ${feitas.filter(t => t.status === "lancada").length} lançadas</span></div>
+      <div class="kpi"><span class="label">Cumpridas no prazo</span><span class="v">${comPrazo.length ? Math.round(noPrazo / comPrazo.length * 100) + "%" : "—"}</span><span class="s">${comPrazo.length ? `${noPrazo} de ${comPrazo.length} com prazo` : "nenhuma com prazo"}</span></div>
+      <div class="kpi"><span class="label">Abertas agora</span><span class="v">${abertas.length}</span><span class="s">nas agendas</span></div>
+      <div class="kpi ${atr ? "warn" : ""}"><span class="label">Atrasadas agora</span><span class="v">${atr}</span><span class="s">prazo vencido</span></div>
+    </div>
+    ${!P && porP.length ? `<div class="hbars">${porP.map(([p, n, a]) => `<div class="hbar" data-tip="${esc(p.nome)}: ${n} concluída${n === 1 ? "" : "s"}, ${a} aberta${a === 1 ? "" : "s"}"><span class="nm">${esc(p.nome)}</span><span class="track"><span class="fill" style="display:block;width:${(n / max * 100).toFixed(1)}%"></span></span><span class="vl">${n}</span></div>`).join("")}</div>` : ""}
+  </div>`;
+}
+{
+  const _vp = viewProdutividade;
+  viewProdutividade = () => { const h = _vp(); const i = h.indexOf('<div class="cols">'); return i < 0 ? h + agendaProdHtml() : h.slice(0, i) + agendaProdHtml() + h.slice(i); };
+}
+(function ligarV19(){
+  const iv = setInterval(() => { if (!S.db) return; clearInterval(iv);
+    S.db.collection("tarefas").onSnapshot(s => { S.tarefas = s.docs.map(d => ({id: d.id, ...d.data()})); renderTabs(); if (["minha", "inicio", "produtividade"].includes(S.tab) && !document.activeElement?.closest?.("#tf-rapida")) render(); }, () => {});
+  }, 300);
+  setInterval(() => { if (S.tab === "minha" && !document.activeElement?.closest?.("#tf-rapida")) render(); }, 60000);
 })();
 
 /* ---------- Conexão ---------- */
